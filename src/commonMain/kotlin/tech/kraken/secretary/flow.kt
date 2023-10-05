@@ -30,30 +30,40 @@ public fun Clock.pulse(period: DateTimePeriod, timeZone: TimeZone): Flow<Instant
     }
 }
 
-public fun Clock.pulse(
-    atSecond: Int = 0,
+public fun Clock.schedulePulse(
+    timeZone: TimeZone = TimeZone.UTC,
+    atSecond: Int? = null,
     atMinute: Int? = null,
     atHour: Int? = null,
-): Flow<Instant> {
-
-}
-
-@DelicateSecretaryApi
-public fun Clock.pulse(
-    timeZone: TimeZone = TimeZone.UTC,
-    atTime: LocalTime = LocalTime(hour = 0, minute = 0),
     onDayOfWeek: DayOfWeek? = null,
-    inMonth: Month? = null
-): Flow<Instant> = flow {
+    inMonth: Month? = null,
+): Flow<Instant> = schedulePulse(
+    timeZone = timeZone,
+    atSeconds = atSecond?.let { it..it } ?: 0..59,
+    atMinutes = atMinute?.let { it..it } ?: 0..59,
+    atHours = atHour?.let { it..it } ?: 0..23,
+    onDaysOfWeek = onDayOfWeek?.let { it..it } ?: DayOfWeek.MONDAY..DayOfWeek.SUNDAY,
+    inMonths = inMonth?.let { it..it } ?: Month.JANUARY..Month.DECEMBER,
+)
 
+public fun Clock.schedulePulse(
+    timeZone: TimeZone = TimeZone.UTC,
+    atSeconds: IntRange = 0..59,
+    atMinutes: IntRange = 0..59,
+    atHours: IntRange = 0..23,
+    onDaysOfWeek: ClosedRange<DayOfWeek> = DayOfWeek.MONDAY..DayOfWeek.SUNDAY,
+    inMonths: ClosedRange<Month> = Month.JANUARY..Month.DECEMBER,
+): Flow<Instant> {
+    TODO()
 }
 
-@DelicateSecretaryApi
-public fun Clock.pulse(
+public fun Clock.schedulePulse(
     timeZone: TimeZone = TimeZone.UTC,
-    atTime: LocalTime = LocalTime(hour = 0, minute = 0),
-    onDayOfMonth: Int = 1,
-    inMonth: Month? = null
-): Flow<Instant> = flow {
-
+    atSecond: Int? = null,
+    atMinute: Int? = null,
+    atHour: Int? = null,
+    onDayOfMonth: Int? = null,
+    inMonth: Month? = null,
+): Flow<Instant> {
+    TODO()
 }
