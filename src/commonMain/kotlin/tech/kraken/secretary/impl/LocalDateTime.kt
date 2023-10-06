@@ -2,6 +2,7 @@ package tech.kraken.secretary.impl
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
+import kotlinx.datetime.number
 
 internal fun LocalDateTime.nextMatch(
     atSeconds: IntRange = 0..59,
@@ -9,37 +10,137 @@ internal fun LocalDateTime.nextMatch(
     atHours: IntRange = 0..23,
     onDaysOfMonth: IntRange = 1..31,
     inMonths: ClosedRange<Month> = Month.JANUARY..Month.DECEMBER,
+): LocalDateTime = nextMonth(inMonths)
+    .nextDay(onDaysOfMonth, inMonths)
+    .nextHour(atHours, onDaysOfMonth, inMonths)
+    .nextMinute(atMinutes, atHours, onDaysOfMonth, inMonths)
+    .nextSecond(atSeconds, atMinutes, atHours, onDaysOfMonth, inMonths)
+
+private fun LocalDateTime.nextMonth(
+    inMonths: ClosedRange<Month>,
+    increment: Boolean = false,
 ): LocalDateTime {
-    val incrementedSecond = if (nanosecond > 0) second + 1 else second
-    val incrementedMinute = if (incrementedSecond > atSeconds.last) minute + 1 else minute
-    val incrementedHour = if (incrementedMinute > atMinutes.last) hour + 1 else hour
-
-    val shouldIncrementDay = incrementedHour > atHours.last
-    val coercedDay = when {
-        shouldIncrementDay && (dayOfMonth + 1) in onDaysOfMonth && (dayOfMonth + 1) <= month.numberOfDays(year) -> {
-            dayOfMonth + 1
-        }
-        shouldIncrementDay && month.numberOfDays(year) < (dayOfMonth + 1) -> 1.coerceIn(onDaysOfMonth)
-        else -> dayOfMonth
+    val incrementedMonth = if (increment) month.inc() else month
+    return when {
+        incrementedMonth < month -> copy(year = year + 1, monthNumber = incrementedMonth.number)
+        incrementedMonth in inMonths -> copy(monthNumber = incrementedMonth.number)
+        incrementedMonth < inMonths.start -> copy(
+            monthNumber = inMonths.start.number,
+            dayOfMonth = 1,
+            hour = 0,
+            minute = 0,
+            second = 0,
+            nanosecond = 0
+        )
+        incrementedMonth > inMonths.endInclusive -> copy(
+            year = year + 1,
+            monthNumber = inMonths.start.number,
+            dayOfMonth = 1,
+            hour = 0,
+            minute = 0,
+            second = 0,
+            nanosecond = 0
+        )
+        else -> error("This should be impossible")
     }
-
-    val incrementedMonth = if (coercedDay < dayOfMonth) month.inc() else month
-
-    return copy(
-        nanosecond = 0,
-        second = (incrementedSecond % 60).coerceIn(atSeconds),
-        minute = (incrementedMinute % 60).coerceIn(atMinutes),
-        hour = (incrementedHour % 24).coerceIn(atHours),
-        dayOfMonth = coercedDay,
-        month = incrementedMonth.coerceIn(inMonths),
-        year = if (incrementedMonth < month) year + 1 else year,
-    )
 }
-
 
 private val MONTHS = Month.values()
 private operator fun Month.inc(): Month {
     return MONTHS[(ordinal + 1) % 12]
+}
+
+private fun LocalDateTime.nextDay(
+    onDaysOfMonth: IntRange,
+    inMonths: ClosedRange<Month>,
+    increment: Boolean = false,
+): LocalDateTime {
+    require(onDaysOfMonth.first >= 1 && onDaysOfMonth.last <= 31) { "onDaysOfMonth $onDaysOfMonth not in range 1..31." }
+    val incrementedDay = when {
+        increment && dayOfMonth + 1 <= month.numberOfDays(year) -> dayOfMonth + 1
+        increment -> 1
+        else -> dayOfMonth
+    }
+    return when {
+        incrementedDay < dayOfMonth -> copy(dayOfMonth = incrementedDay).nextMonth(inMonths, increment = true)
+        incrementedDay in onDaysOfMonth -> copy(dayOfMonth = incrementedDay)
+        incrementedDay < onDaysOfMonth.first -> {
+            if (onDaysOfMonth.first <= month.numberOfDays(year)) {
+                copy(dayOfMonth = onDaysOfMonth.first)
+            } else {
+                nextMonth(inMonths, increment = true).copy(dayOfMonth = 1)
+            }
+        }
+        incrementedDay > onDaysOfMonth.last -> {
+            nextMonth(inMonths, increment = true).copy(dayOfMonth = 1)
+        }
+        else -> error("This should be impossible.")
+    }
+}
+
+private fun LocalDateTime.nextHour(
+    atHours: IntRange,
+    onDaysOfMonth: IntRange,
+    inMonths: ClosedRange<Month>,
+    increment: Boolean = false,
+): LocalDateTime {
+    require(atHours.first >= 0 && atHours.last <= 23) { "atHours $atHours not in range 0..23." }
+    val incrementedHour = if (increment) (hour + 1) % 24 else hour
+    return when {
+        incrementedHour < hour -> nextDay(onDaysOfMonth, inMonths, increment = true).copy(hour = incrementedHour)
+        incrementedHour in atHours -> copy(hour = incrementedHour)
+        incrementedHour < atHours.first -> copy(hour = atHours.first, minute = 0, second = 0, nanosecond = 0)
+        incrementedHour > atHours.last -> nextDay(onDaysOfMonth, inMonths, increment = true).copy(hour = atHours.first)
+        else -> error("This should be impossible.")
+    }
+}
+
+private fun LocalDateTime.nextMinute(
+    atMinutes: IntRange,
+    atHours: IntRange,
+    onDaysOfMonth: IntRange,
+    inMonths: ClosedRange<Month>,
+    increment: Boolean = false,
+): LocalDateTime {
+    require(atMinutes.first >= 0 && atMinutes.last <= 59) { "atMinutes $atMinutes not in range 0..59." }
+    val incrementedMinute = if (increment) (minute + 1) % 60 else minute
+    return when {
+        incrementedMinute < minute -> nextHour(atHours, onDaysOfMonth, inMonths, increment = true).copy(
+            minute = incrementedMinute
+        )
+        incrementedMinute in atMinutes -> copy(minute = incrementedMinute)
+        incrementedMinute < atMinutes.first -> copy(minute = atMinutes.first, second = 0, nanosecond = 0)
+        incrementedMinute > atMinutes.last -> nextHour(atHours, onDaysOfMonth, inMonths, increment = true).copy(
+            minute = atMinutes.first
+        )
+        else -> error("This should be impossible.")
+    }
+}
+
+private fun LocalDateTime.nextSecond(
+    atSeconds: IntRange,
+    atMinutes: IntRange,
+    atHours: IntRange,
+    onDaysOfMonth: IntRange,
+    inMonths: ClosedRange<Month>,
+): LocalDateTime {
+    require(atSeconds.first >= 0 && atSeconds.last <= 59) { " atSeconds $atSeconds not in range 0..59." }
+    val incrementedSecond = if (nanosecond > 0) (second + 1) % 60 else second
+    return when {
+        incrementedSecond < second -> nextMinute(atMinutes, atHours, onDaysOfMonth, inMonths, increment = true).copy(
+            second = incrementedSecond
+        )
+        incrementedSecond in atSeconds -> copy(second = incrementedSecond)
+        incrementedSecond < atSeconds.first -> copy(second = atSeconds.first)
+        incrementedSecond > atSeconds.last -> nextMinute(
+            atMinutes,
+            atHours,
+            onDaysOfMonth,
+            inMonths,
+            increment = true,
+        ).copy(second = atSeconds.first)
+        else -> error("This should be impossible.")
+    }.copy(nanosecond = 0)
 }
 
 private fun Month.numberOfDays(year: Int) = when (this) {
@@ -72,13 +173,3 @@ internal fun LocalDateTime.copy(
     second: Int = this.second,
     nanosecond: Int = this.nanosecond,
 ) = LocalDateTime(year, monthNumber, dayOfMonth, hour, minute, second, nanosecond)
-
-private fun LocalDateTime.copy(
-    year: Int = this.year,
-    month: Month = this.month,
-    dayOfMonth: Int = this.dayOfMonth,
-    hour: Int = this.hour,
-    minute: Int = this.minute,
-    second: Int = this.second,
-    nanosecond: Int = this.nanosecond,
-) = LocalDateTime(year, month, dayOfMonth, hour, minute, second, nanosecond)

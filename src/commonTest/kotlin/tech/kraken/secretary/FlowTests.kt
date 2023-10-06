@@ -1,14 +1,16 @@
 package tech.kraken.secretary
 
 import app.cash.turbine.test
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.testTimeSource
+import kotlinx.coroutines.withContext
 import kotlinx.datetime.*
-import tech.kraken.secretary.impl.copy
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
@@ -54,57 +56,11 @@ class FlowTests {
         }
     }
 
-    @Test fun unqualified_schedulePulse_emits_every_second() = runTest {
-        val start = LocalDateTime(year = 2023, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0, second = 0)
-        val elapsed = testTimeSource.measureTime {
-            schedulePulseParameterized(start.copy(second = 1), start.copy(second = 2), startTime = start)
-        }
-
-        assertEquals(expected = 2.seconds, actual = elapsed)
-    }
-
-    @Test fun specified_second_schedulePulse_executes_once_per_minute() = runTest {
-        val start = LocalDateTime(year = 2023, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0, second = 0)
-        val elapsed = testTimeSource.measureTime {
-            schedulePulseParameterized(
-                start.copy(second = 50),
-                start.copy(minute = 1, second = 50),
-                startTime = start,
-                atSecond = 50,
-            )
-        }
-
-        assertEquals(expected = 1.minutes + 50.seconds, actual = elapsed)
-    }
-
-    @Test fun specified_minute_schedulePulse_executes_60_times_for_a_given_minute() = runTest {
-        val start = LocalDateTime(year = 2023, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0, second = 0)
-        val endTimes = Array(60) { index -> start.copy(minute = 50, second = index) }
-        val elapsed = testTimeSource.measureTime {
-            schedulePulseParameterized(
-                *endTimes,
-                startTime = start,
-                atMinute = 50,
-            )
-        }
-
-        assertEquals(expected = 51.minutes, actual = elapsed)
-    }
-
-    private suspend fun schedulePulseParameterized(
-        vararg endTimes: LocalDateTime,
-        startTime: LocalDateTime,
-        timeZone: TimeZone = TimeZone.UTC,
-        atSecond: Int? = null,
-        atMinute: Int? = null,
-        atHour: Int? = null,
-        onDayOfWeek: DayOfWeek? = null,
-        inMonth: Month? = null,
-    ) {
-        val clock = startTime.asClock(timeZone)
-        clock.schedulePulse(timeZone, atSecond, atMinute, atHour, onDayOfWeek, inMonth).test {
-            for (endTime in endTimes) {
-                assertEquals(expected = endTime.toInstant(timeZone), actual = awaitItem())
+    @Test fun foo() = runTest(timeout = 1.days) {
+        withContext(Dispatchers.Default) {
+            val tz = TimeZone.of("America/New_York")
+            listOf(0, 30).map { Clock.System.schedulePulse(timeZone = tz, atSecond = it) }.merge().collect { instant ->
+                println(instant.toLocalDateTime(tz))
             }
         }
     }

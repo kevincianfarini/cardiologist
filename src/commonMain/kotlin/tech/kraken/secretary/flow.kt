@@ -4,6 +4,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.datetime.*
+import tech.kraken.secretary.impl.nextMatch
 import kotlin.time.Duration
 
 /**
@@ -30,32 +31,32 @@ public fun Clock.pulse(period: DateTimePeriod, timeZone: TimeZone): Flow<Instant
     }
 }
 
-public fun Clock.schedulePulse(
-    timeZone: TimeZone = TimeZone.UTC,
-    atSecond: Int? = null,
-    atMinute: Int? = null,
-    atHour: Int? = null,
-    onDayOfWeek: DayOfWeek? = null,
-    inMonth: Month? = null,
-): Flow<Instant> = schedulePulse(
-    timeZone = timeZone,
-    atSeconds = atSecond?.let { it..it } ?: 0..59,
-    atMinutes = atMinute?.let { it..it } ?: 0..59,
-    atHours = atHour?.let { it..it } ?: 0..23,
-    onDaysOfWeek = onDayOfWeek?.let { it..it } ?: DayOfWeek.MONDAY..DayOfWeek.SUNDAY,
-    inMonths = inMonth?.let { it..it } ?: Month.JANUARY..Month.DECEMBER,
-)
-
-public fun Clock.schedulePulse(
-    timeZone: TimeZone = TimeZone.UTC,
-    atSeconds: IntRange = 0..59,
-    atMinutes: IntRange = 0..59,
-    atHours: IntRange = 0..23,
-    onDaysOfWeek: ClosedRange<DayOfWeek> = DayOfWeek.MONDAY..DayOfWeek.SUNDAY,
-    inMonths: ClosedRange<Month> = Month.JANUARY..Month.DECEMBER,
-): Flow<Instant> {
-    TODO()
-}
+//public fun Clock.schedulePulse(
+//    timeZone: TimeZone = TimeZone.UTC,
+//    atSecond: Int? = null,
+//    atMinute: Int? = null,
+//    atHour: Int? = null,
+//    onDayOfWeek: DayOfWeek? = null,
+//    inMonth: Month? = null,
+//): Flow<Instant> = schedulePulse(
+//    timeZone = timeZone,
+//    atSeconds = atSecond?.let { it..it } ?: 0..59,
+//    atMinutes = atMinute?.let { it..it } ?: 0..59,
+//    atHours = atHour?.let { it..it } ?: 0..23,
+//    onDaysOfWeek = onDayOfWeek?.let { it..it } ?: DayOfWeek.MONDAY..DayOfWeek.SUNDAY,
+//    inMonths = inMonth?.let { it..it } ?: Month.JANUARY..Month.DECEMBER,
+//)
+//
+//public fun Clock.schedulePulse(
+//    timeZone: TimeZone = TimeZone.UTC,
+//    atSeconds: IntRange = 0..59,
+//    atMinutes: IntRange = 0..59,
+//    atHours: IntRange = 0..23,
+//    onDaysOfWeek: ClosedRange<DayOfWeek> = DayOfWeek.MONDAY..DayOfWeek.SUNDAY,
+//    inMonths: ClosedRange<Month> = Month.JANUARY..Month.DECEMBER,
+//): Flow<Instant> {
+//    TODO()
+//}
 
 public fun Clock.schedulePulse(
     timeZone: TimeZone = TimeZone.UTC,
@@ -64,6 +65,18 @@ public fun Clock.schedulePulse(
     atHour: Int? = null,
     onDayOfMonth: Int? = null,
     inMonth: Month? = null,
-): Flow<Instant> {
-    TODO()
+): Flow<Instant> = flow {
+    while (true) {
+        val nowLocal = now().toLocalDateTime(timeZone)
+        val nextPulse = nowLocal.nextMatch(
+            atSeconds = atSecond?.let { it..it } ?: 0..59,
+            atMinutes = atMinute?.let { it..it } ?: 0..59,
+            atHours = atHour?.let { it..it } ?: 0..23,
+            onDaysOfMonth = onDayOfMonth?.let { it..it } ?: 1..31,
+            inMonths = inMonth?.let { it..it } ?: Month.JANUARY..Month.DECEMBER,
+        )
+
+        delayUntil(nextPulse, timeZone)
+        emit(now())
+    }
 }
