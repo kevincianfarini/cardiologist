@@ -17,7 +17,6 @@ public suspend fun Clock.delayFor(period: DateTimePeriod, timeZone: TimeZone) {
     delay(futureInstant - now)
 }
 
-@DelicateSecretaryApi
 public suspend fun Clock.delayUntilNext(time: LocalTime, timeZone: TimeZone) {
     val now = now()
     val nowLocal = now.toLocalDateTime(timeZone)

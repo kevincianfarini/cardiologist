@@ -17,7 +17,7 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 
-@OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class, DelicateSecretaryApi::class)
+@OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
 class SuspendingTests {
 
     @Test fun delays_for_proper_amount_of_time_until_future_instant() = runTest {
