@@ -1,10 +1,9 @@
-package tech.kraken.secretary
+package tech.kraken.cardiologist
 
 import app.cash.turbine.test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.testTimeSource
 import kotlinx.coroutines.withContext
@@ -57,13 +56,12 @@ class FlowTests {
         }
     }
 
-//    @Test fun foo() = runTest(timeout = 1.days) {
-//        withContext(Dispatchers.Default) {
-//            val tz = TimeZone.of("America/New_York")
-//            Clock.System.schedulePulse(tz).beat(mode = RecurringJobMode.Concurrent) { instant ->
-//                delay(1500L)
-//                println("Delayed for 1.5 seconds! $instant")
-//            }
-//        }
-//    }
+    @Test fun foo() = runTest(timeout = 1.days) {
+        withContext(Dispatchers.Default) {
+            val tz = TimeZone.of("America/New_York")
+            Clock.System.schedulePulse(tz, atSecond = 0).beat(mode = RecurringJobMode.Concurrent) { instant ->
+                println("The time in $tz is ${instant.toLocalDateTime(tz)}.")
+            }
+        }
+    }
 }

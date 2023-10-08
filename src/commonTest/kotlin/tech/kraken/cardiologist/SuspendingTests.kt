@@ -1,4 +1,4 @@
-package tech.kraken.secretary
+package tech.kraken.cardiologist
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest

@@ -1,4 +1,4 @@
-package tech.kraken.secretary
+package tech.kraken.cardiologist
 
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.coroutineScope
@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.*
-import tech.kraken.secretary.impl.nextMatch
+import tech.kraken.cardiologist.impl.nextMatch
 import kotlin.time.Duration
 
 /**

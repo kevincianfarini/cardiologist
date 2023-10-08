@@ -1,4 +1,4 @@
-package tech.kraken.secretary
+package tech.kraken.cardiologist
 
 public enum class RecurringJobMode {
 
