@@ -4,13 +4,17 @@ import app.cash.turbine.test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.testTimeSource
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.nanoseconds
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
@@ -58,9 +62,10 @@ class FlowTests {
 
     @Test fun foo() = runTest(timeout = 1.days) {
         withContext(Dispatchers.Default) {
-            val tz = TimeZone.of("America/New_York")
-            Clock.System.schedulePulse(tz, atSecond = 0).beat(mode = RecurringJobMode.Concurrent) { instant ->
-                println("The time in $tz is ${instant.toLocalDateTime(tz)}.")
+            val tz = TimeZone.of("Europe/London")
+            val flow = Clock.System.schedulePulse(tz)
+            flow.beat(mode = RecurringJobMode.Concurrent) { instant ->
+                println(instant)
             }
         }
     }

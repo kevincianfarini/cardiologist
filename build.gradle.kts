@@ -51,3 +51,11 @@ kotlin {
         }
     }
 }
+
+tasks.withType<AbstractTestTask> {
+    testLogging {
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+        showStandardStreams = true
+        showStackTraces = true
+    }
+}

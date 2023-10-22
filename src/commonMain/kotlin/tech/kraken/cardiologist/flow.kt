@@ -18,7 +18,7 @@ import kotlin.time.Duration
 public fun Clock.intervalPulse(interval: Duration): Flow<Pulse> = flow {
     while (true) {
         emit(Pulse(now()))
-        delay(interval)
+        delay(interval.roundToMillis())
     }
 }
 
@@ -76,7 +76,6 @@ public fun Clock.schedulePulse(
             onDaysOfMonth = onDayOfMonth?.let { it..it } ?: 1..31,
             inMonths = inMonth?.let { it..it } ?: Month.JANUARY..Month.DECEMBER,
         )
-
         delayUntil(nextPulse, timeZone)
         emit(Pulse(now()))
     }
