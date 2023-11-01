@@ -13,7 +13,6 @@ kotlin {
     androidNativeArm64()
     androidNativeX64()
     androidNativeX86()
-    iosArm32()
     iosArm64()
     iosSimulatorArm64()
     iosX64()
@@ -32,7 +31,6 @@ kotlin {
     watchosDeviceArm64()
     watchosSimulatorArm64()
     watchosX64()
-    watchosX86()
 
     sourceSets {
         val commonMain by getting {
