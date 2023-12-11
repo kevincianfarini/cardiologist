@@ -1,7 +1,7 @@
 [versions]
-kotlin = "1.9.20"
-kotlinx-coroutines = "1.7.3"
-kotlinx-datetime = "0.4.1"
+kotlin = "1.9.21"
+kotlinx-coroutines = "1.8.0-RC"
+kotlinx-datetime = "0.5.0"
 turbine = "1.0.0"
 
 [libraries]

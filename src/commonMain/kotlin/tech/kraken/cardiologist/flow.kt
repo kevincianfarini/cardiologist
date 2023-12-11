@@ -18,7 +18,7 @@ import kotlin.time.Duration
 public fun Clock.intervalPulse(interval: Duration): Flow<Pulse> = flow {
     while (true) {
         emit(Pulse(now()))
-        delay(interval.roundToMillis())
+        delay(interval)
     }
 }
 

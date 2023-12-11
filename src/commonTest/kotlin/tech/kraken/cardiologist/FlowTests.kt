@@ -59,14 +59,4 @@ class FlowTests {
             )
         }
     }
-
-    @Test fun foo() = runTest(timeout = 1.days) {
-        withContext(Dispatchers.Default) {
-            val tz = TimeZone.of("Europe/London")
-            val flow = Clock.System.schedulePulse(tz)
-            flow.beat(mode = RecurringJobMode.Concurrent) { instant ->
-                println(instant)
-            }
-        }
-    }
 }
