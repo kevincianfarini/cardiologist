@@ -1,4 +1,4 @@
-package tech.kraken.cardiologist
+package com.kevincianfarini.cardiologist
 
 import app.cash.turbine.test
 import kotlinx.coroutines.Dispatchers

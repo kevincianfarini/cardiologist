@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
 }
 
-group = "tech.kraken"
+group = "com.kevincianfarini"
 version = "0.0.1"
 
 kotlin {
