@@ -1,4 +1,4 @@
-package tech.kraken.cardiologist
+package com.kevincianfarini.cardiologist
 
 import kotlinx.coroutines.delay
 import kotlinx.datetime.*

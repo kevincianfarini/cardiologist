@@ -1,4 +1,4 @@
-package tech.kraken.cardiologist.impl
+package com.kevincianfarini.cardiologist.impl
 
 import kotlinx.datetime.*
 import kotlin.test.Test
