@@ -1,4 +1,5 @@
 plugins {
+    alias(libs.plugins.dokka)
     alias(libs.plugins.kotlin.multiplatform)
 }
 
@@ -9,10 +10,6 @@ kotlin {
 
     explicitApi()
 
-    androidNativeArm32()
-    androidNativeArm64()
-    androidNativeX64()
-    androidNativeX86()
     iosArm64()
     iosSimulatorArm64()
     iosX64()
@@ -33,19 +30,14 @@ kotlin {
     watchosX64()
 
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api(libs.kotlinx.coroutines.core)
-                api(libs.kotlinx.datetime)
-            }
+        commonMain.dependencies {
+            api(libs.kotlinx.coroutines.core)
+            api(libs.kotlinx.datetime)
         }
-
-        val commonTest by getting {
-            dependencies {
-                implementation(libs.kotlin.test.core)
-                implementation(libs.kotlinx.coroutines.test)
-                implementation(libs.turbine)
-            }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test.core)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.turbine)
         }
     }
 }
