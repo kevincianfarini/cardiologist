@@ -35,6 +35,7 @@ public fun Clock.intervalPulse(period: DateTimePeriod, timeZone: TimeZone): Flow
 
 /**
  * Schedule pulses to occur [atSecond], [atMinute], [atHour], [onDayOfMonth], and [inMonth] for a specific [timeZone].
+ *
  * Null values for any parameter indiciates that a pulse can occur on _any_ second, minute, hour, etc. For example,
  * scheduling a pulse to occur on the fifth second of every minute would look like the following:
  *
