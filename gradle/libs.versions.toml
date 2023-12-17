@@ -1,6 +1,7 @@
 [versions]
 dokka = "1.9.10"
 kotlin = "1.9.21"
+kotlinx-atomicfu = "0.23.1" # This is a workaround for https://github.com/Kotlin/kotlinx.coroutines/issues/3968
 kotlinx-coroutines = "1.8.0-RC"
 kotlinx-datetime = "0.5.0"
 turbine = "1.0.0"
@@ -8,6 +9,7 @@ publish = "0.25.3"
 
 [libraries]
 kotlin-test-core = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlinx-atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "kotlinx-atomicfu" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
