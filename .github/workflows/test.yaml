@@ -1,0 +1,26 @@
+name: test
+
+on:
+  pull_request: {}
+  push:
+    branches:
+      - 'trunk'
+
+env:
+  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.daemon=false -Dkotlin.incremental=false"
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [macOS-latest, windows-latest, ubuntu-latest]
+
+    runs-on: ${{matrix.os}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4.0.0
+        with:
+          distribution: 'zulu'
+          java-version: 19
+
+      - run: ./gradlew allTests
