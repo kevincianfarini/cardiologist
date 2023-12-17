@@ -1,4 +1,5 @@
 [versions]
+dokka = "1.9.10"
 kotlin = "1.9.21"
 kotlinx-coroutines = "1.8.0-RC"
 kotlinx-datetime = "0.5.0"
@@ -13,3 +14,4 @@ turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
