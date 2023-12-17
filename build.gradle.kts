@@ -11,15 +11,6 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
     iosX64()
-    js {
-        nodejs {
-            testTask {
-                useMocha {
-                    timeout = "5s"
-                }
-            }
-        }
-    }
     jvm()
     linuxArm64()
     linuxX64()
