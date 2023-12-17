@@ -4,6 +4,7 @@ kotlin = "1.9.21"
 kotlinx-coroutines = "1.8.0-RC"
 kotlinx-datetime = "0.5.0"
 turbine = "1.0.0"
+publish = "0.25.3"
 
 [libraries]
 kotlin-test-core = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -15,3 +16,4 @@ turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+publish = { id = "com.vanniktech.maven.publish", version.ref = "publish" }
