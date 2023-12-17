@@ -1,10 +1,8 @@
 plugins {
     alias(libs.plugins.dokka)
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.publish)
 }
-
-group = "com.kevincianfarini"
-version = "0.0.1"
 
 kotlin {
 
@@ -13,7 +11,15 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
     iosX64()
-    js()
+    js {
+        nodejs {
+            testTask {
+                useMocha {
+                    timeout = "5s"
+                }
+            }
+        }
+    }
     jvm()
     linuxArm64()
     linuxX64()
