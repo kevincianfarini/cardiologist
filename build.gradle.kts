@@ -11,15 +11,6 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
     iosX64()
-    js {
-        nodejs {
-            testTask {
-                useMocha {
-                    timeout = "5s"
-                }
-            }
-        }
-    }
     jvm()
     linuxArm64()
     linuxX64()
@@ -37,6 +28,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            api(libs.kotlinx.atomicfu)
             api(libs.kotlinx.coroutines.core)
             api(libs.kotlinx.datetime)
         }
