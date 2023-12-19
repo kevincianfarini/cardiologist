@@ -1,0 +1,24 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+$dokka.location:com.kevincianfarini.cardiologist////PointingToDeclaration/cardiologist/com.kevincianfarini.cardiologist/index.html
+$dokka.location:com.kevincianfarini.cardiologist//beat/kotlinx.coroutines.flow.Flow[com.kevincianfarini.cardiologist.Pulse]#com.kevincianfarini.cardiologist.RecurringJobMode#kotlin.coroutines.SuspendFunction1[kotlinx.datetime.Instant,kotlin.Unit]/PointingToDeclaration/cardiologist/com.kevincianfarini.cardiologist/beat.html
+$dokka.location:com.kevincianfarini.cardiologist//delayFor/kotlinx.datetime.Clock#kotlinx.datetime.DateTimePeriod#kotlinx.datetime.TimeZone/PointingToDeclaration/cardiologist/com.kevincianfarini.cardiologist/delay-for.html
+$dokka.location:com.kevincianfarini.cardiologist//delayUntil/kotlinx.datetime.Clock#kotlinx.datetime.Instant/PointingToDeclaration/cardiologist/com.kevincianfarini.cardiologist/delay-until.html
+$dokka.location:com.kevincianfarini.cardiologist//delayUntil/kotlinx.datetime.Clock#kotlinx.datetime.LocalDateTime#kotlinx.datetime.TimeZone/PointingToDeclaration/cardiologist/com.kevincianfarini.cardiologist/delay-until.html
+$dokka.location:com.kevincianfarini.cardiologist//delayUntilNext/kotlinx.datetime.Clock#kotlinx.datetime.LocalTime#kotlinx.datetime.TimeZone/PointingToDeclaration/cardiologist/com.kevincianfarini.cardiologist/delay-until-next.html
+$dokka.location:com.kevincianfarini.cardiologist//intervalPulse/kotlinx.datetime.Clock#kotlin.time.Duration/PointingToDeclaration/cardiologist/com.kevincianfarini.cardiologist/interval-pulse.html
+$dokka.location:com.kevincianfarini.cardiologist//intervalPulse/kotlinx.datetime.Clock#kotlinx.datetime.DateTimePeriod#kotlinx.datetime.TimeZone/PointingToDeclaration/cardiologist/com.kevincianfarini.cardiologist/interval-pulse.html
+$dokka.location:com.kevincianfarini.cardiologist//schedulePulse/kotlinx.datetime.Clock#kotlinx.datetime.TimeZone#kotlin.Int?#kotlin.Int?#kotlin.Int?#kotlin.Int?#kotlinx.datetime.Month?/PointingToDeclaration/cardiologist/com.kevincianfarini.cardiologist/schedule-pulse.html
+$dokka.location:com.kevincianfarini.cardiologist/Pulse///PointingToDeclaration/cardiologist/com.kevincianfarini.cardiologist/-pulse/index.html
+$dokka.location:com.kevincianfarini.cardiologist/Pulse/equals/#kotlin.Any?/PointingToDeclaration/cardiologist/com.kevincianfarini.cardiologist/-pulse/equals.html
+$dokka.location:com.kevincianfarini.cardiologist/Pulse/hashCode/#/PointingToDeclaration/cardiologist/com.kevincianfarini.cardiologist/-pulse/hash-code.html
+$dokka.location:com.kevincianfarini.cardiologist/Pulse/toString/#/PointingToDeclaration/cardiologist/com.kevincianfarini.cardiologist/-pulse/to-string.html
+$dokka.location:com.kevincianfarini.cardiologist/RecurringJobMode.CancellingSequential///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}cardiologist/com.kevincianfarini.cardiologist/-recurring-job-mode/-cancelling-sequential/index.html
+$dokka.location:com.kevincianfarini.cardiologist/RecurringJobMode.Concurrent///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}cardiologist/com.kevincianfarini.cardiologist/-recurring-job-mode/-concurrent/index.html
+$dokka.location:com.kevincianfarini.cardiologist/RecurringJobMode.DelayBetweenSequential///PointingToDeclaration/{"org.jetbrains.dokka.links.EnumEntryDRIExtra":{"key":"org.jetbrains.dokka.links.EnumEntryDRIExtra"}}cardiologist/com.kevincianfarini.cardiologist/-recurring-job-mode/-delay-between-sequential/index.html
+$dokka.location:com.kevincianfarini.cardiologist/RecurringJobMode///PointingToDeclaration/cardiologist/com.kevincianfarini.cardiologist/-recurring-job-mode/index.html
+$dokka.location:com.kevincianfarini.cardiologist/RecurringJobMode/entries/#/PointingToDeclaration/cardiologist/com.kevincianfarini.cardiologist/-recurring-job-mode/entries.html
+$dokka.location:com.kevincianfarini.cardiologist/RecurringJobMode/valueOf/#kotlin.String/PointingToDeclaration/cardiologist/com.kevincianfarini.cardiologist/-recurring-job-mode/value-of.html
+$dokka.location:com.kevincianfarini.cardiologist/RecurringJobMode/values/#/PointingToDeclaration/cardiologist/com.kevincianfarini.cardiologist/-recurring-job-mode/values.html
+com.kevincianfarini.cardiologist
+
