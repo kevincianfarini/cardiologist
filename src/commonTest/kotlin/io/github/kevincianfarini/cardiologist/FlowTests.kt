@@ -1,4 +1,4 @@
-package com.kevincianfarini.cardiologist
+package io.github.kevincianfarini.cardiologist
 
 import app.cash.turbine.test
 import kotlinx.coroutines.Dispatchers

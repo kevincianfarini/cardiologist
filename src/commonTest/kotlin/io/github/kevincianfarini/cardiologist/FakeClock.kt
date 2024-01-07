@@ -1,4 +1,4 @@
-package com.kevincianfarini.cardiologist
+package io.github.kevincianfarini.cardiologist
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScheduler

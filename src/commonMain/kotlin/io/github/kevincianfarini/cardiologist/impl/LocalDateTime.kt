@@ -1,4 +1,4 @@
-package com.kevincianfarini.cardiologist.impl
+package io.github.kevincianfarini.cardiologist.impl
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
