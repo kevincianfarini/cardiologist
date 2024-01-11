@@ -1,4 +1,4 @@
-package com.kevincianfarini.cardiologist
+package io.github.kevincianfarini.cardiologist
 
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.coroutineScope
@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.*
-import com.kevincianfarini.cardiologist.impl.nextMatch
+import io.github.kevincianfarini.cardiologist.impl.nextMatch
 import kotlin.time.Duration
 
 /**

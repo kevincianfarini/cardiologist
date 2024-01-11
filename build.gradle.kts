@@ -1,3 +1,5 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     alias(libs.plugins.dokka)
     alias(libs.plugins.kotlin.multiplatform)
@@ -28,7 +30,6 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(libs.kotlinx.atomicfu)
             api(libs.kotlinx.coroutines.core)
             api(libs.kotlinx.datetime)
         }
@@ -46,4 +47,9 @@ tasks.withType<AbstractTestTask> {
         showStandardStreams = true
         showStackTraces = true
     }
+}
+
+mavenPublishing {
+    publishToMavenCentral(host = SonatypeHost.S01)
+    signAllPublications()
 }

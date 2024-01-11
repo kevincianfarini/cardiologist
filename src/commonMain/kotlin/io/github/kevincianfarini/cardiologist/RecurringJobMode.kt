@@ -1,4 +1,4 @@
-package com.kevincianfarini.cardiologist
+package io.github.kevincianfarini.cardiologist
 
 public enum class RecurringJobMode {
 

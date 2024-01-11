@@ -80,7 +80,7 @@ to beat a pulse which allow jobs to run concurrently or apply backpressure.
 You should not collect a `Flow<Pulse>` without calling `beat`. 
 
 ```kt
-import com.kevincianfarini.cardiologist.RecurringJobMode.*
+import io.github.kevincianfarini.cardiologist.RecurringJobMode.*
 
 // Cancels previous job when next job is scheduled to occur. 
 hourlyPulse.beat(mode = CancellingSequential) { instant -> longRunningOperation(instant) }
