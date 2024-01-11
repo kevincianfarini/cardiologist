@@ -51,5 +51,5 @@ tasks.withType<AbstractTestTask> {
 
 mavenPublishing {
     publishToMavenCentral(host = SonatypeHost.S01)
-//    signAllPublications()
+    signAllPublications()
 }
