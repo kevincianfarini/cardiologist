@@ -1,3 +1,5 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     alias(libs.plugins.dokka)
     alias(libs.plugins.kotlin.multiplatform)
@@ -45,4 +47,9 @@ tasks.withType<AbstractTestTask> {
         showStandardStreams = true
         showStackTraces = true
     }
+}
+
+mavenPublishing {
+    publishToMavenCentral(host = SonatypeHost.S01)
+//    signAllPublications()
 }
