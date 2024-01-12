@@ -25,6 +25,31 @@ jobs:
           - tvosX64Test
           - watchosSimulatorArm64Test
           - watchosX64Test
+        exclude:
+          - os: macOS-latest
+            job:
+              - linuxX64Test
+              - mingwX64Test
+          - os: windows-latest
+            job:
+              - iosX64Test
+              - macosArm64Test
+              - macosX64Test
+              - mingwX64Test
+              - tvosSimulatorArm64Test
+              - tvosX64Test
+              - watchosSimulatorArm64Test
+              - watchosX64Test
+          - os: ubuntu-latest
+            job:
+              - iosX64Test
+              - macosArm64Test
+              - macosX64Test
+              - mingwX64Test
+              - tvosSimulatorArm64Test
+              - tvosX64Test
+              - watchosSimulatorArm64Test
+              - watchosX64Test
 
     runs-on: ${{matrix.os}}
     steps:
