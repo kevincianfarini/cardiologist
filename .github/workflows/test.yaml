@@ -14,42 +14,32 @@ jobs:
     strategy:
       matrix:
         os: [macOS-latest, windows-latest, ubuntu-latest]
-        job:
-          - iosX64Test
-          - jvmTest
-          - linuxX64Test
-          - macosArm64Test
-          - macosX64Test
-          - mingwX64Test
-          - tvosSimulatorArm64Test
-          - tvosX64Test
-          - watchosSimulatorArm64Test
-          - watchosX64Test
-        exclude:
+        job: [jvmTest]
+        include:
           - os: macOS-latest
-            job:
-              - linuxX64Test
-              - mingwX64Test
+            job: iosX64Test
+          - os: macOS-latest
+            job: jvmTest
+          - os: macOS-latest
+            job: macosArm64Test
+          - os: macOS-latest
+            job: macosX64Test
+          - os: macOS-latest
+            job: tvosSimulatorArm64Test
+          - os: macOS-latest
+            job: tvosX64Test
+          - os: macOS-latest
+            job: watchosSimulatorArm64Test
+          - os: macOS-latest
+            job: watchosX64Test
           - os: windows-latest
-            job:
-              - iosX64Test
-              - macosArm64Test
-              - macosX64Test
-              - mingwX64Test
-              - tvosSimulatorArm64Test
-              - tvosX64Test
-              - watchosSimulatorArm64Test
-              - watchosX64Test
+            job: jvmTest
+          - os: windows-latest
+            job: mingwX64Test
           - os: ubuntu-latest
-            job:
-              - iosX64Test
-              - macosArm64Test
-              - macosX64Test
-              - mingwX64Test
-              - tvosSimulatorArm64Test
-              - tvosX64Test
-              - watchosSimulatorArm64Test
-              - watchosX64Test
+            job: jvmTest
+          - os: ubuntu-latest
+            job: linuxX64Test
 
     runs-on: ${{matrix.os}}
     steps:
