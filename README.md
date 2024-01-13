@@ -20,8 +20,7 @@ The time in America/New_York is 2023-10-07T19:53:00.
 ## Introduction 
 
 Cardiologist integrates with kotlinx-datetime to provide you scheduling based on `Instant`, `LocalDateTime`, 
-and `LocalTime`, and integrates with kotlinx-coroutines to provide you a Flow API to trigger your pending jobs
-with a suspending API. 
+and `LocalTime`, and integrates with kotlinx-coroutines to provide a suspending API to trigger pending jobs.
 
 Simple suspending functions are available to delay until a given moment in time.
 
@@ -43,11 +42,11 @@ val midnight = LocalTime(hour = 0, minute = 0)
 Clock.System.delayUntilNext(time = midnight, timeZone = TimeZone.UTC)
 ```
 
-Repeating intervals are provided as a `Flow<Pulse>`. 
+Repeating intervals are provided as a `Pulse`, a type which holds a reccurence cadence. 
 
 ```kt
-val hourlyPulse: Flow<Pulse> = Clock.System.intervalPulse(interval = 1.hours)
-val dailyPulse: Flow<Pulse> = Clock.System.intervalPulse(
+val hourlyPulse: Pulse = Clock.System.intervalPulse(interval = 1.hours)
+val dailyPulse: Pulse = Clock.System.intervalPulse(
     period = DateTimePeriod(days = 1),
     timeZone = TimeZone.UTC,
 )
@@ -66,8 +65,7 @@ val scheduledPulse = Clock.System.schedulePulse(
 )
 ```
 
-...and can be collected by calling `Flow<Pulse>.beat`. This will unwrap a `Pulse` and yield
-the instant at which the pulse occurred.
+...and can be invoked by calling `Pulse.beat`. 
 
 ```kt
 scheduledPulse.beat { instant -> println("$instant") }
@@ -76,8 +74,6 @@ scheduledPulse.beat { instant -> println("$instant") }
 Beating a pulse is a backpressure sensitive operation. If your job has not completed when the next 
 pulse is scheduled to occur, it will by default be cancelled. Cardiologist provides two other modes 
 to beat a pulse which allow jobs to run concurrently or apply backpressure. 
-
-You should not collect a `Flow<Pulse>` without calling `beat`. 
 
 ```kt
 import io.github.kevincianfarini.cardiologist.RecurringJobMode.*
