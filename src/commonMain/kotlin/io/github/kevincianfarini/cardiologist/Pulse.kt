@@ -9,7 +9,7 @@ import kotlinx.datetime.Instant
 import kotlin.jvm.JvmInline
 
 /**
- * A [Pulse] is a marker class that helps limit the namespace of collecting pulse flows.
+ * A [Pulse] is a cadence which informs consumers when to execute work by calling [Pulse.beat].
  */
 @JvmInline
 public value class Pulse internal constructor(internal val flow: Flow<Instant>) {
@@ -17,12 +17,6 @@ public value class Pulse internal constructor(internal val flow: Flow<Instant>) 
     /**
      * Reinvoke [action] every time this Pulse is set to execute.
      * This operator will execute [action] according to which [mode] is specified.
-     *
-     * ```kt
-     * clock.intervalPulse(5.seconds).beat { pulseInstant ->
-     *   println(pulseInstant.toString())
-     * }
-     * ```
      */
     public suspend fun beat(
         mode: RecurringJobMode = RecurringJobMode.CancellingSequential,
