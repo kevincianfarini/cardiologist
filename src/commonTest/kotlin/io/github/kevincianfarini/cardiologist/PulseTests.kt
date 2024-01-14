@@ -1,6 +1,5 @@
 package io.github.kevincianfarini.cardiologist
 
-import app.cash.turbine.test
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.testTimeSource
@@ -15,40 +14,36 @@ import kotlin.time.measureTime
 class PulseTests {
 
     @Test fun durationPulse_emits_initial_instant_before_delaying() = runTest {
-        testClock.intervalPulse(5.seconds).flow.test {
-            assertEquals(
-                expected = 0.seconds,
-                actual = testTimeSource.measureTime { awaitItem() }
-            )
-        }
+        assertEquals(
+            expected = 0.seconds,
+            actual = testTimeSource.measureTime {
+                testClock.intervalPulse(5.seconds).take(1).beat { }
+            }
+        )
     }
 
     @Test fun durationPulse_emits_subsequent_instants_after_delaying() = runTest {
-        testClock.intervalPulse(5.seconds).flow.test {
-            skipItems(1)
-            assertEquals(
-                expected = 5.seconds,
-                actual = testTimeSource.measureTime { awaitItem() }
-            )
-        }
+        assertEquals(
+            expected = 5.seconds,
+            actual = testTimeSource.measureTime {
+                testClock.intervalPulse(5.seconds).take(2).beat { }
+            }
+        )
     }
 
     @Test fun periodPulse_emits_initial_instant_before_delaying() = runTest {
-        testClock.intervalPulse(DateTimePeriod(seconds = 5), TimeZone.UTC).flow.test {
-            assertEquals(
-                expected = 0.seconds,
-                actual = testTimeSource.measureTime { awaitItem() }
-            )
-        }
+        val pulse = testClock.intervalPulse(DateTimePeriod(seconds = 5), TimeZone.UTC).take(1)
+        assertEquals(
+            expected = 0.seconds,
+            actual = testTimeSource.measureTime { pulse.beat { } }
+        )
     }
 
     @Test fun periodPulse_emits_subsequent_instants_after_delaying() = runTest {
-        testClock.intervalPulse(DateTimePeriod(seconds = 5), TimeZone.UTC).flow.test {
-            skipItems(1)
-            assertEquals(
-                expected = 5.seconds,
-                actual = testTimeSource.measureTime { awaitItem() }
-            )
-        }
+        val pulse = testClock.intervalPulse(DateTimePeriod(seconds = 5), TimeZone.UTC).take(2)
+        assertEquals(
+            expected = 5.seconds,
+            actual = testTimeSource.measureTime { pulse.beat { } }
+        )
     }
 }
