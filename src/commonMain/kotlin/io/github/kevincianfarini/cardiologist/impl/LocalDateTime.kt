@@ -3,6 +3,7 @@ package io.github.kevincianfarini.cardiologist.impl
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.number
+import kotlin.math.min
 
 internal fun LocalDateTime.nextMatch(
     atSeconds: IntRange = 0..59,
@@ -10,11 +11,27 @@ internal fun LocalDateTime.nextMatch(
     atHours: IntRange = 0..23,
     onDaysOfMonth: IntRange = 1..31,
     inMonths: ClosedRange<Month> = Month.JANUARY..Month.DECEMBER,
-): LocalDateTime = nextMonth(inMonths)
-    .nextDay(onDaysOfMonth, inMonths)
-    .nextHour(atHours, onDaysOfMonth, inMonths)
-    .nextMinute(atMinutes, atHours, onDaysOfMonth, inMonths)
-    .nextSecond(atSeconds, atMinutes, atHours, onDaysOfMonth, inMonths)
+): LocalDateTime {
+    // Ensure that the nextMatch of this LocalDateTime doesn't produce itself. If it does then increment the
+    // nanosecond component by one to ensure that we produce a match that's distinct from this value.
+    val time = if (matches(atSeconds, atMinutes, atHours, onDaysOfMonth, inMonths)) copy(nanosecond = 1) else this
+    return time.nextMonth(inMonths)
+        .nextDay(onDaysOfMonth, inMonths)
+        .nextHour(atHours, onDaysOfMonth, inMonths)
+        .nextMinute(atMinutes, atHours, onDaysOfMonth, inMonths)
+        .nextSecond(atSeconds, atMinutes, atHours, onDaysOfMonth, inMonths)
+}
+
+private fun LocalDateTime.matches(
+    atSeconds: IntRange = 0..59,
+    atMinutes: IntRange = 0..59,
+    atHours: IntRange = 0..23,
+    onDaysOfMonth: IntRange = 1..31,
+    inMonths: ClosedRange<Month> = Month.JANUARY..Month.DECEMBER,
+): Boolean {
+    return nanosecond == 0 && second in atSeconds && minute in atMinutes && hour in atHours
+            && dayOfMonth in onDaysOfMonth && month in inMonths
+}
 
 private fun LocalDateTime.nextMonth(
     inMonths: ClosedRange<Month>,
@@ -45,9 +62,8 @@ private fun LocalDateTime.nextMonth(
     }
 }
 
-private val MONTHS = Month.values()
 private operator fun Month.inc(): Month {
-    return MONTHS[(ordinal + 1) % 12]
+    return Month.entries[(ordinal + 1) % 12]
 }
 
 private fun LocalDateTime.nextDay(
