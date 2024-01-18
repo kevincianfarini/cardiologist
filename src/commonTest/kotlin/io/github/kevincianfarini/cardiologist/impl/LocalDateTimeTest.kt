@@ -16,6 +16,11 @@ class LocalDateTimeTest {
         nanosecond = 0,
     )
 
+    @Test fun does_not_match_to_equivalent_value() = assertEquals(
+        expected = stubDatetime.copy(second = 1),
+        actual = stubDatetime.nextMatch()
+    )
+
     @Test fun half_second_is_adjusted_up_to_second() = assertEquals(
         expected = stubDatetime.copy(second = 1),
         actual = stubDatetime.copy(nanosecond = 500).nextMatch(),
@@ -252,8 +257,5 @@ private fun LocalDateTime.nextMatchSequence(
     onDaysOfMonth: IntRange = 1..31,
     inMonths: ClosedRange<Month> = Month.JANUARY..Month.DECEMBER,
 ): Sequence<LocalDateTime> = generateSequence(seed = this) { seed ->
-    when (val next = seed.nextMatch(atSeconds, atMinutes, atHours, onDaysOfMonth, inMonths)) {
-        seed -> seed.copy(nanosecond = 1).nextMatch(atSeconds, atMinutes, atHours, onDaysOfMonth, inMonths)
-        else -> next
-    }
+    seed.nextMatch(atSeconds, atMinutes, atHours, onDaysOfMonth, inMonths)
 }
