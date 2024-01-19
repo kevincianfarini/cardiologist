@@ -3,7 +3,6 @@ package io.github.kevincianfarini.cardiologist.impl
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.number
-import kotlin.math.min
 
 internal fun LocalDateTime.nextMatch(
     atSeconds: IntRange = 0..59,
@@ -62,10 +61,6 @@ private fun LocalDateTime.nextMonth(
     }
 }
 
-private operator fun Month.inc(): Month {
-    return Month.entries[(ordinal + 1) % 12]
-}
-
 private fun LocalDateTime.nextDay(
     onDaysOfMonth: IntRange,
     inMonths: ClosedRange<Month>,
@@ -106,7 +101,12 @@ private fun LocalDateTime.nextHour(
         incrementedHour < hour -> nextDay(onDaysOfMonth, inMonths, increment = true).copy(hour = incrementedHour)
         incrementedHour in atHours -> copy(hour = incrementedHour)
         incrementedHour < atHours.first -> copy(hour = atHours.first, minute = 0, second = 0, nanosecond = 0)
-        incrementedHour > atHours.last -> nextDay(onDaysOfMonth, inMonths, increment = true).copy(hour = atHours.first)
+        incrementedHour > atHours.last -> nextDay(onDaysOfMonth, inMonths, increment = true).copy(
+            hour = atHours.first,
+            minute = 0,
+            second = 0,
+            nanosecond = 0,
+        )
         else -> error("This should be impossible.")
     }
 }
@@ -127,7 +127,9 @@ private fun LocalDateTime.nextMinute(
         incrementedMinute in atMinutes -> copy(minute = incrementedMinute)
         incrementedMinute < atMinutes.first -> copy(minute = atMinutes.first, second = 0, nanosecond = 0)
         incrementedMinute > atMinutes.last -> nextHour(atHours, onDaysOfMonth, inMonths, increment = true).copy(
-            minute = atMinutes.first
+            minute = atMinutes.first,
+            second = 0,
+            nanosecond = 0,
         )
         else -> error("This should be impossible.")
     }
@@ -189,3 +191,7 @@ internal fun LocalDateTime.copy(
     second: Int = this.second,
     nanosecond: Int = this.nanosecond,
 ) = LocalDateTime(year, monthNumber, dayOfMonth, hour, minute, second, nanosecond)
+
+private operator fun Month.inc(): Month {
+    return Month.entries[(ordinal + 1) % 12]
+}
