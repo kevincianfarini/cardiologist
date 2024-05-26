@@ -106,13 +106,19 @@ class SuspendingTests {
         val elapsed = testTimeSource.measureTime {
             clock.delayUntilNext(LocalTime(hour = 2, minute = 0), tz)
         }
-        val instant1 = LocalDateTime(year = 2023, monthNumber = 11, dayOfMonth = 5, hour = 1, minute = 0).toInstant(tz).also {
-            println("instant1: $it")
-        }
-        val instant2 = LocalDateTime(year = 2023, monthNumber = 11, dayOfMonth = 5, hour = 2, minute = 0).toInstant(tz).also {
-            println("instant2: $it")
-        }
-        println(instant2 - instant1)
+        val instant1 = LocalDateTime(year = 2023, monthNumber = 11, dayOfMonth = 5, hour = 5, minute = 0).toInstant(TimeZone.UTC)
+        val instant2 = LocalDateTime(year = 2023, monthNumber = 11, dayOfMonth = 5, hour = 7, minute = 0).toInstant(TimeZone.UTC)
+        val offset1 = instant1.offsetIn(tz)
+        val offset2 = instant2.offsetIn(tz)
+        println("The UTC offset in $tz at $instant1 is $offset1.")
+        println("The UTC offset in $tz at $instant2 is $offset2.")
         assertEquals(expected = 2.hours, actual = elapsed)
+    }
+
+    @Test fun utc_offset_is_correct() {
+        val tz = TimeZone.of("America/New_York")
+        val expected = Instant.parse("2023-11-05T07:00:00Z")
+        val actual = LocalDateTime(year = 2023, monthNumber = 11, dayOfMonth = 5, hour = 2, minute = 0).toInstant(tz)
+        assertEquals(expected, actual)
     }
 }
