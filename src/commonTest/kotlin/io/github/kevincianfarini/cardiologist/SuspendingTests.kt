@@ -3,10 +3,7 @@ package io.github.kevincianfarini.cardiologist
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.testTimeSource
-import kotlinx.datetime.DateTimePeriod
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.LocalTime
-import kotlinx.datetime.TimeZone
+import kotlinx.datetime.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.days
@@ -109,7 +106,13 @@ class SuspendingTests {
         val elapsed = testTimeSource.measureTime {
             clock.delayUntilNext(LocalTime(hour = 2, minute = 0), tz)
         }
-
+        val instant1 = LocalDateTime(year = 2023, monthNumber = 11, dayOfMonth = 5, hour = 1, minute = 0).toInstant(tz).also {
+            println("instant1: $it")
+        }
+        val instant2 = LocalDateTime(year = 2023, monthNumber = 11, dayOfMonth = 5, hour = 2, minute = 0).toInstant(tz).also {
+            println("instant2: $it")
+        }
+        println(instant2 - instant1)
         assertEquals(expected = 2.hours, actual = elapsed)
     }
 }
