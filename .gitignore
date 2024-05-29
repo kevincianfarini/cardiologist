@@ -2,3 +2,4 @@
 .gradle
 **/build
 local.properties
+.kotlin
