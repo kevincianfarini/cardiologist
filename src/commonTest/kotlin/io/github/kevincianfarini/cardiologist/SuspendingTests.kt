@@ -7,6 +7,7 @@ import kotlinx.datetime.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -41,7 +42,7 @@ class SuspendingTests {
         assertEquals(expected = 115.seconds, actual = elapsed)
     }
 
-    @Test fun delayUntil_considers_negative_time_drift() = runTest {
+    @Test fun considers_negative_time_drift() = runTest {
         val instants = listOf(
             Instant.fromEpochMilliseconds(0),
             Instant.fromEpochSeconds(55),
@@ -92,5 +93,45 @@ class SuspendingTests {
             testClock.delayFor(datePeriod, TimeZone.UTC)
         }
         assertEquals(expected = 1.days, actual = elapsed)
+    }
+
+    @Test fun delayUntilNext_simple_in_future_delays_for_proper_duration() = runTest {
+        val tz = TimeZone.UTC
+        val localDt = LocalDateTime(year = 2023, monthNumber = 10, dayOfMonth = 4, hour = 16, minute = 0)
+        val clock = testClockAt(localDt, tz)
+        val elapsed = testTimeSource.measureTime {
+            clock.delayUntilNext(LocalTime(hour = 17, minute = 0), tz)
+        }
+        assertEquals(expected = 1.hours, actual = elapsed)
+    }
+
+    @Test fun delayUntilNext_simple_in_past_delays_until_tomorrow_duration() = runTest {
+        val tz = TimeZone.UTC
+        val localDt = LocalDateTime(year = 2023, monthNumber = 10, dayOfMonth = 4, hour = 16, minute = 0)
+        val clock = testClockAt(localDt, tz)
+        val elapsed = testTimeSource.measureTime {
+            clock.delayUntilNext(LocalTime(hour = 14, minute = 0), tz)
+        }
+        assertEquals(expected = 22.hours, actual = elapsed)
+    }
+
+    @Test fun delayUntilNext_time_zone_switch_forwards_delays_proper_duration() = runTest {
+        val tz = TimeZone.of("America/New_York")
+        val localDt = LocalDateTime(year = 2023, monthNumber = 3, dayOfMonth = 12, hour = 1, minute = 0)
+        val clock = testClockAt(localDt, tz)
+        val elapsed = testTimeSource.measureTime {
+            clock.delayUntilNext(LocalTime(hour = 2, minute = 30), tz)
+        }
+        assertEquals(expected = 1.hours + 30.minutes, actual = elapsed)
+    }
+
+    @Test fun delayUntilNext_time_zone_switch_backwards_delays_proper_duration() = runTest {
+        val tz = TimeZone.of("America/New_York")
+        val localDt = LocalDateTime(year = 2023, monthNumber = 11, dayOfMonth = 5, hour = 1, minute = 0)
+        val clock = testClockAt(localDt, tz)
+        val elapsed = testTimeSource.measureTime {
+            clock.delayUntilNext(LocalTime(hour = 2, minute = 0), tz)
+        }
+        assertEquals(expected = 2.hours, actual = elapsed)
     }
 }

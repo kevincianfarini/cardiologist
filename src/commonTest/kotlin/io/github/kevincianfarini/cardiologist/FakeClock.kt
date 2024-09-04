@@ -15,6 +15,17 @@ private class TestClock(private val scheduler: TestCoroutineScheduler) : Clock {
 
 val TestScope.testClock: Clock get() = TestClock(testScheduler)
 
+@OptIn(ExperimentalCoroutinesApi::class)
+fun TestScope.testClockAt(instant: Instant): Clock {
+    val currentTime = Instant.fromEpochMilliseconds(currentTime)
+    advanceTimeBy(instant - currentTime)
+    return TestClock(testScheduler)
+}
+
+fun TestScope.testClockAt(localDateTime: LocalDateTime, timeZone: TimeZone): Clock {
+    return testClockAt(localDateTime.toInstant(timeZone))
+}
+
 private class QueueClock(private val instants: List<Instant>) : Clock {
     private var index = 0
     override fun now(): Instant = instants[index++]
