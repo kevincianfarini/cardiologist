@@ -1,6 +1,7 @@
 package io.github.kevincianfarini.cardiologist
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.testTimeSource
 import kotlinx.datetime.*
@@ -45,5 +46,9 @@ class PulseTests {
             expected = 5.seconds,
             actual = testTimeSource.measureTime { pulse.beat { } }
         )
+    }
+
+    @Test fun superTest() = runBlocking {
+
     }
 }

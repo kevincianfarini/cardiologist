@@ -1,6 +1,5 @@
 package io.github.kevincianfarini.cardiologist
 
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.datetime.*
 import io.github.kevincianfarini.cardiologist.impl.nextMatch
@@ -12,8 +11,9 @@ import kotlin.time.Duration
 public fun Clock.intervalPulse(interval: Duration): Pulse {
     val flow = flow {
         while (true) {
-            emit(now())
-            delay(interval)
+            val now = now()
+            emit(now)
+            delayUntil(now + interval)
         }
     }
     return Pulse(flow)
