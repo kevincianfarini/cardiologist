@@ -1,19 +1,28 @@
 package io.github.kevincianfarini.cardiologist
 
-import kotlinx.coroutines.flow.flow
-import kotlinx.datetime.*
 import io.github.kevincianfarini.cardiologist.impl.nextMatch
 import kotlin.time.Duration
+import kotlinx.coroutines.flow.flow
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimePeriod
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.Month
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 
 /**
- * Return a [Pulse] which beats every [interval]. The return value will immediately beat prior to delaying.
+ * Return a [Pulse] which beats every [interval]. The returned [Pulse] will delay prior to its first
+ * [Pulse.beat].
  */
 public fun Clock.intervalPulse(interval: Duration): Pulse {
     val flow = flow {
         var nextPulse: Instant = now() + interval
         while (true) {
-            emit(now())
             delayUntil(nextPulse)
+            emit(Pair(nextPulse, now()))
             nextPulse += interval
         }
     }
@@ -21,14 +30,15 @@ public fun Clock.intervalPulse(interval: Duration): Pulse {
 }
 
 /**
- * Return a [Pulse] which beats every [period] in [timeZone]. The return value will immediately beat prior to delaying.
+ * Return a [Pulse] which beats every [period] in [timeZone]. The returned [Pulse] will delay prior to its first
+ * [Pulse.beat].
  */
 public fun Clock.intervalPulse(period: DateTimePeriod, timeZone: TimeZone): Pulse {
     val flow = flow {
         var nextPulse: Instant = now().plus(period, timeZone)
         while (true) {
-            emit(now())
             delayUntil(nextPulse)
+            emit(Pair(nextPulse, now()))
             nextPulse = nextPulse.plus(period, timeZone)
         }
     }
@@ -82,7 +92,7 @@ public fun Clock.schedulePulse(
                 inMonths = inMonth?.let { it..it } ?: Month.JANUARY..Month.DECEMBER,
             )
             delayUntil(nextPulse, timeZone)
-            emit(now())
+            emit(Pair(nextPulse.toInstant(timeZone), now()))
             lastPulse = nextPulse
         }
     }
