@@ -44,6 +44,5 @@ public value class Pulse internal constructor(private val flow: Flow<Instant>) {
                 }
             }
         }
-        RecurringJobMode.DelayBetweenSequential -> flow.collect(action)
     }
 }

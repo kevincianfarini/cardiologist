@@ -1,6 +1,8 @@
 package io.github.kevincianfarini.cardiologist
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.testTimeSource
 import kotlinx.datetime.*
@@ -10,7 +12,7 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 
-@OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class)
 class PulseTests {
 
     @Test fun durationPulse_emits_initial_instant_before_delaying() = runTest {

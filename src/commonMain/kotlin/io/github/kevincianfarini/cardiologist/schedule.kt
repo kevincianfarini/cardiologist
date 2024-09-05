@@ -1,6 +1,5 @@
 package io.github.kevincianfarini.cardiologist
 
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.datetime.*
 import io.github.kevincianfarini.cardiologist.impl.nextMatch
@@ -11,9 +10,11 @@ import kotlin.time.Duration
  */
 public fun Clock.intervalPulse(interval: Duration): Pulse {
     val flow = flow {
+        var nextPulse: Instant = now() + interval
         while (true) {
             emit(now())
-            delay(interval)
+            delayUntil(nextPulse)
+            nextPulse += interval
         }
     }
     return Pulse(flow)
@@ -24,9 +25,11 @@ public fun Clock.intervalPulse(interval: Duration): Pulse {
  */
 public fun Clock.intervalPulse(period: DateTimePeriod, timeZone: TimeZone): Pulse {
     val flow = flow {
+        var nextPulse: Instant = now().plus(period, timeZone)
         while (true) {
             emit(now())
-            delayFor(period, timeZone)
+            delayUntil(nextPulse)
+            nextPulse = nextPulse.plus(period, timeZone)
         }
     }
     return Pulse(flow)
@@ -36,7 +39,7 @@ public fun Clock.intervalPulse(period: DateTimePeriod, timeZone: TimeZone): Puls
  * Schedule a [Pulse] whose beats occur [atSecond], [atMinute], [atHour], [onDayOfMonth], and [inMonth] for a specific
  * [timeZone].
  *
- * Null values for any parameter indiciates that a beat can occur on _any_ second, minute, hour, etc. For example,
+ * Null values for any parameter indicate that a beat can occur on _any_ second, minute, hour, etc. For example,
  * scheduling a pulse on the fifth second of every minute would look like the following:
  *
  * ```kt
@@ -69,9 +72,9 @@ public fun Clock.schedulePulse(
     inMonth: Month? = null,
 ): Pulse {
     val flow = flow {
+        var lastPulse: LocalDateTime = now().toLocalDateTime(timeZone)
         while (true) {
-            val nowLocal = now().toLocalDateTime(timeZone)
-            val nextPulse = nowLocal.nextMatch(
+            val nextPulse = lastPulse.nextMatch(
                 atSeconds = atSecond?.let { it..it } ?: 0..59,
                 atMinutes = atMinute?.let { it..it } ?: 0..59,
                 atHours = atHour?.let { it..it } ?: 0..23,
@@ -80,6 +83,7 @@ public fun Clock.schedulePulse(
             )
             delayUntil(nextPulse, timeZone)
             emit(now())
+            lastPulse = nextPulse
         }
     }
     return Pulse(flow)
