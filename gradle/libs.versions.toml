@@ -3,7 +3,7 @@ dokka = "1.9.20"
 kotlin = "2.0.20"
 kotlinx-coroutines = "1.9.0"
 kotlinx-datetime = "0.6.1"
-publish = "0.29.0"
+publish = "0.30.0"
 
 [libraries]
 kotlin-test-core = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
