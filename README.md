@@ -17,6 +17,17 @@ The time in America/New_York is 2023-10-07T19:52:00.
 The time in America/New_York is 2023-10-07T19:53:00.
 ```
 
+## Download 
+
+```toml
+[versions]
+cardiologist = "0.3.0"
+
+[libraries]
+alchemist = { module = "io.github.kevincianfarini.cardiologist:cardiologist", version.ref = "cardiologist" }
+
+```
+
 ## Introduction 
 
 Cardiologist integrates with kotlinx-datetime to provide you scheduling based on `Instant`, `LocalDateTime`, 
