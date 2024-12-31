@@ -2,6 +2,7 @@ import com.vanniktech.maven.publish.SonatypeHost
 
 plugins {
     alias(libs.plugins.dokka)
+    alias(libs.plugins.kmpmt)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.publish)
 }
@@ -10,6 +11,10 @@ kotlin {
 
     explicitApi()
 
+    androidNativeArm32()
+    androidNativeArm64()
+    androidNativeX64()
+    androidNativeX86()
     iosArm64()
     iosSimulatorArm64()
     iosX64()
@@ -51,4 +56,9 @@ tasks.withType<AbstractTestTask> {
 mavenPublishing {
     publishToMavenCentral(host = SonatypeHost.S01, automaticRelease = true)
     signAllPublications()
+}
+
+kotlinMissingTargets {
+    ignore("js", because = "I need to set up js-joda.")
+    ignore("wasmJs", because = "I need to set up js-joda.")
 }

@@ -1,5 +1,6 @@
 [versions]
 dokka = "2.0.0"
+kmpmt = "0.1.1"
 kotlin = "2.1.0"
 kotlinx-coroutines = "1.10.1"
 kotlinx-datetime = "0.6.1"
@@ -12,6 +13,7 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 
 [plugins]
-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+kmpmt = { id = "com.jakewharton.kmp-missing-targets", version.ref = "kmpmt" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 publish = { id = "com.vanniktech.maven.publish", version.ref = "publish" }
