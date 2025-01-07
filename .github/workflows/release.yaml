@@ -24,7 +24,7 @@ jobs:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALUSERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_MAVENCENTRALPASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
-        run: ./gradlew dokkaHtml publish
+        run: ./gradlew dokkaGenerate publish
 
       - name: Deploy docs to website
         uses: JamesIves/github-pages-deploy-action@releases/v3
