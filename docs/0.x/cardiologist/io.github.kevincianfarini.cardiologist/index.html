@@ -26,42 +26,85 @@
 <link href="../../styles/prism.css" rel="Stylesheet">
 <link href="../../styles/logo-styles.css" rel="Stylesheet">
 <link href="../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<link href="../../ui-kit/ui-kit.min.css" rel="Stylesheet">
 <script type="text/javascript" src="../../scripts/clipboard.js" async="async"></script>
 <script type="text/javascript" src="../../scripts/navigation-loader.js" async="async"></script>
 <script type="text/javascript" src="../../scripts/platform-content-handler.js" async="async"></script>
 <script type="text/javascript" src="../../scripts/main.js" defer="defer"></script>
 <script type="text/javascript" src="../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../ui-kit/ui-kit.min.js" defer="defer"></script>
 <script type="text/javascript" src="../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
 </head>
 <body>
     <div class="root">
-<nav class="navigation" id="navigation-wrapper">
-    <div class="navigation--inner">
-        <div class="navigation-title">
-            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
-            <div class="library-name">
-                    <a class="library-name--link" href="../../index.html">
-                            cardiologist
-                    </a>
-            </div>
-            <div class="library-version">
+    <nav class="navigation theme-dark" id="navigation-wrapper">
+            <a class="library-name--link" href="../../index.html">
+                    cardiologist
+            </a>
+        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle"
+                type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">
+        </div>
+        <div class="navigation-controls">
+        <div class="filter-section filter-section_loading" id="filter-section">
+                <button class="platform-tag platform-selector common-like" data-active=""
+                        data-filter=":/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox"
+                        data-role="dropdown-toggle"
+                        aria-controls="platform-tags-listbox"
+                        aria-haspopup="listbox"
+                        aria-expanded="false"
+                        aria-label="Toggle source sets"
+                ></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
+                    <div class="dropdown--header"><span>Platform filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close platform filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":/commonMain"
+                                       data-filter=":/commonMain"/>
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
             </div>
         </div>
-        <div class="filter-section" id="filter-section">
-                <button class="platform-tag platform-selector common-like" data-active="" data-filter=":dokkaHtml/commonMain">common</button>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button"
+                    type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
         </div>
-    </div>
-    <div class="navigation-controls">
-        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
-        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
-    </div>
-</nav>
+    </nav>
         <div id="container">
             <div class="sidebar" id="leftColumn">
-                <div class="sidebar--inner" id="sideMenu"></div>
+                <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                    <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list"
+                        data-role="dropdown-listbox">
+                        <div class="dropdown--header">
+                            <span>
+                                    cardiologist
+                            </span>
+                            <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                                <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                            </button>
+                        </div>
+                        <div class="sidebar--inner" id="sideMenu"></div>
+                    </ul>
+                    <div class="dropdown--overlay"></div>
+                </div>
             </div>
             <div id="main">
-<div class="main-content" data-page-type="package" id="content" pageIds="cardiologist::io.github.kevincianfarini.cardiologist////PointingToDeclaration//788909594">
+<div class="main-content" data-page-type="package" id="content" pageIds="cardiologist::io.github.kevincianfarini.cardiologist////PointingToDeclaration//1558683979">
   <div class="breadcrumbs"><a href="../../index.html">cardiologist</a><span class="delimiter">/</span><span class="current">io.github.kevincianfarini.cardiologist</span></div>
   <div class="cover ">
     <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
@@ -71,32 +114,32 @@
     <div class="tabs-section-body">
       <div data-togglable="TYPE">
         <h2 class="">Types</h2>
-        <div class="table"><a data-name="1784163355%2FClasslikes%2F788909594" anchor-label="Pulse" id="1784163355%2FClasslikes%2F788909594" data-filterable-set=":dokkaHtml/commonMain"></a>
-          <div class="table-row" data-filterable-current=":dokkaHtml/commonMain" data-filterable-set=":dokkaHtml/commonMain">
+        <div class="table"><a data-name="1784163355%2FClasslikes%2F1558683979" anchor-label="Pulse" id="1784163355%2FClasslikes%2F1558683979" data-filterable-set=":/commonMain"></a>
+          <div class="table-row" data-filterable-current=":/commonMain" data-filterable-set=":/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-pulse/index.html"><span><span>Pulse</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1784163355%2FClasslikes%2F788909594"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1784163355%2FClasslikes%2F1558683979"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-inline/index.html"><span class="token annotation builtin">JvmInline</span></a></div></div><span class="token keyword">value </span><span class="token keyword">class </span><a href="-pulse/index.html">Pulse</a></div><div class="brief "><p class="paragraph">A <a href="-pulse/index.html">Pulse</a> is a cadence which informs consumers when to execute work by calling <a href="-pulse/beat.html">Pulse.beat</a>.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":/commonMain"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.jvm/-jvm-inline/index.html"><span class="token annotation builtin">JvmInline</span></a></div></div><span class="token keyword">value </span><span class="token keyword">class </span><a href="-pulse/index.html">Pulse</a></div><div class="brief "><p class="paragraph">A <a href="-pulse/index.html">Pulse</a> is a cadence which informs consumers when to execute work by calling <a href="-pulse/beat.html">Pulse.beat</a>.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="308806379%2FClasslikes%2F788909594" anchor-label="RecurringJobMode" id="308806379%2FClasslikes%2F788909594" data-filterable-set=":dokkaHtml/commonMain"></a>
-          <div class="table-row" data-filterable-current=":dokkaHtml/commonMain" data-filterable-set=":dokkaHtml/commonMain">
+<a data-name="308806379%2FClasslikes%2F1558683979" anchor-label="RecurringJobMode" id="308806379%2FClasslikes%2F1558683979" data-filterable-set=":/commonMain"></a>
+          <div class="table-row" data-filterable-current=":/commonMain" data-filterable-set=":/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="-recurring-job-mode/index.html"><span>Recurring</span><wbr></wbr><span>Job</span><wbr></wbr><span><span>Mode</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="308806379%2FClasslikes%2F788909594"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="308806379%2FClasslikes%2F1558683979"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-recurring-job-mode/index.html">RecurringJobMode</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="-recurring-job-mode/index.html">RecurringJobMode</a><span class="token operator">&gt; </span></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":/commonMain"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-recurring-job-mode/index.html">RecurringJobMode</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="-recurring-job-mode/index.html">RecurringJobMode</a><span class="token operator">&gt; </span></div></div></div>
                 </div>
               </div>
             </div>
@@ -105,77 +148,77 @@
       </div>
       <div data-togglable="EXTENSION_FUNCTION">
         <h2 class="">Functions</h2>
-        <div class="table"><a data-name="1580576443%2FFunctions%2F788909594" anchor-label="delayFor" id="1580576443%2FFunctions%2F788909594" data-filterable-set=":dokkaHtml/commonMain"></a>
-          <div class="table-row" data-filterable-current=":dokkaHtml/commonMain" data-filterable-set=":dokkaHtml/commonMain">
+        <div class="table"><a data-name="1580576443%2FFunctions%2F1558683979" anchor-label="delayFor" id="1580576443%2FFunctions%2F1558683979" data-filterable-set=":/commonMain"></a>
+          <div class="table-row" data-filterable-current=":/commonMain" data-filterable-set=":/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="delay-for.html"><span>delay</span><wbr></wbr><span><span>For</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1580576443%2FFunctions%2F788909594"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1580576443%2FFunctions%2F1558683979"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><span data-unresolved-link="kotlinx.datetime/Clock///PointingToDeclaration/">Clock</span><span class="token punctuation">.</span><a href="delay-for.html"><span class="token function">delayFor</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">period<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/DateTimePeriod///PointingToDeclaration/">DateTimePeriod</span><span class="token punctuation">, </span></span><span class="parameter ">timeZone<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/TimeZone///PointingToDeclaration/">TimeZone</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Suspend the coroutine for <a href="delay-for.html">period</a> in <a href="delay-for.html">timeZone</a> without blocking the thread.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><span data-unresolved-link="kotlinx.datetime/Clock///PointingToDeclaration/">Clock</span><span class="token punctuation">.</span><a href="delay-for.html"><span class="token function">delayFor</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">period<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/DateTimePeriod///PointingToDeclaration/">DateTimePeriod</span><span class="token punctuation">, </span></span><span class="parameter ">timeZone<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/TimeZone///PointingToDeclaration/">TimeZone</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Suspend the coroutine for <a href="delay-for.html">period</a> in <a href="delay-for.html">timeZone</a> without blocking the thread.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1275444587%2FFunctions%2F788909594" anchor-label="delayUntil" id="-1275444587%2FFunctions%2F788909594" data-filterable-set=":dokkaHtml/commonMain"></a>
-          <div class="table-row" data-filterable-current=":dokkaHtml/commonMain" data-filterable-set=":dokkaHtml/commonMain">
+<a data-name="-1275444587%2FFunctions%2F1558683979" anchor-label="delayUntil" id="-1275444587%2FFunctions%2F1558683979" data-filterable-set=":/commonMain"></a>
+          <div class="table-row" data-filterable-current=":/commonMain" data-filterable-set=":/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="delay-until.html"><span>delay</span><wbr></wbr><span><span>Until</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1275444587%2FFunctions%2F788909594"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1275444587%2FFunctions%2F1558683979"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><span data-unresolved-link="kotlinx.datetime/Clock///PointingToDeclaration/">Clock</span><span class="token punctuation">.</span><a href="delay-until.html"><span class="token function">delayUntil</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">instant<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/Instant///PointingToDeclaration/">Instant</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Suspend the coroutine until <a href="delay-until.html">instant</a> without blocking the thread. If <span data-unresolved-link="kotlinx.datetime/Clock/now/#/PointingToDeclaration/">Clock.now</span> is greater than <a href="delay-until.html">instant</a>, this function returns immediately.</p></div><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><span data-unresolved-link="kotlinx.datetime/Clock///PointingToDeclaration/">Clock</span><span class="token punctuation">.</span><a href="delay-until.html"><span class="token function">delayUntil</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">dateTime<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/LocalDateTime///PointingToDeclaration/">LocalDateTime</span><span class="token punctuation">, </span></span><span class="parameter ">timeZone<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/TimeZone///PointingToDeclaration/">TimeZone</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Suspend the coroutine until <a href="delay-until.html">dateTime</a> in <a href="delay-until.html">timeZone</a> without blocking the thread. If <span data-unresolved-link="kotlinx.datetime/Clock/now/#/PointingToDeclaration/">Clock.now</span> is greater than the <span data-unresolved-link="kotlinx.datetime/Instant///PointingToDeclaration/">Instant</span> associated with <a href="delay-until.html">dateTime</a> and <a href="delay-until.html">timeZone</a>, this function returns immediately.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><span data-unresolved-link="kotlinx.datetime/Clock///PointingToDeclaration/">Clock</span><span class="token punctuation">.</span><a href="delay-until.html"><span class="token function">delayUntil</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">instant<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/Instant///PointingToDeclaration/">Instant</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Suspend the coroutine until <a href="delay-until.html">instant</a> without blocking the thread. If <span data-unresolved-link="kotlinx.datetime/Clock/now/#/PointingToDeclaration/">Clock.now</span> is greater than <a href="delay-until.html">instant</a>, this function returns immediately.</p></div><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><span data-unresolved-link="kotlinx.datetime/Clock///PointingToDeclaration/">Clock</span><span class="token punctuation">.</span><a href="delay-until.html"><span class="token function">delayUntil</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">dateTime<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/LocalDateTime///PointingToDeclaration/">LocalDateTime</span><span class="token punctuation">, </span></span><span class="parameter ">timeZone<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/TimeZone///PointingToDeclaration/">TimeZone</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Suspend the coroutine until <a href="delay-until.html">dateTime</a> in <a href="delay-until.html">timeZone</a> without blocking the thread. If <span data-unresolved-link="kotlinx.datetime/Clock/now/#/PointingToDeclaration/">Clock.now</span> is greater than the <span data-unresolved-link="kotlinx.datetime/Instant///PointingToDeclaration/">Instant</span> associated with <a href="delay-until.html">dateTime</a> and <a href="delay-until.html">timeZone</a>, this function returns immediately.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1869307513%2FFunctions%2F788909594" anchor-label="delayUntilNext" id="-1869307513%2FFunctions%2F788909594" data-filterable-set=":dokkaHtml/commonMain"></a>
-          <div class="table-row" data-filterable-current=":dokkaHtml/commonMain" data-filterable-set=":dokkaHtml/commonMain">
+<a data-name="-1869307513%2FFunctions%2F1558683979" anchor-label="delayUntilNext" id="-1869307513%2FFunctions%2F1558683979" data-filterable-set=":/commonMain"></a>
+          <div class="table-row" data-filterable-current=":/commonMain" data-filterable-set=":/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="delay-until-next.html"><span>delay</span><wbr></wbr><span>Until</span><wbr></wbr><span><span>Next</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1869307513%2FFunctions%2F788909594"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1869307513%2FFunctions%2F1558683979"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><span data-unresolved-link="kotlinx.datetime/Clock///PointingToDeclaration/">Clock</span><span class="token punctuation">.</span><a href="delay-until-next.html"><span class="token function">delayUntilNext</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">time<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/LocalTime///PointingToDeclaration/">LocalTime</span><span class="token punctuation">, </span></span><span class="parameter ">timeZone<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/TimeZone///PointingToDeclaration/">TimeZone</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Suspend the coroutine until the next occurance of <a href="delay-until-next.html">time</a> in <a href="delay-until-next.html">timeZone</a> without blocking the thread.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><span data-unresolved-link="kotlinx.datetime/Clock///PointingToDeclaration/">Clock</span><span class="token punctuation">.</span><a href="delay-until-next.html"><span class="token function">delayUntilNext</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">time<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/LocalTime///PointingToDeclaration/">LocalTime</span><span class="token punctuation">, </span></span><span class="parameter ">timeZone<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/TimeZone///PointingToDeclaration/">TimeZone</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Suspend the coroutine until the next occurance of <a href="delay-until-next.html">time</a> in <a href="delay-until-next.html">timeZone</a> without blocking the thread.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1627494594%2FFunctions%2F788909594" anchor-label="intervalPulse" id="-1627494594%2FFunctions%2F788909594" data-filterable-set=":dokkaHtml/commonMain"></a>
-          <div class="table-row" data-filterable-current=":dokkaHtml/commonMain" data-filterable-set=":dokkaHtml/commonMain">
+<a data-name="-1627494594%2FFunctions%2F1558683979" anchor-label="intervalPulse" id="-1627494594%2FFunctions%2F1558683979" data-filterable-set=":/commonMain"></a>
+          <div class="table-row" data-filterable-current=":/commonMain" data-filterable-set=":/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="interval-pulse.html"><span>interval</span><wbr></wbr><span><span>Pulse</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1627494594%2FFunctions%2F788909594"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1627494594%2FFunctions%2F1558683979"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="kotlinx.datetime/Clock///PointingToDeclaration/">Clock</span><span class="token punctuation">.</span><a href="interval-pulse.html"><span class="token function">intervalPulse</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">interval<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-pulse/index.html">Pulse</a></div><div class="brief "><p class="paragraph">Return a <a href="-pulse/index.html">Pulse</a> which beats every <a href="interval-pulse.html">interval</a>. The returned <a href="-pulse/index.html">Pulse</a> will delay prior to its first <a href="-pulse/beat.html">Pulse.beat</a>.</p></div><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="kotlinx.datetime/Clock///PointingToDeclaration/">Clock</span><span class="token punctuation">.</span><a href="interval-pulse.html"><span class="token function">intervalPulse</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">period<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/DateTimePeriod///PointingToDeclaration/">DateTimePeriod</span><span class="token punctuation">, </span></span><span class="parameter ">timeZone<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/TimeZone///PointingToDeclaration/">TimeZone</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-pulse/index.html">Pulse</a></div><div class="brief "><p class="paragraph">Return a <a href="-pulse/index.html">Pulse</a> which beats every <a href="interval-pulse.html">period</a> in <a href="interval-pulse.html">timeZone</a>. The returned <a href="-pulse/index.html">Pulse</a> will delay prior to its first <a href="-pulse/beat.html">Pulse.beat</a>.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="kotlinx.datetime/Clock///PointingToDeclaration/">Clock</span><span class="token punctuation">.</span><a href="interval-pulse.html"><span class="token function">intervalPulse</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">interval<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.time/-duration/index.html">Duration</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-pulse/index.html">Pulse</a></div><div class="brief "><p class="paragraph">Return a <a href="-pulse/index.html">Pulse</a> which beats every <a href="interval-pulse.html">interval</a>. The returned <a href="-pulse/index.html">Pulse</a> will delay prior to its first <a href="-pulse/beat.html">Pulse.beat</a>.</p></div><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="kotlinx.datetime/Clock///PointingToDeclaration/">Clock</span><span class="token punctuation">.</span><a href="interval-pulse.html"><span class="token function">intervalPulse</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">period<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/DateTimePeriod///PointingToDeclaration/">DateTimePeriod</span><span class="token punctuation">, </span></span><span class="parameter ">timeZone<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/TimeZone///PointingToDeclaration/">TimeZone</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-pulse/index.html">Pulse</a></div><div class="brief "><p class="paragraph">Return a <a href="-pulse/index.html">Pulse</a> which beats every <a href="interval-pulse.html">period</a> in <a href="interval-pulse.html">timeZone</a>. The returned <a href="-pulse/index.html">Pulse</a> will delay prior to its first <a href="-pulse/beat.html">Pulse.beat</a>.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-248265324%2FFunctions%2F788909594" anchor-label="schedulePulse" id="-248265324%2FFunctions%2F788909594" data-filterable-set=":dokkaHtml/commonMain"></a>
-          <div class="table-row" data-filterable-current=":dokkaHtml/commonMain" data-filterable-set=":dokkaHtml/commonMain">
+<a data-name="-248265324%2FFunctions%2F1558683979" anchor-label="schedulePulse" id="-248265324%2FFunctions%2F1558683979" data-filterable-set=":/commonMain"></a>
+          <div class="table-row" data-filterable-current=":/commonMain" data-filterable-set=":/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="schedule-pulse.html"><span>schedule</span><wbr></wbr><span><span>Pulse</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-248265324%2FFunctions%2F788909594"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-248265324%2FFunctions%2F1558683979"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":dokkaHtml/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="kotlinx.datetime/Clock///PointingToDeclaration/">Clock</span><span class="token punctuation">.</span><a href="schedule-pulse.html"><span class="token function">schedulePulse</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">timeZone<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/TimeZone///PointingToDeclaration/">TimeZone</span><span class="token operator"> = </span>TimeZone.UTC<span class="token punctuation">, </span></span><span class="parameter ">atSecond<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">atMinute<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">atHour<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">onDayOfMonth<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">inMonth<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/Month///PointingToDeclaration/">Month</span><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-pulse/index.html">Pulse</a></div><div class="brief "><p class="paragraph">Schedule a <a href="-pulse/index.html">Pulse</a> whose beats occur <a href="schedule-pulse.html">atSecond</a>, <a href="schedule-pulse.html">atMinute</a>, <a href="schedule-pulse.html">atHour</a>, <a href="schedule-pulse.html">onDayOfMonth</a>, and <a href="schedule-pulse.html">inMonth</a> for a specific <a href="schedule-pulse.html">timeZone</a>.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><span data-unresolved-link="kotlinx.datetime/Clock///PointingToDeclaration/">Clock</span><span class="token punctuation">.</span><a href="schedule-pulse.html"><span class="token function">schedulePulse</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">timeZone<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/TimeZone///PointingToDeclaration/">TimeZone</span><span class="token operator"> = </span>TimeZone.UTC<span class="token punctuation">, </span></span><span class="parameter ">atSecond<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">atMinute<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">atHour<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">onDayOfMonth<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">inMonth<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/Month///PointingToDeclaration/">Month</span><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="-pulse/index.html">Pulse</a></div><div class="brief "><p class="paragraph">Schedule a <a href="-pulse/index.html">Pulse</a> whose beats occur <a href="schedule-pulse.html">atSecond</a>, <a href="schedule-pulse.html">atMinute</a>, <a href="schedule-pulse.html">atHour</a>, <a href="schedule-pulse.html">onDayOfMonth</a>, and <a href="schedule-pulse.html">inMonth</a> for a specific <a href="schedule-pulse.html">timeZone</a>.</p></div></div></div>
                 </div>
               </div>
             </div>
@@ -185,11 +228,16 @@
     </div>
   </div>
 </div>
-      <div class="footer">
-        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span
-                class="pull-right"><span>Generated by </span><a
-                href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
-      </div>
+    <div class="footer">
+        <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+        <span>© 2025 Copyright</span>
+        <span class="pull-right">
+            <span>Generated by </span>
+            <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                <span>dokka</span>
+            </a>
+        </span>
+    </div>
             </div>
         </div>
     </div>
