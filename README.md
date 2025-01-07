@@ -21,7 +21,7 @@ The time in America/New_York is 2023-10-07T19:53:00.
 
 ```toml
 [versions]
-cardiologist = "0.3.0"
+cardiologist = "0.3.1"
 
 [libraries]
 cardiologist = { module = "io.github.kevincianfarini.cardiologist:cardiologist", version.ref = "cardiologist" }
