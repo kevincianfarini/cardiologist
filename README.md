@@ -4,17 +4,19 @@ Build job schedules with [kotlinx-datetime](https://github.com/Kotlin/kotlinx-da
 
 ```kt
 val tz = TimeZone.of("America/New_York")
-Clock.System.schedulePulse(atSecond = 0).beat { instant ->
-    println("The time in $tz is ${instant.toLocalDateTime(tz)}.")
+Clock.System.schedulePulse(atSecond = 0).beat { scheduled, occurred ->
+    println("A pulse was scheduled in $tz for ${scheduled.toLocalDateTime(tz)} and occurred at ${occurred.toLocalDateTime(tz)}.")
 }
 ```
 
 ```
-The time in America/New_York is 2023-10-07T19:49:00.
-The time in America/New_York is 2023-10-07T19:50:00.
-The time in America/New_York is 2023-10-07T19:51:00.
-The time in America/New_York is 2023-10-07T19:52:00.
-The time in America/New_York is 2023-10-07T19:53:00.
+A pulse was scheduled in America/New_York for 2025-01-11T08:41 and occurred at 2025-01-11T08:41:00.005227606
+A pulse was scheduled in America/New_York for 2025-01-11T08:42 and occurred at 2025-01-11T08:42:00.001463582
+A pulse was scheduled in America/New_York for 2025-01-11T08:43 and occurred at 2025-01-11T08:43:00.001028731
+A pulse was scheduled in America/New_York for 2025-01-11T08:44 and occurred at 2025-01-11T08:44:00.001037604
+A pulse was scheduled in America/New_York for 2025-01-11T08:45 and occurred at 2025-01-11T08:45:00.001025281
+A pulse was scheduled in America/New_York for 2025-01-11T08:46 and occurred at 2025-01-11T08:46:00.001062597
+A pulse was scheduled in America/New_York for 2025-01-11T08:47 and occurred at 2025-01-11T08:47:00.000846953
 ```
 
 ## Download 
