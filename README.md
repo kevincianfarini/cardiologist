@@ -85,8 +85,8 @@ scheduledPulse.beat { instant -> println("$instant") }
 ```
 
 Beating a pulse is a backpressure sensitive operation. If your job has not completed when the next 
-pulse is scheduled to occur, it will by default be cancelled. Cardiologist provides two other modes 
-to beat a pulse which allow jobs to run concurrently or apply backpressure. 
+pulse is scheduled to occur, it will by default be cancelled. Cardiologist provides another mode 
+to beat a pulse which allow jobs to run concurrently. 
 
 ```kt
 import io.github.kevincianfarini.cardiologist.RecurringJobMode.*
@@ -96,9 +96,6 @@ hourlyPulse.beat(mode = CancellingSequential) { instant -> longRunningOperation(
         
 // Allows jobs to run concurrently if previous job is still active. 
 hourlyPulse.beat(mode = Concurrent) { instant -> longRunningOperation(instant) }
-
-// Will not emit again until previous job finishes, applying backpressure.  
-hourlyPulse.beat(mode = DelayBetweenSequential) { instant -> longRunningOperation(instant) }
 ```
 
 
