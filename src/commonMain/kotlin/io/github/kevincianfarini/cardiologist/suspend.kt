@@ -17,8 +17,7 @@ import kotlinx.datetime.toLocalDateTime
  * Suspend the coroutine until [instant] without blocking the thread. If [Clock.now] is greater than [instant], this
  * function returns immediately.
  *
- * This function checks for time drift in one minute increments. Coroutines delayed for more than one minute will be
- * periodically resumed, allowing them to account for drift.
+ * Coroutines delayed for more than one minute will occassionally be resumed to account for clock drift.
  */
 public suspend fun Clock.delayUntil(instant: Instant) {
     var now = now()
@@ -34,8 +33,7 @@ public suspend fun Clock.delayUntil(instant: Instant) {
  * Suspend the coroutine until [dateTime] in [timeZone] without blocking the thread. If [Clock.now] is greater than
  * the [Instant] associated with [dateTime] and [timeZone], this function returns immediately.
  *
- * This function checks for time drift in one minute increments. Coroutines delayed for more than one minute will be
- * periodically resumed, allowing them to account for drift.
+ * Coroutines delayed for more than one minute will occassionally be resumed to account for clock drift.
  */
 public suspend fun Clock.delayUntil(dateTime: LocalDateTime, timeZone: TimeZone) {
     delayUntil(instant = dateTime.toInstant(timeZone))
@@ -44,8 +42,7 @@ public suspend fun Clock.delayUntil(dateTime: LocalDateTime, timeZone: TimeZone)
 /**
  * Suspend the coroutine for [period] in [timeZone] without blocking the thread.
  *
- * This function checks for time drift in one minute increments. Coroutines delayed for more than one minute will be
- * periodically resumed, allowing them to account for drift.
+ * Coroutines delayed for more than one minute will occassionally be resumed to account for clock drift.
  */
 public suspend fun Clock.delayFor(period: DateTimePeriod, timeZone: TimeZone) {
     val now = now()
@@ -56,8 +53,7 @@ public suspend fun Clock.delayFor(period: DateTimePeriod, timeZone: TimeZone) {
 /**
  * Suspend the coroutine until the next occurance of [time] in [timeZone] without blocking the thread.
  *
- * This function checks for time drift in one minute increments. Coroutines delayed for more than one minute will be
- * periodically resumed, allowing them to account for drift.
+ * Coroutines delayed for more than one minute will occassionally be resumed to account for clock drift.
  */
 public suspend fun Clock.delayUntilNext(time: LocalTime, timeZone: TimeZone) {
     val now = now()
