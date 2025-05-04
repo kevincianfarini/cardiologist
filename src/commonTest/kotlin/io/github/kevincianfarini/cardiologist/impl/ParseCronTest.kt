@@ -24,7 +24,7 @@ class ParseCronTest {
                 atMinutes = (0..59).toSet(),
                 atHours = (0..23).toSet(),
                 onDaysOfMonth = (1..31).toSet(),
-                onDaysOfWeek = DayOfWeek.entries.toSet(),
+                onDaysOfWeek = emptySet(),
                 inMonths = Month.entries.toSet(),
             ),
             actual = "* * * * *".parseCronExpression()
@@ -38,7 +38,7 @@ class ParseCronTest {
                 atMinutes = (0..59).toSet(),
                 atHours = (0..23).toSet(),
                 onDaysOfMonth = (1..31).toSet(),
-                onDaysOfWeek = DayOfWeek.entries.toSet(),
+                onDaysOfWeek = emptySet(),
                 inMonths = Month.entries.toSet(),
             ),
             actual = "*       * \t *   *   *".parseCronExpression()
@@ -52,7 +52,7 @@ class ParseCronTest {
                 atMinutes = setOf(0),
                 atHours = (0..23).toSet(),
                 onDaysOfMonth = (1..31).toSet(),
-                onDaysOfWeek = DayOfWeek.entries.toSet(),
+                onDaysOfWeek = emptySet(),
                 inMonths = Month.entries.toSet(),
             ),
             actual = "0 * * * *".parseCronExpression()
@@ -66,7 +66,7 @@ class ParseCronTest {
                 atMinutes = setOf(0, 5),
                 atHours = (0..23).toSet(),
                 onDaysOfMonth = (1..31).toSet(),
-                onDaysOfWeek = DayOfWeek.entries.toSet(),
+                onDaysOfWeek = emptySet(),
                 inMonths = Month.entries.toSet(),
             ),
             actual = "0,5 * * * *".parseCronExpression()
@@ -80,7 +80,7 @@ class ParseCronTest {
                 atMinutes = setOf(0, 1, 2, 3, 4, 5),
                 atHours = (0..23).toSet(),
                 onDaysOfMonth = (1..31).toSet(),
-                onDaysOfWeek = DayOfWeek.entries.toSet(),
+                onDaysOfWeek = emptySet(),
                 inMonths = Month.entries.toSet(),
             ),
             actual = "0-5 * * * *".parseCronExpression()
@@ -94,7 +94,7 @@ class ParseCronTest {
                 atMinutes = setOf(0, 1, 2, 3, 4, 5, 10, 15),
                 atHours = (0..23).toSet(),
                 onDaysOfMonth = (1..31).toSet(),
-                onDaysOfWeek = DayOfWeek.entries.toSet(),
+                onDaysOfWeek = emptySet(),
                 inMonths = Month.entries.toSet(),
             ),
             actual = "0-5,10,15 * * * *".parseCronExpression()
@@ -108,7 +108,7 @@ class ParseCronTest {
                 atMinutes = setOf(0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15),
                 atHours = (0..23).toSet(),
                 onDaysOfMonth = (1..31).toSet(),
-                onDaysOfWeek = DayOfWeek.entries.toSet(),
+                onDaysOfWeek = emptySet(),
                 inMonths = Month.entries.toSet(),
             ),
             actual = "0-5,10-15 * * * *".parseCronExpression()
@@ -249,7 +249,7 @@ class ParseCronTest {
                     atMinutes = (0..59).toSet(),
                     atHours = (0..23).toSet(),
                     onDaysOfMonth = (1..31).toSet(),
-                    onDaysOfWeek = DayOfWeek.entries.toSet(),
+                    onDaysOfWeek = emptySet(),
                     inMonths = setOf(enum),
                 ),
                 actual = "* * * $string *".parseCronExpression()
@@ -281,6 +281,20 @@ class ParseCronTest {
                 actual = "* * * * $string".parseCronExpression()
             )
         }
+    }
+
+    @Test
+    fun full_range_day_of_week_maps_properly() {
+        assertEquals(
+            expected = CronValues(
+                atMinutes = (0..59).toSet(),
+                atHours = (0..23).toSet(),
+                onDaysOfMonth = (1..31).toSet(),
+                onDaysOfWeek = DayOfWeek.entries.toSet(),
+                inMonths = Month.entries.toSet()
+            ),
+            actual = "* * * * SUN-SAT".parseCronExpression()
+        )
     }
 
     @Test

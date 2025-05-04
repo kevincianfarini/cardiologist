@@ -42,14 +42,24 @@ internal fun String.parseCronExpression(): CronValues {
     }
 }
 
-private fun String.parseMinutesExpressionOrNull(): Set<Int>? = parseIntegerComponentExpressionOrNull(0..59)
+private fun String.parseMinutesExpressionOrNull(): Set<Int>? = parseIntegerComponentExpressionOrNull(
+    wildcardValue = (0..59).toSet(),
+    validValues = 0..59,
+)
 
-private fun String.parseHoursExpressionOrNull(): Set<Int>? = parseIntegerComponentExpressionOrNull(0..23)
+private fun String.parseHoursExpressionOrNull(): Set<Int>? = parseIntegerComponentExpressionOrNull(
+    wildcardValue = (0..23).toSet(),
+    validValues = 0..23,
+)
 
-private fun String.parseDaysOfMonthExpressionOrNull(): Set<Int>? = parseIntegerComponentExpressionOrNull(1..31)
+private fun String.parseDaysOfMonthExpressionOrNull(): Set<Int>? = parseIntegerComponentExpressionOrNull(
+    wildcardValue = (1..31).toSet(),
+    validValues = 1..31,
+)
 
 private fun String.parseDaysOfWeekExpressionOrNull(): Set<DayOfWeek>? {
     val raw = parseIntegerComponentExpressionOrNull(
+        wildcardValue = emptySet(), // A wildcard for the day of week cron expression is an empty set.
         validValues = 0..6,
         stringToIntegerMapping = mapOf(
             "SUN" to 0,
@@ -82,6 +92,7 @@ private fun String.parseDaysOfWeekExpressionOrNull(): Set<DayOfWeek>? {
 
 private fun String.parseMonthsExpressionOrNull(): Set<Month>? {
     val raw = parseIntegerComponentExpressionOrNull(
+        wildcardValue = (1..12).toSet(),
         validValues = 1..12,
         stringToIntegerMapping = mapOf(
             "JAN" to 1,
@@ -108,12 +119,13 @@ private fun String.parseMonthsExpressionOrNull(): Set<Month>? {
 }
 
 private fun String.parseIntegerComponentExpressionOrNull(
+    wildcardValue: Set<Int>,
     validValues: IntRange,
     stringToIntegerMapping: Map<String, Int> = emptyMap(),
 ): Set<Int>? = when {
-    this == "*" -> validValues.toSet()
+    this == "*" -> wildcardValue
     "," in this -> {
-        val parts = split(",").map { it.parseIntegerComponentExpressionOrNull(validValues) }
+        val parts = split(",").map { it.parseIntegerComponentExpressionOrNull(wildcardValue, validValues) }
         val noNulls = parts.filterNotNull()
         if (parts.size == noNulls.size) {
             buildSet {
@@ -126,8 +138,8 @@ private fun String.parseIntegerComponentExpressionOrNull(
     "-" in this -> {
         val parts = split("-")
         if (parts.size == 2) {
-            val start = parts[0].toIntOrNull()
-            val end = parts[1].toIntOrNull()
+            val start = parts[0].toIntOrNull() ?: stringToIntegerMapping[parts[0].uppercase()]
+            val end = parts[1].toIntOrNull() ?: stringToIntegerMapping[parts[1].uppercase()]
             if (start == null || end == null) {
                 null
             } else {
