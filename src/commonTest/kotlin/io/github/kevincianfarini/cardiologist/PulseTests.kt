@@ -16,13 +16,13 @@ class PulseTests {
         assertEquals(
             expected = 5.seconds,
             actual = testTimeSource.measureTime {
-                testClock.intervalPulse(5.seconds).take(1).beat { _, _ -> }
+                testClock.fixedPeriodPulse(5.seconds).take(1).beat { _, _ -> }
             }
         )
     }
 
     @Test fun intervalPulse_DateTimePeriod_emits_subsequent_instants_after_delaying() = runTest {
-        val pulse = testClock.intervalPulse(DateTimePeriod(seconds = 5), TimeZone.UTC).take(1)
+        val pulse = testClock.fixedPeriodPulse(DateTimePeriod(seconds = 5), TimeZone.UTC).take(1)
         assertEquals(
             expected = 5.seconds,
             actual = testTimeSource.measureTime { pulse.beat { _, _ -> } }
@@ -48,7 +48,7 @@ class PulseTests {
             Instant.fromEpochSeconds(120), // After delayUntil resumes.
             Instant.fromEpochSeconds(120), // Second emissions in intervalPulse.
         ).asClock()
-        val pulse = clock.intervalPulse(60.seconds)
+        val pulse = clock.fixedPeriodPulse(60.seconds)
         pulse.take(2).beat { scheduled, occurred ->
             assertEquals(expected = scheduledInstants[index], scheduled)
             assertEquals(expected = occurredInstants[index++], occurred)
@@ -76,7 +76,7 @@ class PulseTests {
             Instant.fromEpochSeconds(120), // After delayUntil resumes.
             Instant.fromEpochSeconds(120), // Second emissions in intervalPulse.
         ).asClock()
-        val pulse = clock.intervalPulse(60.seconds)
+        val pulse = clock.fixedPeriodPulse(60.seconds)
         pulse.take(2).beat { scheduled, occurred ->
             assertEquals(expected = scheduledInstants[index], scheduled)
             assertEquals(expected = occurredInstants[index++], occurred)
@@ -102,7 +102,7 @@ class PulseTests {
             Instant.fromEpochSeconds(120), // After delayUntil resumes.
             Instant.fromEpochSeconds(120), // Second emissions in intervalPulse.
         ).asClock()
-        val pulse = clock.intervalPulse(DateTimePeriod(minutes = 1), timeZone = TimeZone.UTC)
+        val pulse = clock.fixedPeriodPulse(DateTimePeriod(minutes = 1), timeZone = TimeZone.UTC)
         pulse.take(2).beat { scheduled, occurred ->
             assertEquals(expected = scheduledInstants[index], scheduled)
             assertEquals(expected = occurredInstants[index++], occurred)
@@ -130,7 +130,7 @@ class PulseTests {
             Instant.fromEpochSeconds(120), // After delayUntil resumes.
             Instant.fromEpochSeconds(120), // Second emissions in intervalPulse.
         ).asClock()
-        val pulse = clock.intervalPulse(DateTimePeriod(minutes = 1), timeZone = TimeZone.UTC)
+        val pulse = clock.fixedPeriodPulse(DateTimePeriod(minutes = 1), timeZone = TimeZone.UTC)
         pulse.take(2).beat { scheduled, occurred ->
             assertEquals(expected = scheduledInstants[index], scheduled)
             assertEquals(expected = occurredInstants[index++], occurred)

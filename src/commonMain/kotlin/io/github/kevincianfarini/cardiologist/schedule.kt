@@ -14,26 +14,32 @@ import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
 /**
- * Return a [Pulse] which beats every [interval]. The returned [Pulse] will delay prior to its first
+ * Return a [Pulse] which beats every [period].
+ *
+ * The period cadence which this [Pulse] beats is defined as the time between the start of one [beat][Pulse.beat] and the
+ * scheduled start of the subsequent [beat][Pulse.beat]. The returned [Pulse] will delay for [period] prior to its first
  * [Pulse.beat].
  */
-public fun Clock.intervalPulse(interval: Duration): Pulse {
+public fun Clock.fixedPeriodPulse(period: Duration): Pulse {
     val flow = flow {
-        var nextPulse: Instant = now() + interval
+        var nextPulse: Instant = now() + period
         while (true) {
             delayUntil(nextPulse)
             emit(Pair(nextPulse, now()))
-            nextPulse += interval
+            nextPulse += period
         }
     }
     return Pulse(flow)
 }
 
 /**
- * Return a [Pulse] which beats every [period] in [timeZone]. The returned [Pulse] will delay prior to its first
+ * Return a [Pulse] which beats every [period] in [timeZone].
+ *
+ * The period cadence which this [Pulse] beats is defined as the time between the start of one [beat][Pulse.beat] and the
+ * scheduled start of the subsequent [beat][Pulse.beat]. The returned [Pulse] will delay for [period] prior to its first
  * [Pulse.beat].
  */
-public fun Clock.intervalPulse(period: DateTimePeriod, timeZone: TimeZone): Pulse {
+public fun Clock.fixedPeriodPulse(period: DateTimePeriod, timeZone: TimeZone): Pulse {
     val flow = flow {
         var nextPulse: Instant = now().plus(period, timeZone)
         while (true) {
