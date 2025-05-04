@@ -1,5 +1,6 @@
 package io.github.kevincianfarini.cardiologist
 
+import io.github.kevincianfarini.cardiologist.impl.collectCurrent
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -46,6 +47,9 @@ public value class Pulse internal constructor(private val flow: Flow<Pair<Instan
             flow.collect { (scheduled, occurred) ->
                 launch { action(scheduled, occurred) }
             }
+        }
+        RecurringJobMode.Skip -> flow.collectCurrent { (scheduled, occurred) ->
+            action(scheduled, occurred)
         }
     }
 }
