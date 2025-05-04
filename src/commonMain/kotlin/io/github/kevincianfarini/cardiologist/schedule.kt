@@ -18,7 +18,7 @@ import kotlinx.datetime.toLocalDateTime
  *
  * The period cadence which this [Pulse] beats is defined as the time between the start of one [beat][Pulse.beat] and the
  * scheduled start of the subsequent [beat][Pulse.beat]. The returned [Pulse] will delay for [period] prior to its first
- * [Pulse.beat].
+ * [beat][Pulse.beat].
  */
 public fun Clock.fixedPeriodPulse(period: Duration): Pulse {
     val flow = flow {
@@ -37,7 +37,7 @@ public fun Clock.fixedPeriodPulse(period: Duration): Pulse {
  *
  * The period cadence which this [Pulse] beats is defined as the time between the start of one [beat][Pulse.beat] and the
  * scheduled start of the subsequent [beat][Pulse.beat]. The returned [Pulse] will delay for [period] prior to its first
- * [Pulse.beat].
+ * [beat][Pulse.beat].
  */
 public fun Clock.fixedPeriodPulse(period: DateTimePeriod, timeZone: TimeZone): Pulse {
     val flow = flow {
