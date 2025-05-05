@@ -1,17 +1,10 @@
 package io.github.kevincianfarini.cardiologist.impl
 
+import io.github.kevincianfarini.cardiologist.PulseSchedule
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.Month
 
-internal data class CronValues(
-    val atMinutes: Set<Int>,
-    val atHours: Set<Int>,
-    val onDaysOfMonth: Set<Int>,
-    val onDaysOfWeek: Set<DayOfWeek>,
-    val inMonths: Set<Month>,
-)
-
-internal fun String.parseCronExpression(): CronValues {
+internal fun String.parseCronExpression(): PulseSchedule {
     val segments = split(Regex("\\s+"))
     require(segments.size == 5) { "'$this' is not a valid cron expression." }
     val minutes = segments[0].parseMinutesExpressionOrNull()
@@ -20,7 +13,8 @@ internal fun String.parseCronExpression(): CronValues {
     val months = segments[3].parseMonthsExpressionOrNull()
     val daysOfWeek = segments[4].parseDaysOfWeekExpressionOrNull()
     return if (minutes != null && hours != null && daysOfMonth != null && months != null && daysOfWeek != null) {
-        CronValues(
+        PulseSchedule(
+            atSeconds = setOf(0),
             atMinutes = minutes,
             atHours = hours,
             onDaysOfMonth = daysOfMonth,
