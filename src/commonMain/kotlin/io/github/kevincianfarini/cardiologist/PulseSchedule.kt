@@ -4,6 +4,14 @@ import dev.drewhamilton.poko.Poko
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.Month
 
+/**
+ * A [Pulse] schedule that can be used with [schedulePulse] to define complex schedules.
+ *
+ * @constructor Creates a new PulseSchedule. Second values must be in range 0..59, minute values must be in range 0..59
+ *              hour values must be in range 0..23, and day of month values must be in range 1..31. This constructor also
+ *              requires that seconds, minutes, hours, days of month, and months cannot be empty sets.
+ * @throws IllegalArgumentException if the constructor is called with any of our bounds value or an improperly empty set.
+ */
 @Poko
 public class PulseSchedule(
     public val atSeconds: Set<Int>,
@@ -85,7 +93,7 @@ public class PulseScheduleBuilder internal constructor() {
         }
     }
 
-    public fun build(): PulseSchedule = PulseSchedule(
+    internal fun build(): PulseSchedule = PulseSchedule(
         atSeconds = _atSeconds ?: (0..59).toSet(),
         atMinutes = _atMinutes ?: (0..59).toSet(),
         atHours = _atHours ?: (0..23).toSet(),
@@ -95,6 +103,41 @@ public class PulseScheduleBuilder internal constructor() {
     )
 }
 
+/**
+ * Build a complex [PulseSchedule] with a DSL.
+ *
+ * For example, the following code will build a [schedule][PulseSchedule] that, when used with [schedulePulse], will
+ * beat once per minute at the 0th second on Mondays and Fridays.
+ *
+ * ```kt
+ * val schedule = buildPulseSchedule {
+ *   atSeconds(0)
+ *   onDaysOfWeek(DayOfWeek.MONDAY, DayOfWeek.FRIDAY)
+ * }
+ * ```
+ *
+ * Multiple successive calls to the same function on [PulseScheduleBuilder] are additive. This is useful for building
+ * schedules imperatively. For example, the following will create a schedule that, when used with [schedulePulse], will
+ * beat on three random seconds of each minute.
+ *
+ * ```kt
+ * val schedule = buildPulseSchedule {
+ *   val random = Random.Default
+ *   repeat(3) {
+ *     atSeconds(random.nextInt(0..59))
+ *   }
+ * }
+ * ```
+ *
+ * The valid values for each function are:
+ *
+ * - `atSeconds`: 0..59
+ * - `atMinutes`: 0..59
+ * - `atHours`: 0..23
+ * - `onDaysOfMonth`: 1..31
+ *
+ * @throws IllegalArgumentException if the [builder] lambda completes with any values outside the above range.
+ */
 public fun buildPulseSchedule(builder: PulseScheduleBuilder.() -> Unit): PulseSchedule {
     return PulseScheduleBuilder().apply(builder).build()
 }
