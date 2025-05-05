@@ -7,7 +7,7 @@ import kotlinx.datetime.Month
 /**
  * A [Pulse] schedule that can be used with [schedulePulse] to define complex schedules.
  *
- * @constructor Creates a new PulseSchedule. Second values must be in range 0..59, minute values must be in range 0..59
+ * @constructor Creates a new PulseSchedule. Second values must be in range 0..59, minute values must be in range 0..59,
  *              hour values must be in range 0..23, and day of month values must be in range 1..31. This constructor also
  *              requires that seconds, minutes, hours, days of month, and months cannot be empty sets.
  * @throws IllegalArgumentException if the constructor is called with any of our bounds value or an improperly empty set.
