@@ -4,6 +4,7 @@ kmpmt = "0.1.1"
 kotlin = "2.1.20"
 kotlinx-coroutines = "1.10.2"
 kotlinx-datetime = "0.6.2"
+poko = "0.18.6"
 publish = "0.30.0"
 
 [libraries]
@@ -16,4 +17,5 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 kmpmt = { id = "com.jakewharton.kmp-missing-targets", version.ref = "kmpmt" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+poko = { id = "dev.drewhamilton.poko", version.ref = "poko" }
 publish = { id = "com.vanniktech.maven.publish", version.ref = "publish" }

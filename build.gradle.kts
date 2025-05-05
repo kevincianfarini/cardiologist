@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.dokka)
     alias(libs.plugins.kmpmt)
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.poko)
     alias(libs.plugins.publish)
 }
 
