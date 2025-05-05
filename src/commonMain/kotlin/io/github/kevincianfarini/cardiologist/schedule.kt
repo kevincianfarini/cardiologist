@@ -90,13 +90,13 @@ public fun Clock.schedulePulse(
     val flow = flow {
         var lastPulse: LocalDateTime = now().toLocalDateTime(timeZone)
         while (true) {
-            val nextPulse = lastPulse.nextMatch(
-                atSeconds = atSecond?.let(::setOf) ?: (0..59).toSet(),
-                atMinutes = atMinute?.let(::setOf) ?: (0..59).toSet(),
-                atHours = atHour?.let(::setOf) ?: (0..23).toSet(),
-                onDaysOfMonth = onDayOfMonth?.let(::setOf) ?: (1..31).toSet(),
-                inMonths = inMonth?.let(::setOf) ?: Month.entries.toSet(),
-            )
+            val nextPulse = lastPulse.nextMatch {
+                atSecond?.run(this::atSeconds)
+                atMinute?.run(this::atMinutes)
+                atHour?.run(this::atHours)
+                onDayOfMonth?.run(this::onDaysOfMonth)
+                inMonth?.run(this::inMonths)
+            }
             delayUntil(nextPulse, timeZone)
             emit(nextPulse.toInstant(timeZone))
             lastPulse = nextPulse

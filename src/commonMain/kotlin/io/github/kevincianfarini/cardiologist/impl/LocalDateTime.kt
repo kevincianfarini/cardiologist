@@ -1,36 +1,35 @@
 package io.github.kevincianfarini.cardiologist.impl
 
+import io.github.kevincianfarini.cardiologist.PulseSchedule
+import io.github.kevincianfarini.cardiologist.PulseScheduleBuilder
+import io.github.kevincianfarini.cardiologist.buildPulseSchedule
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.number
 
-internal fun LocalDateTime.nextMatch(
-    atSeconds: Set<Int> = (0..59).toSet(),
-    atMinutes: Set<Int> = (0..59).toSet(),
-    atHours: Set<Int> = (0..23).toSet(),
-    onDaysOfMonth: Set<Int> = (1..31).toSet(),
-    inMonths: Set<Month> = Month.entries.toSet(),
-): LocalDateTime {
-    // Ensure that the nextMatch of this LocalDateTime doesn't produce itself. If it does then increment the
-    // nanosecond component by one to ensure that we produce a match that's distinct from this value.
-    val time = if (matches(atSeconds, atMinutes, atHours, onDaysOfMonth, inMonths)) copy(nanosecond = 1) else this
-    return time.nextMonth(inMonths)
-        .nextDay(onDaysOfMonth, inMonths)
-        .nextHour(atHours, onDaysOfMonth, inMonths)
-        .nextMinute(atMinutes, atHours, onDaysOfMonth, inMonths)
-        .nextSecond(atSeconds, atMinutes, atHours, onDaysOfMonth, inMonths)
+internal fun LocalDateTime.nextMatch(scheduleBuilder: PulseScheduleBuilder.() -> Unit = {}): LocalDateTime {
+    return nextMatch(buildPulseSchedule(scheduleBuilder))
 }
 
-private fun LocalDateTime.matches(
-    atSeconds: Set<Int>,
-    atMinutes: Set<Int>,
-    atHours: Set<Int>,
-    onDaysOfMonth: Set<Int>,
-    inMonths: Set<Month>,
-): Boolean {
-    return nanosecond == 0 && second in atSeconds && minute in atMinutes && hour in atHours
-            && dayOfMonth in onDaysOfMonth && month in inMonths
+internal fun LocalDateTime.nextMatch(schedule: PulseSchedule): LocalDateTime {
+    // Ensure that the nextMatch of this LocalDateTime doesn't produce itself. If it does then increment the
+    // nanosecond component by one to ensure that we produce a match that's distinct from this value.
+    val time = if (matches(schedule)) copy(nanosecond = 1) else this
+    return with(schedule) {
+        time.nextMonth(inMonths)
+            .nextDay(onDaysOfMonth, inMonths)
+            .nextHour(atHours, onDaysOfMonth, inMonths)
+            .nextMinute(atMinutes, atHours, onDaysOfMonth, inMonths)
+            .nextSecond(atSeconds, atMinutes, atHours, onDaysOfMonth, inMonths)
+    }
 }
+
+private fun LocalDateTime.matches(schedule: PulseSchedule): Boolean = nanosecond == 0 &&
+        second in schedule.atSeconds &&
+        minute in schedule.atMinutes &&
+        hour in schedule.atHours &&
+        dayOfMonth in schedule.onDaysOfMonth &&
+        month in schedule.inMonths
 
 private fun LocalDateTime.nextMonth(
     inMonths: Set<Month>,

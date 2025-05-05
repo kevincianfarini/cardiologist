@@ -1,5 +1,7 @@
 package io.github.kevincianfarini.cardiologist.impl
 
+import io.github.kevincianfarini.cardiologist.PulseSchedule
+import io.github.kevincianfarini.cardiologist.buildPulseSchedule
 import kotlinx.datetime.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -16,72 +18,86 @@ class LocalDateTimeTest {
         nanosecond = 0,
     )
 
-    @Test fun does_not_match_to_equivalent_value() = assertEquals(
+    @Test
+    fun does_not_match_to_equivalent_value() = assertEquals(
         expected = stubDatetime.copy(second = 1),
         actual = stubDatetime.nextMatch()
     )
 
-    @Test fun half_second_is_adjusted_up_to_second() = assertEquals(
+    @Test
+    fun half_second_is_adjusted_up_to_second() = assertEquals(
         expected = stubDatetime.copy(second = 1),
         actual = stubDatetime.copy(nanosecond = 500).nextMatch(),
     )
 
-    @Test fun half_second_is_adjusted_up_to_2_seconds() = assertEquals(
+    @Test
+    fun half_second_is_adjusted_up_to_2_seconds() = assertEquals(
         expected = stubDatetime.copy(second = 2),
-        actual = stubDatetime.copy(nanosecond = 500).nextMatch(atSeconds = (2..2).toSet()),
+        actual = stubDatetime.copy(nanosecond = 500).nextMatch { atSeconds(2) },
     )
 
-    @Test fun beginning_of_minute_adjusted_up_to_30_seconds() = assertEquals(
+    @Test
+    fun beginning_of_minute_adjusted_up_to_30_seconds() = assertEquals(
         expected = stubDatetime.copy(second = 30),
-        actual = stubDatetime.copy(nanosecond = 500).nextMatch(atSeconds = (30..30).toSet()),
+        actual = stubDatetime.copy(nanosecond = 500).nextMatch { atSeconds(30) },
     )
 
-    @Test fun middle_of_minute_adjusted_up_to_minute() = assertEquals(
+    @Test
+    fun middle_of_minute_adjusted_up_to_minute() = assertEquals(
         expected = stubDatetime.copy(minute = 1),
-        actual = stubDatetime.copy(second = 30).nextMatch(atSeconds = (0..0).toSet()),
+        actual = stubDatetime.copy(second = 30).nextMatch { atSeconds(0) },
     )
 
-    @Test fun beginning_of_minute_adjusted_up_to_minimum_of_range() = assertEquals(
+    @Test
+    fun beginning_of_minute_adjusted_up_to_minimum_of_range() = assertEquals(
         expected = stubDatetime.copy(second = 30),
-        actual = stubDatetime.copy(nanosecond = 500).nextMatch(atSeconds = (30..59).toSet()),
+        actual = stubDatetime.copy(nanosecond = 500).nextMatch { atSeconds(30..59) },
     )
 
-    @Test fun beginning_of_hour_adjusted_up_to_30_minutes() = assertEquals(
+    @Test
+    fun beginning_of_hour_adjusted_up_to_30_minutes() = assertEquals(
         expected = stubDatetime.copy(minute = 30),
-        actual = stubDatetime.nextMatch(atMinutes = (30..30).toSet()),
+        actual = stubDatetime.nextMatch { atMinutes(30) },
     )
 
-    @Test fun beginning_of_hour_adjusted_up_to_30_minutes_of_range() = assertEquals(
+    @Test
+    fun beginning_of_hour_adjusted_up_to_30_minutes_of_range() = assertEquals(
         expected = stubDatetime.copy(minute = 30),
-        actual = stubDatetime.nextMatch(atMinutes = (30..59).toSet()),
+        actual = stubDatetime.nextMatch { atMinutes(30..59) },
     )
 
-    @Test fun noon_adjusted_to_next_day() = assertEquals(
+    @Test
+    fun noon_adjusted_to_next_day() = assertEquals(
         expected = stubDatetime.copy(dayOfMonth = 5),
-        actual = stubDatetime.copy(hour = 12).nextMatch(atHours = (0..0).toSet()),
+        actual = stubDatetime.copy(hour = 12).nextMatch { atHours(0) },
     )
 
-    @Test fun noon_october_31_adjusted_to_midnight_november_1() = assertEquals(
+    @Test
+    fun noon_october_31_adjusted_to_midnight_november_1() = assertEquals(
         expected = stubDatetime.copy(monthNumber = 11, dayOfMonth = 1),
-        actual = stubDatetime.copy(dayOfMonth = 31, hour = 12).nextMatch(atHours = (0..0).toSet()),
+        actual = stubDatetime.copy(dayOfMonth = 31, hour = 12).nextMatch { atHours(0) },
     )
 
-    @Test fun noon_february_28_adjusted_to_midnight_march_1() = assertEquals(
+    @Test
+    fun noon_february_28_adjusted_to_midnight_march_1() = assertEquals(
         expected = stubDatetime.copy(monthNumber = 3, dayOfMonth = 1),
-        actual = stubDatetime.copy(monthNumber = 2, dayOfMonth = 28, hour = 12).nextMatch(atHours = (0..0).toSet()),
+        actual = stubDatetime.copy(monthNumber = 2, dayOfMonth = 28, hour = 12).nextMatch { atHours(0) },
     )
 
-    @Test fun noon_february_28_2024_adjusted_to_midnight_feb_29() = assertEquals(
+    @Test
+    fun noon_february_28_2024_adjusted_to_midnight_feb_29() = assertEquals(
         expected = stubDatetime.copy(year = 2024, monthNumber = 2, dayOfMonth = 29),
-        actual = stubDatetime.copy(year = 2024, monthNumber = 2, dayOfMonth = 28, hour = 12).nextMatch(atHours = (0..0).toSet()),
+        actual = stubDatetime.copy(year = 2024, monthNumber = 2, dayOfMonth = 28, hour = 12).nextMatch { atHours(0) },
     )
 
-    @Test fun noon_december_31_2023_adjusted_to_midnight_jan_1_2024() = assertEquals(
+    @Test
+    fun noon_december_31_2023_adjusted_to_midnight_jan_1_2024() = assertEquals(
         expected = stubDatetime.copy(year = 2024, monthNumber = 1, dayOfMonth = 1),
-        actual = stubDatetime.copy(year = 2023, monthNumber = 12, dayOfMonth = 31, hour = 12).nextMatch(atHours = (0..0).toSet()),
+        actual = stubDatetime.copy(year = 2023, monthNumber = 12, dayOfMonth = 31, hour = 12).nextMatch { atHours(0) },
     )
 
-    @Test fun nanosecond_before_2024_cascades_all_fields() = assertEquals(
+    @Test
+    fun nanosecond_before_2024_cascades_all_fields() = assertEquals(
         expected = stubDatetime.copy(year = 2024, monthNumber = 1, dayOfMonth = 1),
         actual = LocalDateTime(
             year = 2023,
@@ -91,15 +107,20 @@ class LocalDateTimeTest {
             minute = 59,
             second = 59,
             nanosecond = 999_999_999,
-        ).nextMatch(atSeconds = (0..0).toSet()),
+        ).nextMatch { atSeconds(0) }
     )
 
-    @Test fun matches_next_five_minute_interval_of_noon() = assertEquals(
+    @Test
+    fun matches_next_five_minute_interval_of_noon() = assertEquals(
         expected = stubDatetime.copy(hour = 12, minute = 5),
-        actual = stubDatetime.nextMatch(atMinutes = (5..5).toSet(), atHours = (12..23).toSet()),
+        actual = stubDatetime.nextMatch {
+            atMinutes(5)
+            atHours(12..23)
+        },
     )
 
-    @Test fun matches_up_to_next_minute_complex() = assertEquals(
+    @Test
+    fun matches_up_to_next_minute_complex() = assertEquals(
         expected = LocalDateTime(
             year = 2023,
             monthNumber = 10,
@@ -116,119 +137,150 @@ class LocalDateTimeTest {
             minute = 56,
             second = 17,
             nanosecond = 707401025,
-        ).nextMatch(atMinutes = (58..59).toSet()),
+        ).nextMatch { atMinutes(58, 59) },
     )
 
-    @Test fun matches_next_month() = assertEquals(
+    @Test
+    fun matches_next_month() = assertEquals(
         expected = stubDatetime.copy(monthNumber = 11, dayOfMonth = 1),
-        actual = stubDatetime.nextMatch(inMonths = setOf(Month.NOVEMBER)),
+        actual = stubDatetime.nextMatch { inMonths(Month.NOVEMBER) },
     )
 
-    @Test fun matches_10_seconds() = assertEquals(
+    @Test
+    fun matches_10_seconds() = assertEquals(
         expected = stubDatetime.copy(hour = 20, minute = 30, second = 10),
-        actual = stubDatetime.copy(hour = 20, minute = 29, second = 36).nextMatch(atSeconds = setOf(10))
+        actual = stubDatetime.copy(hour = 20, minute = 29, second = 36).nextMatch { atSeconds(10) },
     )
 
-    @Test fun matches_10_seconds_through_45_seconds() = assertEquals(
+    @Test
+    fun matches_10_seconds_through_45_seconds() = assertEquals(
         expected = stubDatetime.copy(hour = 20, minute = 36, second = 10, nanosecond = 0),
         actual = stubDatetime.copy(
             hour = 20,
             minute = 35,
             second = 45,
             nanosecond = 1,
-        ).nextMatch(atSeconds = (10..45).toSet())
+        ).nextMatch { atSeconds(10..45) },
     )
 
-    @Test fun matches_10_minutes_through_57_minutes() = assertEquals(
+    @Test
+    fun matches_10_minutes_through_57_minutes() = assertEquals(
         expected = stubDatetime.copy(dayOfMonth = 5, hour = 0, minute = 10, second = 0),
         actual = stubDatetime.copy(
             hour = 23,
             minute = 57,
             second = 1,
-        ).nextMatch(atMinutes = (10..57).toSet(), atSeconds = setOf(0))
+        ).nextMatch {
+            atSeconds(0)
+            atMinutes(10..57)
+        },
     )
 
-    @Test fun matches_september_2024_from_october_2023() = assertEquals(
+    @Test
+    fun matches_september_2024_from_october_2023() = assertEquals(
         expected = stubDatetime.copy(year = 2024, monthNumber = 9, dayOfMonth = 1),
-        actual = stubDatetime.nextMatch(
-            inMonths = setOf(Month.SEPTEMBER),
-            onDaysOfMonth = setOf(1),
-            atHours = setOf(0),
-            atMinutes = setOf(0),
-            atSeconds = setOf(0),
-        )
+        actual = stubDatetime.nextMatch {
+            atSeconds(0)
+            atMinutes(0)
+            atHours(0)
+            onDaysOfMonth(1)
+            inMonths(Month.SEPTEMBER)
+        },
     )
 
-    @Test fun matches_september_2024_from_october_2023_any_hour() = assertEquals(
+    @Test
+    fun matches_september_2024_from_october_2023_any_hour() = assertEquals(
         expected = stubDatetime.copy(year = 2024, monthNumber = 9, dayOfMonth = 1),
-        actual = stubDatetime.copy(dayOfMonth = 6, hour = 0, minute = 41, second = 7).nextMatch(
-            inMonths = setOf(Month.SEPTEMBER),
-            onDaysOfMonth = setOf(1),
-            atMinutes = setOf(0),
-            atSeconds = setOf(0),
-        )
+        actual = stubDatetime.copy(dayOfMonth = 6, hour = 0, minute = 41, second = 7).nextMatch {
+            atSeconds(0)
+            atMinutes(0)
+            onDaysOfMonth(1)
+            inMonths(Month.SEPTEMBER)
+        },
     )
 
-    @Test fun matches_jan_18_2024_to_jan_19_2024() = assertEquals(
+    @Test
+    fun matches_jan_18_2024_to_jan_19_2024() = assertEquals(
         expected = LocalDateTime(year = 2024, monthNumber = 1, dayOfMonth = 19, hour = 0, minute = 0),
         actual = LocalDateTime(year = 2024, monthNumber = 1, dayOfMonth = 18, hour = 23, minute = 59, second = 48)
-            .nextMatch(atSeconds = setOf(0), atMinutes = setOf(0), atHours = setOf(0))
+            .nextMatch {
+                atSeconds(0)
+                atMinutes(0)
+                atHours(0)
+            },
     )
 
-    @Test fun one_month_gap_for_two_years() {
+    @Test
+    fun one_month_gap_for_two_years() {
         LocalDateTime(year = 2023, monthNumber = 1, dayOfMonth = 1, hour = 0, minute = 0).assertGap(
             assertPeriod = DateTimePeriod(months = 1),
-            atSeconds = setOf(0),
-            atMinutes = setOf(0),
-            atHours = setOf(0),
-            onDaysOfMonth = setOf(1),
+            schedule = buildPulseSchedule {
+                atSeconds(0)
+                atMinutes(0)
+                atHours(0)
+                onDaysOfMonth(1)
+            },
         ) { it.year < 2025 }
     }
 
-    @Test fun one_month_gap_for_a_year() {
+    @Test
+    fun one_month_gap_for_a_year() {
         LocalDateTime(year = 2023, monthNumber = 1, dayOfMonth = 1, hour = 0, minute = 0).assertGap(
             assertPeriod = DateTimePeriod(months = 1),
-            atSeconds = setOf(0),
-            atMinutes = setOf(0),
-            atHours = setOf(0),
-            onDaysOfMonth = setOf(1),
+            schedule = buildPulseSchedule {
+                atSeconds(0)
+                atMinutes(0)
+                atHours(0)
+                onDaysOfMonth(1)
+            },
         ) { it.year < 2024 }
     }
 
-    @Test fun one_day_gap_for_a_year() {
+    @Test
+    fun one_day_gap_for_a_year() {
         LocalDateTime(year = 2023, monthNumber = 1, dayOfMonth = 1, hour = 0, minute = 0).assertGap(
             assertPeriod = DateTimePeriod(days = 1),
-            atSeconds = setOf(0),
-            atMinutes = setOf(0),
-            atHours = setOf(0),
+            schedule = buildPulseSchedule {
+                atSeconds(0)
+                atMinutes(0)
+                atHours(0)
+            },
         ) { it.year < 2024 }
     }
 
-    @Test fun one_day_gap_for_two_years() {
+    @Test
+    fun one_day_gap_for_two_years() {
         LocalDateTime(year = 2023, monthNumber = 1, dayOfMonth = 1, hour = 0, minute = 0).assertGap(
             assertPeriod = DateTimePeriod(days = 1),
-            atSeconds = setOf(0),
-            atMinutes = setOf(0),
-            atHours = setOf(0),
+            schedule = buildPulseSchedule {
+                atSeconds(0)
+                atMinutes(0)
+                atHours(0)
+            },
         ) { it.year < 2025 }
     }
 
-    @Test fun one_hour_gap_for_a_year() {
+    @Test
+    fun one_hour_gap_for_a_year() {
         LocalDateTime(year = 2023, monthNumber = 1, dayOfMonth = 1, hour = 0, minute = 0).assertGap(
             assertPeriod = DateTimePeriod(hours = 1),
-            atSeconds = setOf(0),
-            atMinutes = setOf(0),
+            schedule = buildPulseSchedule {
+                atSeconds(0)
+                atMinutes(0)
+            },
         ) { it.year < 2024 }
     }
 
-    @Test fun one_minute_gap_for_a_year() {
+    @Test
+    fun one_minute_gap_for_a_year() {
         LocalDateTime(year = 2023, monthNumber = 1, dayOfMonth = 1, hour = 0, minute = 0).assertGap(
             assertPeriod = DateTimePeriod(minutes = 1),
-            atSeconds = setOf(0),
+            schedule = buildPulseSchedule { atSeconds(0) },
         ) { it.year < 2024 }
     }
 
-    @Test fun one_second_gap_for_a_year() {
+    @Test
+    fun one_second_gap_for_a_year() {
         LocalDateTime(year = 2023, monthNumber = 1, dayOfMonth = 1, hour = 0, minute = 0).assertGap(
             assertPeriod = DateTimePeriod(seconds = 1),
         ) { it.year < 2024 }
@@ -237,13 +289,9 @@ class LocalDateTimeTest {
 
 private fun LocalDateTime.assertGap(
     assertPeriod: DateTimePeriod,
-    atSeconds: Set<Int> = (0..59).toSet(),
-    atMinutes: Set<Int> = (0..59).toSet(),
-    atHours: Set<Int> = (0..23).toSet(),
-    onDaysOfMonth: Set<Int> = (1..31).toSet(),
-    inMonths: Set<Month> = Month.entries.toSet(),
+    schedule: PulseSchedule = buildPulseSchedule {  },
     takeWhile: (LocalDateTime) -> Boolean,
-) = nextMatchSequence(atSeconds, atMinutes, atHours, onDaysOfMonth, inMonths)
+) = nextMatchSequence(schedule)
     .takeWhile(takeWhile)
     .windowed(2) { (first, second) ->
         assertEquals(
@@ -256,12 +304,6 @@ private fun LocalDateTime.assertGap(
         )
     }.last()
 
-private fun LocalDateTime.nextMatchSequence(
-    atSeconds: Set<Int> = (0..59).toSet(),
-    atMinutes: Set<Int> = (0..59).toSet(),
-    atHours: Set<Int> = (0..23).toSet(),
-    onDaysOfMonth: Set<Int> = (1..31).toSet(),
-    inMonths: Set<Month> = Month.entries.toSet(),
-): Sequence<LocalDateTime> = generateSequence(seed = this) { seed ->
-    seed.nextMatch(atSeconds, atMinutes, atHours, onDaysOfMonth, inMonths)
+private fun LocalDateTime.nextMatchSequence(schedule: PulseSchedule): Sequence<LocalDateTime> {
+    return generateSequence(seed = this) { seed -> seed.nextMatch(schedule) }
 }
