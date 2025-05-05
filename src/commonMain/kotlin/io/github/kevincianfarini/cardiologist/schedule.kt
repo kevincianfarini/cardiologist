@@ -91,11 +91,11 @@ public fun Clock.schedulePulse(
         var lastPulse: LocalDateTime = now().toLocalDateTime(timeZone)
         while (true) {
             val nextPulse = lastPulse.nextMatch(
-                atSeconds = atSecond?.let { it..it } ?: 0..59,
-                atMinutes = atMinute?.let { it..it } ?: 0..59,
-                atHours = atHour?.let { it..it } ?: 0..23,
-                onDaysOfMonth = onDayOfMonth?.let { it..it } ?: 1..31,
-                inMonths = inMonth?.let { it..it } ?: Month.JANUARY..Month.DECEMBER,
+                atSeconds = atSecond?.let(::setOf) ?: (0..59).toSet(),
+                atMinutes = atMinute?.let(::setOf) ?: (0..59).toSet(),
+                atHours = atHour?.let(::setOf) ?: (0..23).toSet(),
+                onDaysOfMonth = onDayOfMonth?.let(::setOf) ?: (1..31).toSet(),
+                inMonths = inMonth?.let(::setOf) ?: Month.entries.toSet(),
             )
             delayUntil(nextPulse, timeZone)
             emit(nextPulse.toInstant(timeZone))
