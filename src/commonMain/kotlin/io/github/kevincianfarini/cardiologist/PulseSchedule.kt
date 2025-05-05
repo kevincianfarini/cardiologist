@@ -3,6 +3,8 @@ package io.github.kevincianfarini.cardiologist
 import dev.drewhamilton.poko.Poko
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.Month
+import kotlinx.datetime.isoDayNumber
+import kotlinx.datetime.number
 
 /**
  * A [Pulse] schedule that can be used with [schedulePulse] to define complex schedules.
@@ -53,11 +55,35 @@ public class PulseScheduleBuilder internal constructor() {
         }
     }
 
+    public fun atSeconds(value: IntRange, vararg values: IntRange) {
+        require(!value.isEmpty()) { "Cannot add empty range of values: $value" }
+        values.forEach { v ->
+            require(!v.isEmpty()) { "Cannot add empty range of values: $v" }
+        }
+        _atSeconds = buildSet {
+            _atSeconds?.let(this::addAll)
+            addAll(value)
+            values.forEach(this::addAll)
+        }
+    }
+
     public fun atMinutes(value: Int, vararg values: Int) {
         _atMinutes = buildSet {
             _atMinutes?.let(this::addAll)
             add(value)
             values.forEach(this::add)
+        }
+    }
+
+    public fun atMinutes(value: IntRange, vararg values: IntRange) {
+        require(!value.isEmpty()) { "Cannot add empty range of values: $value" }
+        values.forEach { v ->
+            require(!v.isEmpty()) { "Cannot add empty range of values: $v" }
+        }
+        _atMinutes = buildSet {
+            _atMinutes?.let(this::addAll)
+            addAll(value)
+            values.forEach(this::addAll)
         }
     }
 
@@ -69,11 +95,35 @@ public class PulseScheduleBuilder internal constructor() {
         }
     }
 
+    public fun atHours(value: IntRange, vararg values: IntRange) {
+        require(!value.isEmpty()) { "Cannot add empty range of values: $value" }
+        values.forEach { v ->
+            require(!v.isEmpty()) { "Cannot add empty range of values: $v" }
+        }
+        _atHours = buildSet {
+            _atHours?.let(this::addAll)
+            addAll(value)
+            values.forEach(this::addAll)
+        }
+    }
+
     public fun onDaysOfMonth(value: Int, vararg values: Int) {
         _onDaysOfMonth = buildSet {
             _onDaysOfMonth?.let(this::addAll)
             add(value)
             values.forEach(this::add)
+        }
+    }
+
+    public fun onDaysOfMonth(value: IntRange, vararg values: IntRange) {
+        require(!value.isEmpty()) { "Cannot add empty range of values: $value" }
+        values.forEach { v ->
+            require(!v.isEmpty()) { "Cannot add empty range of values: $v" }
+        }
+        _onDaysOfMonth = buildSet {
+            _onDaysOfMonth?.let(this::addAll)
+            addAll(value)
+            values.forEach(this::addAll)
         }
     }
 
@@ -85,11 +135,35 @@ public class PulseScheduleBuilder internal constructor() {
         }
     }
 
+    public fun inMonths(value: ClosedRange<Month>, vararg values: ClosedRange<Month>) {
+        require(!value.isEmpty()) { "Cannot add empty range of values: $value" }
+        values.forEach { v ->
+            require(!v.isEmpty()) { "Cannot add empty range of values: $v" }
+        }
+        _inMonths = buildSet {
+            _inMonths?.let(this::addAll)
+            addAllMonths(value)
+            values.forEach(this::addAllMonths)
+        }
+    }
+
     public fun onDaysOfWeek(value: DayOfWeek, vararg values: DayOfWeek) {
         _onDaysOfWeek = buildSet {
             _onDaysOfWeek?.let(this::addAll)
             add(value)
             values.forEach(this::add)
+        }
+    }
+
+    public fun onDaysOfWeek(value: ClosedRange<DayOfWeek>, vararg values: ClosedRange<DayOfWeek>) {
+        require(!value.isEmpty()) { "Cannot add empty range of values: $value" }
+        values.forEach { v ->
+            require(!v.isEmpty()) { "Cannot add empty range of values: $v" }
+        }
+        _onDaysOfWeek = buildSet {
+            _onDaysOfWeek?.let(this::addAll)
+            addAllDaysOfWeek(value)
+            values.forEach(this::addAllDaysOfWeek)
         }
     }
 
@@ -101,6 +175,18 @@ public class PulseScheduleBuilder internal constructor() {
         inMonths = _inMonths ?: Month.entries.toSet(),
         onDaysOfWeek = _onDaysOfWeek ?: emptySet(),
     )
+}
+
+private fun MutableSet<Month>.addAllMonths(range: ClosedRange<Month>) {
+    (range.start.number..range.endInclusive.number).forEach { monthNumber ->
+        add(Month(monthNumber))
+    }
+}
+
+private fun MutableSet<DayOfWeek>.addAllDaysOfWeek(range: ClosedRange<DayOfWeek>) {
+    (range.start.isoDayNumber..range.endInclusive.isoDayNumber).forEach { isoDayNumber ->
+        add(DayOfWeek(isoDayNumber))
+    }
 }
 
 /**
