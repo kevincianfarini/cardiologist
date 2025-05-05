@@ -14,13 +14,13 @@ public class PulseSchedule(
     public val onDaysOfWeek: Set<DayOfWeek>,
 ) {
     init {
-        require(atSeconds.all { it in 0..59 }) { "Seconds has an out of bound value: $atSeconds" }
+        require(!atSeconds.any { it !in 0..59 }) { "Seconds has an out of bound value: $atSeconds" }
         require(atSeconds.isNotEmpty()) { "Seconds cannot be empty!" }
-        require(atMinutes.all { it in 0..59 }) { "Minutes has an out of bound value: $atMinutes" }
+        require(!atMinutes.any { it !in 0..59 }) { "Minutes has an out of bound value: $atMinutes" }
         require(atMinutes.isNotEmpty()) { "Minutes cannot be empty!" }
-        require(atHours.all { it in 0..23 }) { "Hours has an out of bound value: $atHours" }
+        require(!atHours.any { it !in 0..23 }) { "Hours has an out of bound value: $atHours" }
         require(atHours.isNotEmpty()) { "Hours cannot be empty!" }
-        require(onDaysOfMonth.all { it in 1..31 }) { "Days of month has an out of bound value: $onDaysOfMonth" }
+        require(!onDaysOfMonth.any { it !in 1..31 }) { "Days of month has an out of bound value: $onDaysOfMonth" }
         require(onDaysOfMonth.isNotEmpty()) { "Days of month cannot be empty!" }
         require(inMonths.isNotEmpty()) { "Months cannot be empty!" }
         // Don't check if onDaysOfWeek is empty because an empty set is equivalent to the wildcard `*` value in cron
