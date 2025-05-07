@@ -1,10 +1,12 @@
 # Cardiologist
 
-Build job schedules with [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime) and [kotlinx-coroutines](https://github.com/Kotlin/kotlinx.coroutines). 
+## Overview
+
+Build job schedules with [kotlinx-datetime](https://github.com/Kotlin/kotlinx-datetime) and [kotlinx-coroutines](https://github.com/Kotlin/kotlinx.coroutines).
 
 ```kt
 val tz = TimeZone.of("America/New_York")
-Clock.System.schedulePulse(atSecond = 0).beat { scheduled, occurred ->
+Clock.System.schedulePulse(timeZone = tz, atSecond = 0).beat { scheduled, occurred ->
     println("A pulse was scheduled in $tz for ${scheduled.toLocalDateTime(tz)} and occurred at ${occurred.toLocalDateTime(tz)}.")
 }
 ```
@@ -23,105 +25,180 @@ A pulse was scheduled in America/New_York for 2025-01-11T08:47 and occurred at 2
 
 ```toml
 [versions]
-cardiologist = "0.3.1"
+cardiologist = "0.4.0"
 
 [libraries]
 cardiologist = { module = "io.github.kevincianfarini.cardiologist:cardiologist", version.ref = "cardiologist" }
 
 ```
 
-## Introduction 
+## Usage
 
-Cardiologist integrates with kotlinx-datetime to provide you scheduling based on `Instant`, `LocalDateTime`, 
-and `LocalTime`, and integrates with kotlinx-coroutines to provide a suspending API to trigger pending jobs.
+### How do I build a job schedule?
 
-Simple suspending functions are available to delay until a given moment in time.
+Cardiologist offers several different ways to build job schedules, ranging from simple periods to complex recurring 
+dates and times. At the core of it all is the `Pulse` type which encapsulates a job schedule. Pulses can be created 
+through several different functions exposed on a `kotlinx.datetime.Clock`. 
 
-```kt
-Clock.System.delayUntil(instant = Instant.DISTANT_FUTURE)
-Clock.System.delayUntil(dateTime = LocalDateTime.MAX, timeZone = TimeZone.UTC)
-```
+#### Fixed period job schedules
 
-...or suspending for a given period of time. 
-
-```kt
-Clock.System.delayFor(period = DateTimePeriod(months = 1, days = 2), timeZone = TimeZone.UTC)
-```
-
-...or suspending until the next time a `LocalTime` occurs in a certain time zone. 
+Cardiologist offers two functions to schedule fixed period schedules using a `kotlin.time.Duration` and a 
+`kotlinx.datetime.DateTimePeriod`. Fixed period Pulses are rigid and the period specifies the time between the start 
+of a job and the start of its successor. Interval schedules are intentioanlly omitted from Cardiologist because 
+they can be trivially built with a while loop. 
 
 ```kt
-val midnight = LocalTime(hour = 0, minute = 0)
-Clock.System.delayUntilNext(time = midnight, timeZone = TimeZone.UTC)
+// Some Clock implementation. 
+val clock: Clock = ...
+val timeZone = TimeZone.of("America/New_York")
+
+// Creates a Pulse which beats on a fixed 30-minute period.
+val durationPulse: Pulse = clock.fixedPeriodPulse(30.minutes)
+
+// Creates a Pulse which beats on a fixed 1-month period in America/New_York.
+val dateTimePeriodPulse: Pulse = clock.fixedPeriodPulse(period = DateTimePeriod(months = 1), timeZone = timeZone)
 ```
 
-Repeating intervals are provided as a `Pulse`, a type which holds a reccurence cadence. 
+#### Complex job schedules
+
+Cardiologist allows complex job schedules to be created using a simple function that accepts type-safe parameters; 
+a complex function which exposes a type-safe DSL for building a schedule; and a function which accept a **standard**
+loosely typed Cron expression. Cardiologist intentionally implements only standard Cron functionality and considers 
+extensions of that specification, like the `@monthly` directive, out of scope.
 
 ```kt
-val hourlyPulse: Pulse = Clock.System.intervalPulse(interval = 1.hours)
-val dailyPulse: Pulse = Clock.System.intervalPulse(
-    period = DateTimePeriod(days = 1),
-    timeZone = TimeZone.UTC,
-)
+// Some Clock implementation. 
+val clock: Clock = ... 
+val timeZone = TimeZone.of("America/New_York")
+
+// Creates a Pulse which beats on the 5th minute of every hour in America/New_York.
+val scheduledPulse: Pulse = clock.schedulePulse(atSecond = 0, atMinute = 5, timeZone = timeZone)
+
+// Creates a Pulse with a complex schedule in America/New_York using a DSL. 
+val complexPulse: Pulse = clock.schedulePulse(timeZone = timeZone) {
+    atSeconds(0, 30)
+    atMinutes(0, 5, 10, 15, 20, 25, 30)
+    atHours(9..17)
+    onDaysOfWeek(DayOfWeek.Monday..DayOfWeek.Friday)
+}
+
+// Creates a Pulse from a standard cron expression in America/New_York.
+val cronPulse: Pulse = clock.schedulePulse(cronExpression = "* * * * *", timeZone = timeZone)
 ```
 
-Pulse schedules can be built with a cron like API. 
+#### Executing jobs
+
+Pulses alone don't do any work. You need to beat a pulse for it to do something! The lambda exposes two `Instant` 
+parameters denoting when a pulse was scheduled and when it actually occurred. 
 
 ```kt
-// Schedules a pulse to occur on the 5th of every month at 12:30 in UTC. 
-val scheduledPulse = Clock.System.schedulePulse(
-    timeZone = TimeZone.UTC,
-    atSecond = 0,
-    atMinute = 30,
-    atHour = 12,
-    onDayOfMonth = 5, 
-)
+clock.fixedPeriodPulse(30.seconds).beat { scheduled, occurred ->
+    println("My job was scheduled for $scheduled and occurred at $occurred.")
+}
 ```
 
-...and can be invoked by calling `Pulse.beat`. 
+### Some of my jobs are slow. How do I stop them from executing concurrently? 
+
+Beating a pulse is a suspending function which might not complete before the next pulse is scheduled to occur. By 
+default, Cardiologist allows these jobs to run concurrently rather than silently canceling or skipping jobs. In 
+addition, you can specify that when a job doesn't complete quickly enough it can be canceled or the next job can be 
+skipped. 
 
 ```kt
-scheduledPulse.beat { instant -> println("$instant") }
+// Cancels slow jobs. 
+clock.fixedPeriodPulse(5.seconds).beat(strategy = PulseBackpressureStrategy.CancelPrevious) { _, _ ->
+    mySlowSuspendingFunction()
+}
+
+// Skips new jobs until this slow job completes. 
+clock.fixedPeriodPulse(5.seconds).beat(strategy = PulseBackpressureStrategy.SkipNext) { _, _ ->
+    mySlowSuspendingFunction()
+}
 ```
 
-Beating a pulse is a backpressure sensitive operation. If your job has not completed when the next 
-pulse is scheduled to occur, it will by default be cancelled. Cardiologist provides another mode 
-to beat a pulse which allow jobs to run concurrently. 
+### How do I schedule one-off jobs? 
+
+Cardiologist exposes the function `Clock.delayUntil` which delays until a specific moment in time using either a 
+`kotlinx.datetime.Instant` or a `kotlinx.datetime.LocalDateTime`. This building block allows you build rich APIs
+for executing one-off jobs. For example:
 
 ```kt
-import io.github.kevincianfarini.cardiologist.RecurringJobMode.*
+suspend fun Clock.executeAt(instant: Instant, job: suspend () -> Unit) {
+    this.delayUntil(instant)
+    job()
+}
 
-// Cancels previous job when next job is scheduled to occur. 
-hourlyPulse.beat(mode = CancellingSequential) { instant -> longRunningOperation(instant) }
-        
-// Allows jobs to run concurrently if previous job is still active. 
-hourlyPulse.beat(mode = Concurrent) { instant -> longRunningOperation(instant) }
+suspend fun Clock.executeAt(dateTime: LocalDateTime, timeZone: TimeZone, job: suspend () -> Unit) {
+    this.delayUntil(dateTime, timeZone)
+    job()
+}
 ```
 
+### How do I name my jobs? 
 
+Beating a Pulse is just a normal suspending function so we can name jobs just like any other coroutine. The following 
+code gives the executing schedule's coroutine the name "5-second Pulse schedule", and each inner job gets its own name 
+like "My job which started executing at 2025-05-07T15:24:00"
 
-## Cardiologist is not a replacement for crontab(5) or Android WorkManager.
+```kt
+val scheduleName = CoroutineName("5-second Pulse schedule")
+withContext(scheduleName) {
+    clock.fixedPeriodPulse(5.seconds).beat(strategy = PulseBackpressureStrategy.CancelPrevious) { scheduled, _ ->
+        val jobName = CoroutineName("My job which started executing at $scheduled")
+        withContext(jobName) { myJob() }
+    }
+}
+```
 
-Cardiologist is an _in process_ job scheduling library. It is meant to run concurrently to the rest of 
-your process, not as a separate process. Use cases include job scheduling within a long-lived process like 
-a server or a daemon. 
+### How many jobs can Cardiologist run concurrently? 
+
+To be determined, but definitely more than 5 and less than 1,000,000. Stress testing coming soon. 
+
+### How can I persist my job schedules (and why doesn't Cardiologist do this for me)?
+
+Cardiologist isn't interested in forcing you to use any persistence scheme. It doesn't care if you like SQL or not, 
+and it doesn't want you to have to adopt a heavy piece of infrastructure simply to set up some recurring jobs. For 
+people who do want to persist their job schedules, Cardiologist allows for job schedules to be built independently 
+of a `Pulse`, and those schedules can be persisted however you like. 
+
+```kt
+val schedule: PulseSchedule = buildPulseSchedule {
+    atSeconds(0, 30)
+    atMinutes(0, 5, 10, 15, 20, 25, 30)
+    atHours(9..17)
+    onDaysOfWeek(DayOfWeek.Monday..DayOfWeek.Friday)
+}
+```
+
+Furthermore, Cardiologist provides an out-of-the-box mechanism to serialize job schedules to standard Cron expressions.
+_Please note that transforming a `PulseSchedule` into a standard Cron expression will omit any seconds components as 
+that's not included in the standard Cron specification._
+
+```kt
+val schedule: PulseSchedule = buildPulseSchedule {
+    atSeconds(0, 30)
+    atMinutes(0, 5, 10, 15, 20, 25, 30)
+    atHours(9..17)
+    onDaysOfWeek(DayOfWeek.Monday..DayOfWeek.Friday)
+}
+val cron: String = schedule.toCronExpression() // 0,5,10,15,20,25,30 9-17 * * 1-5
+```
+
+### What's the difference between Cardiologist and other tools like cron?
+
+Cardiologist is an _in process_ job scheduling library. It is meant to run concurrently within the rest of
+your process, not as a separate process. Use cases include job scheduling within a long-lived process like
+a server or a daemon.
 
 ```kt
 // With ktor, for example. 
 fun main() = runBlocking { // this: CoroutineScope
     this.embeddedServer(Netty, port = 8080) { /* omitted */ }.start(wait = false)
-    launch { recurringJob() }
-}
-
-private suspend fun recurringJob() {
-    Clock.System.schedulePulse(
-        onDayOfMonth = 1, 
-        atHour = 0, 
-        atMinute = 0, 
-        atSecond = 0
-    ).beat { instant -> someWork(instant) }
+    launch { 
+        Clock.System.fixedPeriodPulse(30.minutes).beat { myJob() }
+    }
 }
 ```
 
-Cron jobs and Android's WorkManager leverage standalone processes and will launch your program as a separate processes. 
-This is outside the scope of Cadiologist's goals. 
+Cron runs as its own process and will launch your program as a separate processes. This is outside the scope of 
+Cadiologist's goals.
