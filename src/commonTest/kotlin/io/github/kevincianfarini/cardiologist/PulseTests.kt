@@ -16,7 +16,7 @@ class PulseTests {
         assertEquals(
             expected = 5.seconds,
             actual = testTimeSource.measureTime {
-                testClock.fixedPeriodPulse(5.seconds).take(1).beat { _, _ -> }
+                testClock.fixedPeriodPulse(5.seconds).take(1).beat { }
             }
         )
     }
@@ -25,7 +25,7 @@ class PulseTests {
         val pulse = testClock.fixedPeriodPulse(DateTimePeriod(seconds = 5), TimeZone.UTC).take(1)
         assertEquals(
             expected = 5.seconds,
-            actual = testTimeSource.measureTime { pulse.beat { _, _ -> } }
+            actual = testTimeSource.measureTime { pulse.beat { } }
         )
     }
 
