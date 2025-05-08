@@ -37,18 +37,18 @@ public value class Pulse internal constructor(private val flow: Flow<Pair<Instan
      * This operator will execute [action] according to which [mode] is specified.
      */
     public suspend fun beat(
-        mode: RecurringJobMode = RecurringJobMode.CancellingSequential,
+        mode: PulseBackpressureStrategy = PulseBackpressureStrategy.ExecuteConcurrently,
         action: suspend (scheduled: Instant, occurred: Instant) -> Unit,
     ): Unit = when (mode) {
-        RecurringJobMode.CancellingSequential -> flow.collectLatest { (scheduled, occurred) ->
+        PulseBackpressureStrategy.CancelPrevious -> flow.collectLatest { (scheduled, occurred) ->
             action(scheduled, occurred)
         }
-        RecurringJobMode.Concurrent -> coroutineScope {
+        PulseBackpressureStrategy.ExecuteConcurrently -> coroutineScope {
             flow.collect { (scheduled, occurred) ->
                 launch { action(scheduled, occurred) }
             }
         }
-        RecurringJobMode.Skip -> flow.collectCurrent { (scheduled, occurred) ->
+        PulseBackpressureStrategy.SkipNext -> flow.collectCurrent { (scheduled, occurred) ->
             action(scheduled, occurred)
         }
     }
