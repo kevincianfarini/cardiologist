@@ -171,8 +171,6 @@ val schedule: PulseSchedule = buildPulseSchedule {
 ```
 
 Furthermore, Cardiologist provides an out-of-the-box mechanism to serialize job schedules to standard Cron expressions.
-_Please note that transforming a `PulseSchedule` into a standard Cron expression will omit any seconds components as 
-that's not included in the standard Cron specification._
 
 ```kt
 val schedule: PulseSchedule = buildPulseSchedule {
@@ -183,6 +181,10 @@ val schedule: PulseSchedule = buildPulseSchedule {
 }
 val cron: String = schedule.toCronExpression() // 0,5,10,15,20,25,30 9-17 * * 1-5
 ```
+
+> [!WARNING]
+> Transforming a `PulseSchedule` into a standard Cron expression will omit any seconds components as 
+that's not included in the standard Cron specification.
 
 ### What's the difference between Cardiologist and other tools like cron?
 
