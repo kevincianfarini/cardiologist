@@ -34,12 +34,12 @@ public value class Pulse internal constructor(private val flow: Flow<Pair<Instan
      * Invoke [action] every time this Pulse is set to execute. [Action][action] provides two [instants][Instant]
      * denoting when the pulse was scheduled to occur, and when it actually occurred.
      *
-     * This operator will execute [action] according to which [mode] is specified.
+     * This operator will execute [action] according to which [strategy] is specified.
      */
     public suspend fun beat(
-        mode: PulseBackpressureStrategy = PulseBackpressureStrategy.ExecuteConcurrently,
+        strategy: PulseBackpressureStrategy = PulseBackpressureStrategy.ExecuteConcurrently,
         action: suspend (scheduled: Instant, occurred: Instant) -> Unit,
-    ): Unit = when (mode) {
+    ): Unit = when (strategy) {
         PulseBackpressureStrategy.CancelPrevious -> flow.collectLatest { (scheduled, occurred) ->
             action(scheduled, occurred)
         }
@@ -52,4 +52,14 @@ public value class Pulse internal constructor(private val flow: Flow<Pair<Instan
             action(scheduled, occurred)
         }
     }
+
+    /**
+     * Invoke [action] every time this Pulse is set to execute.
+     *
+     * This operator will execute [action] according to which [strategy] is specified.
+     */
+    public suspend fun beat(
+        strategy: PulseBackpressureStrategy = PulseBackpressureStrategy.ExecuteConcurrently,
+        action: suspend () -> Unit,
+    ): Unit = beat(strategy) { _, _, -> action }
 }

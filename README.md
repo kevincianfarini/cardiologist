@@ -44,7 +44,7 @@ through several different functions exposed on a `kotlinx.datetime.Clock`.
 
 Cardiologist offers two functions to schedule fixed period schedules using a `kotlin.time.Duration` and a 
 `kotlinx.datetime.DateTimePeriod`. Fixed period Pulses are rigid and the period specifies the time between the start 
-of a job and the start of its successor. Interval schedules are intentioanlly omitted from Cardiologist because 
+of a job and the start of its successor. Interval schedules are intentionally omitted from Cardiologist because 
 they can be trivially built with a while loop. 
 
 ```kt
@@ -106,12 +106,12 @@ skipped.
 
 ```kt
 // Cancels slow jobs. 
-clock.fixedPeriodPulse(5.seconds).beat(strategy = PulseBackpressureStrategy.CancelPrevious) { _, _ ->
+clock.fixedPeriodPulse(5.seconds).beat(strategy = PulseBackpressureStrategy.CancelPrevious) { 
     mySlowSuspendingFunction()
 }
 
 // Skips new jobs until this slow job completes. 
-clock.fixedPeriodPulse(5.seconds).beat(strategy = PulseBackpressureStrategy.SkipNext) { _, _ ->
+clock.fixedPeriodPulse(5.seconds).beat(strategy = PulseBackpressureStrategy.SkipNext) { 
     mySlowSuspendingFunction()
 }
 ```
@@ -201,4 +201,4 @@ fun main() = runBlocking { // this: CoroutineScope
 ```
 
 Cron runs as its own process and will launch your program as a separate processes. This is outside the scope of 
-Cadiologist's goals.
+Cardiologist's goals.
