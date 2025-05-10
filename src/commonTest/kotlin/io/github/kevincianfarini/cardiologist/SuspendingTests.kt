@@ -6,6 +6,7 @@ import kotlinx.coroutines.test.testTimeSource
 import kotlinx.datetime.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.measureTime
@@ -13,7 +14,8 @@ import kotlin.time.measureTime
 @OptIn(ExperimentalCoroutinesApi::class)
 class SuspendingTests {
 
-    @Test fun delays_for_proper_amount_of_time_until_future_instant() = runTest {
+    @Test
+    fun delays_for_proper_amount_of_time_until_future_instant() = runTest {
         val now = testClock.now()
         val future = now + 10.minutes
         val elapsed = testTimeSource.measureTime {
@@ -22,7 +24,8 @@ class SuspendingTests {
         assertEquals(expected = 10.minutes, actual = elapsed)
     }
 
-    @Test fun delayUntil_considers_positive_time_drift() = runTest {
+    @Test
+    fun delayUntil_considers_positive_time_drift() = runTest {
         val instants = listOf(
             Instant.fromEpochMilliseconds(0),
             Instant.fromEpochSeconds(65),
@@ -39,7 +42,8 @@ class SuspendingTests {
         assertEquals(expected = 115.seconds, actual = elapsed)
     }
 
-    @Test fun considers_negative_time_drift() = runTest {
+    @Test
+    fun considers_negative_time_drift() = runTest {
         val instants = listOf(
             Instant.fromEpochMilliseconds(0),
             Instant.fromEpochSeconds(55),
@@ -56,7 +60,8 @@ class SuspendingTests {
         assertEquals(expected = 65.seconds, actual = elapsed)
     }
 
-    @Test fun resumes_immediately_for_0_duration() = runTest {
+    @Test
+    fun resumes_immediately_for_0_duration() = runTest {
         val now = testClock.now()
         val elapsed = testTimeSource.measureTime {
             testClock.delayUntil(now)
@@ -64,12 +69,36 @@ class SuspendingTests {
         assertEquals(expected = 0.minutes, actual = elapsed)
     }
 
-    @Test fun resumes_immediately_for_negative_duration() = runTest {
+    @Test
+    fun resumes_immediately_for_negative_duration() = runTest {
         val now = testClock.now()
         val past = now - 10.minutes
         val elapsed = testTimeSource.measureTime {
             testClock.delayUntil(past)
         }
         assertEquals(expected = 0.minutes, actual = elapsed)
+    }
+
+    @Test
+    fun executeAt_invokes_with_correct_occurred_instant() = runTest {
+        val tenSeconds = Instant.fromEpochSeconds(10)
+        val duration = testTimeSource.measureTime {
+            testClock.executeAt(tenSeconds) { occurred ->
+                assertEquals(expected = tenSeconds, actual = occurred)
+            }
+        }
+        assertEquals(expected = 10.seconds, actual = duration)
+    }
+
+    @Test
+    fun executeAt_invokes_with_correct_occurred_local_date_time() = runTest {
+        val localDateTime = LocalDateTime(1970, 1, 2, 0, 0)
+        val tz = TimeZone.UTC
+        val duration = testTimeSource.measureTime {
+            testClock.executeAt(localDateTime, tz) { occurred ->
+                assertEquals(expected = localDateTime, actual = occurred)
+            }
+        }
+        assertEquals(expected = 24.hours, actual = duration)
     }
 }

@@ -118,19 +118,18 @@ clock.fixedPeriodPulse(5.seconds).beat(strategy = PulseBackpressureStrategy.Skip
 
 ### How do I schedule one-off jobs? 
 
-Cardiologist exposes the function `Clock.delayUntil` which delays until a specific moment in time using either a 
-`kotlinx.datetime.Instant` or a `kotlinx.datetime.LocalDateTime`. This building block allows you build rich APIs
-for executing one-off jobs. For example:
+Cardiologist provides `Clock.executeAt` which executes an action at a specific `Instant` or a specific `LocalDateTime`.
 
 ```kt
-suspend fun Clock.executeAt(instant: Instant, job: suspend () -> Unit) {
-    this.delayUntil(instant)
-    job()
+val instant = Instant.parse("2025-05-10T13:15:00Z")
+clock.executeAt(instant) { occurred: Instant ->
+    println("I executed at $occurred!")
 }
 
-suspend fun Clock.executeAt(dateTime: LocalDateTime, timeZone: TimeZone, job: suspend () -> Unit) {
-    this.delayUntil(dateTime, timeZone)
-    job()
+val localDateTime = LocalDatetime(2025, 5, 10, 13, 15, 0)
+val timeZone = TimeZone.of("America/New_York")
+clock.executeAt(localDateTime, timeZone) { occurred: LocalDateTime ->
+    println("I executed at $occurred!")
 }
 ```
 
@@ -184,7 +183,7 @@ val cron: String = schedule.toCronExpression() // 0,5,10,15,20,25,30 9-17 * * 1-
 
 > [!WARNING]
 > Transforming a `PulseSchedule` into a standard Cron expression will omit any seconds components as 
-that's not included in the standard Cron specification.
+> that's not included in the standard Cron specification.
 
 ### What's the difference between Cardiologist and other tools like cron?
 
