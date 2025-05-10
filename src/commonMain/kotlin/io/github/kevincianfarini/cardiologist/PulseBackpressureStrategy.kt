@@ -17,7 +17,6 @@ public value class PulseBackpressureStrategy private constructor(private val val
          */
         public val CancelPrevious: PulseBackpressureStrategy get() = PulseBackpressureStrategy(1)
 
-
         /**
          * Schedules recurring jobs sequentially by skipping a new job if an unfinished job
          * is still executing.
