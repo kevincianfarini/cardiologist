@@ -183,7 +183,7 @@ val cron: String = schedule.toCronExpression() // 0,5,10,15,20,25,30 9-17 * * 1-
 
 > [!WARNING]
 > Transforming a `PulseSchedule` into a standard Cron expression will omit any seconds components as 
-that's not included in the standard Cron specification.
+> that's not included in the standard Cron specification.
 
 ### What's the difference between Cardiologist and other tools like cron?
 
