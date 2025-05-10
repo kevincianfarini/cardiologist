@@ -51,6 +51,7 @@ public value class Pulse internal constructor(private val flow: Flow<Pair<Instan
         PulseBackpressureStrategy.SkipNext -> flow.collectCurrent { (scheduled, occurred) ->
             action(scheduled, occurred)
         }
+        else -> error("Impossible.")
     }
 
     /**
