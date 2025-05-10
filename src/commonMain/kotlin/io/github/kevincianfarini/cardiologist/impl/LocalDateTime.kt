@@ -174,7 +174,6 @@ private fun Month.numberOfDays(year: Int) = when (this) {
     Month.OCTOBER -> 31
     Month.NOVEMBER -> 30
     Month.DECEMBER -> 31
-    else -> error("Impossible.")
 }
 
 private val Int.isLeapYear: Boolean get() {

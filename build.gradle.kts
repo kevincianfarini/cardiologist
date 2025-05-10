@@ -12,6 +12,7 @@ plugins {
 
 kotlin {
 
+    compilerOptions { allWarningsAsErrors.set(true) }
     explicitApi()
 
     androidNativeArm32()
