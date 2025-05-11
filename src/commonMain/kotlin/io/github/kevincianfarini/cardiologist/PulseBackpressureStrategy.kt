@@ -20,4 +20,11 @@ public class PulseBackpressureStrategy private constructor() {
          */
         public val SkipNext: PulseBackpressureStrategy = PulseBackpressureStrategy()
     }
+
+    public override fun toString(): String = when (this) {
+        ExecuteConcurrently -> "ExecuteConcurrently"
+        CancelPrevious -> "CancelPrevious"
+        SkipNext -> "SkipNext"
+        else -> error("Impossible.")
+    }
 }
