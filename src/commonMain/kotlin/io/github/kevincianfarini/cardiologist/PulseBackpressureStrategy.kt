@@ -1,26 +1,30 @@
 package io.github.kevincianfarini.cardiologist
 
-import kotlin.jvm.JvmInline
-
-@JvmInline
-public value class PulseBackpressureStrategy private constructor(private val value: Byte) {
+public class PulseBackpressureStrategy private constructor() {
     public companion object {
         /**
          * Schedules recurring jobs concurrently. That is if job `n` is still active when job
          * `n + 1` should begin, then job `n` continues to run concurrently alongside job `n + 1`.
          */
-        public val ExecuteConcurrently: PulseBackpressureStrategy get() = PulseBackpressureStrategy(0)
+        public val ExecuteConcurrently: PulseBackpressureStrategy = PulseBackpressureStrategy()
 
         /**
          * Schedules recurring jobs sequentially by cancelling an unfinished job if a new one
          * should begin executing.
          */
-        public val CancelPrevious: PulseBackpressureStrategy get() = PulseBackpressureStrategy(1)
+        public val CancelPrevious: PulseBackpressureStrategy = PulseBackpressureStrategy()
 
         /**
          * Schedules recurring jobs sequentially by skipping a new job if an unfinished job
          * is still executing.
          */
-        public val SkipNext: PulseBackpressureStrategy get() = PulseBackpressureStrategy(2)
+        public val SkipNext: PulseBackpressureStrategy = PulseBackpressureStrategy()
+    }
+
+    public override fun toString(): String = when (this) {
+        ExecuteConcurrently -> "ExecuteConcurrently"
+        CancelPrevious -> "CancelPrevious"
+        SkipNext -> "SkipNext"
+        else -> error("Impossible.")
     }
 }
