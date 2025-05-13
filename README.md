@@ -149,7 +149,7 @@ withContext(scheduleName) {
 }
 ```
 
-### How do I run Pulses concurrently? 
+### How do I beat many Pulses concurrently? 
 
 Beating a Pulse is a suspending function, so you can execute multiple concurrently like any other suspending function.
 
