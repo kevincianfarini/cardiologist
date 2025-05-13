@@ -57,9 +57,9 @@ class PulseTests {
             Instant.fromEpochSeconds(120), // Second emissions in intervalPulse.
         ).asClock()
         val pulse = clock.fixedPeriodPulse(60.seconds)
-        pulse.take(2).beat { scheduled, occurred ->
+        pulse.take(2).beat { scheduled ->
             assertEquals(expected = scheduledInstants[index], scheduled)
-            assertEquals(expected = occurredInstants[index++], occurred)
+            assertEquals(expected = occurredInstants[index++], clock.now())
         }
     }
 
@@ -86,9 +86,9 @@ class PulseTests {
             Instant.fromEpochSeconds(120), // Second emissions in intervalPulse.
         ).asClock()
         val pulse = clock.fixedPeriodPulse(60.seconds)
-        pulse.take(2).beat { scheduled, occurred ->
+        pulse.take(2).beat { scheduled ->
             assertEquals(expected = scheduledInstants[index], scheduled)
-            assertEquals(expected = occurredInstants[index++], occurred)
+            assertEquals(expected = occurredInstants[index++], clock.now())
         }
     }
 
@@ -113,9 +113,9 @@ class PulseTests {
             Instant.fromEpochSeconds(120), // Second emissions in intervalPulse.
         ).asClock()
         val pulse = clock.fixedPeriodPulse(DateTimePeriod(minutes = 1), timeZone = TimeZone.UTC)
-        pulse.take(2).beat { scheduled, occurred ->
+        pulse.take(2).beat { scheduled ->
             assertEquals(expected = scheduledInstants[index], scheduled)
-            assertEquals(expected = occurredInstants[index++], occurred)
+            assertEquals(expected = occurredInstants[index++], clock.now())
         }
     }
 
@@ -142,9 +142,9 @@ class PulseTests {
             Instant.fromEpochSeconds(120), // Second emissions in intervalPulse.
         ).asClock()
         val pulse = clock.fixedPeriodPulse(DateTimePeriod(minutes = 1), timeZone = TimeZone.UTC)
-        pulse.take(2).beat { scheduled, occurred ->
+        pulse.take(2).beat { scheduled ->
             assertEquals(expected = scheduledInstants[index], scheduled)
-            assertEquals(expected = occurredInstants[index++], occurred)
+            assertEquals(expected = occurredInstants[index++], clock.now())
         }
     }
 
@@ -157,9 +157,9 @@ class PulseTests {
             Instant.fromEpochSeconds(65), // During emission in intervalPulse
         ).asClock()
         val pulse = clock.schedulePulse(timeZone = TimeZone.UTC, atMinute = 1, atSecond = 0)
-        pulse.take(1).beat { scheduled, occurred ->
+        pulse.take(1).beat { scheduled ->
             assertEquals(expected = Instant.fromEpochSeconds(60), scheduled)
-            assertEquals(expected = Instant.fromEpochSeconds(65), occurred)
+            assertEquals(expected = Instant.fromEpochSeconds(65), clock.now())
         }
     }
 
@@ -188,9 +188,9 @@ class PulseTests {
             Instant.fromEpochSeconds(120),
         ).asClock()
         val pulse = clock.schedulePulse(timeZone = TimeZone.UTC, atSecond = 0)
-        pulse.take(2).beat { scheduled, occurred ->
+        pulse.take(2).beat { scheduled ->
             assertEquals(expected = scheduledInstants[index], scheduled)
-            assertEquals(expected = occurredInstants[index++], occurred)
+            assertEquals(expected = occurredInstants[index++], clock.now())
         }
     }
 
@@ -217,7 +217,7 @@ class PulseTests {
         val list = MutableStateFlow<List<Instant>>(emptyList())
         backgroundScope.launch {
             val pulse = testClock.fixedPeriodPulse(1.seconds).take(3)
-            pulse.beat(PulseBackpressureStrategy.CancelPrevious) { scheduled, _ ->
+            pulse.beat(PulseBackpressureStrategy.CancelPrevious) { scheduled ->
                 try {
                     list.update { l -> l + scheduled }
                     awaitCancellation()
@@ -238,7 +238,7 @@ class PulseTests {
         val list = MutableStateFlow<List<Instant>>(emptyList())
         backgroundScope.launch {
             val pulse = testClock.fixedPeriodPulse(1.seconds).take(3)
-            pulse.beat(PulseBackpressureStrategy.SkipNext) { scheduled, _ ->
+            pulse.beat(PulseBackpressureStrategy.SkipNext) { scheduled ->
                 try {
                     list.update { l -> l + scheduled }
                     awaitCancellation()

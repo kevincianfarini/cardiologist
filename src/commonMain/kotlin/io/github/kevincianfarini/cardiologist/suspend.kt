@@ -7,22 +7,19 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 
 /**
  * Execute the provided [action] at or after [instant].
  *
  * The coroutine will be suspended until [instant] without blocking the thread. If [Clock.now] returns an [Instant]
  * greater than the supplied [instant], this function executes [action] without suspending.
- *
- * The supplied [action] is invoked with an [Instant] parameter specifying when the action was actually executed.
  */
 public suspend fun <T> Clock.executeAt(
     instant: Instant,
-    action: suspend (occurred: Instant) -> T,
+    action: suspend () -> T,
 ): T {
     delayUntil(instant)
-    return action(now())
+    return action()
 }
 
 /**
@@ -32,17 +29,16 @@ public suspend fun <T> Clock.executeAt(
  * [Instant] greater than the [Instant] associated with [dateTime] in [timeZone], this function executes [action] without
  * suspending.
  *
- * The supplied [action] is invoked with a [LocalDateTime] parameter specifying the instant that [action] was executed
- * in [timeZone]. Local time conversion is sometimes ambiguous, and therefore it's recommended to schedule pulses in a
+ * Local time conversion is sometimes ambiguous, and therefore it's recommended to schedule execution in a
  * fixed UTC offset timezone. See [LocalDateTime.toInstant] for more details.
  */
 public suspend fun <T> Clock.executeAt(
     dateTime: LocalDateTime,
     timeZone: TimeZone,
-    action: suspend (occurred: LocalDateTime) -> T,
+    action: suspend () -> T,
 ): T {
     delayUntil(dateTime, timeZone)
-    return action(now().toLocalDateTime(timeZone))
+    return action()
 }
 
 /**

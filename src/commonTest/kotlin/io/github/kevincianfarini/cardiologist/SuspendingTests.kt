@@ -83,8 +83,8 @@ class SuspendingTests {
     fun executeAt_invokes_with_correct_occurred_instant() = runTest {
         val tenSeconds = Instant.fromEpochSeconds(10)
         val duration = testTimeSource.measureTime {
-            testClock.executeAt(tenSeconds) { occurred ->
-                assertEquals(expected = tenSeconds, actual = occurred)
+            testClock.executeAt(tenSeconds) {
+                assertEquals(expected = tenSeconds, actual = testClock.now())
             }
         }
         assertEquals(expected = 10.seconds, actual = duration)
@@ -95,8 +95,8 @@ class SuspendingTests {
         val localDateTime = LocalDateTime(1970, 1, 2, 0, 0)
         val tz = TimeZone.UTC
         val duration = testTimeSource.measureTime {
-            testClock.executeAt(localDateTime, tz) { occurred ->
-                assertEquals(expected = localDateTime, actual = occurred)
+            testClock.executeAt(localDateTime, tz) {
+                assertEquals(expected = localDateTime, actual = testClock.now().toLocalDateTime(tz))
             }
         }
         assertEquals(expected = 24.hours, actual = duration)
