@@ -149,6 +149,21 @@ withContext(scheduleName) {
 }
 ```
 
+### How do I run Pulses concurrently? 
+
+Beating a Pulse is a suspending function, so you can execute multiple concurrently like any other suspending function.
+
+```kt
+suspend fun Clock.doMany() = coroutineScope {
+    launch {
+      fixedPeriodPulse(10.seconds).beat { doOne() }
+    }
+    launch {
+      fixedPeriodPulse(10.minutes).beat { doOne() }
+    }
+}
+```
+
 ### How many jobs can Cardiologist run concurrently? 
 
 To be determined, but definitely more than 5 and less than 1,000,000. Stress testing coming soon. 
