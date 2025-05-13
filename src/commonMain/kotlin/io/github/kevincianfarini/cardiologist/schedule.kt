@@ -25,7 +25,7 @@ public fun Clock.fixedPeriodPulse(period: Duration): Pulse {
         var nextPulse: Instant = now() + period
         while (true) {
             delayUntil(nextPulse)
-            emit(Pair(nextPulse, now()))
+            emit(nextPulse)
             nextPulse += period
         }
     }
@@ -44,7 +44,7 @@ public fun Clock.fixedPeriodPulse(period: DateTimePeriod, timeZone: TimeZone): P
         var nextPulse: Instant = now().plus(period, timeZone)
         while (true) {
             delayUntil(nextPulse)
-            emit(Pair(nextPulse, now()))
+            emit(nextPulse)
             nextPulse = nextPulse.plus(period, timeZone)
         }
     }
@@ -98,7 +98,7 @@ public fun Clock.schedulePulse(
                 inMonths = inMonth?.let { it..it } ?: Month.JANUARY..Month.DECEMBER,
             )
             delayUntil(nextPulse, timeZone)
-            emit(Pair(nextPulse.toInstant(timeZone), now()))
+            emit(nextPulse.toInstant(timeZone))
             lastPulse = nextPulse
         }
     }

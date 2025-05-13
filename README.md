@@ -6,8 +6,8 @@ Build job schedules with [kotlinx-datetime](https://github.com/Kotlin/kotlinx-da
 
 ```kt
 val tz = TimeZone.of("America/New_York")
-Clock.System.schedulePulse(timeZone = tz, atSecond = 0).beat { scheduled, occurred ->
-    println("A pulse was scheduled in $tz for ${scheduled.toLocalDateTime(tz)} and occurred at ${occurred.toLocalDateTime(tz)}.")
+Clock.System.schedulePulse(timeZone = tz, atSecond = 0).beat { scheduled ->
+    println("A pulse was scheduled in $tz for ${scheduled.toLocalDateTime(tz)} and occurred at ${Clock.System.now().toLocalDateTime(tz)}.")
 }
 ```
 
@@ -88,12 +88,12 @@ val cronPulse: Pulse = clock.schedulePulse(cronExpression = "* * * * *", timeZon
 
 #### Executing jobs
 
-Pulses alone don't do any work. You need to beat a pulse for it to do something! The lambda exposes two `Instant` 
-parameters denoting when a pulse was scheduled and when it actually occurred. 
+Pulses alone don't do any work. You need to beat a pulse for it to do something! The lambda exposes the `Instant` 
+denoting when a pulse was scheduled to occur. 
 
 ```kt
-clock.fixedPeriodPulse(30.seconds).beat { scheduled, occurred ->
-    println("My job was scheduled for $scheduled and occurred at $occurred.")
+clock.fixedPeriodPulse(30.seconds).beat { scheduled ->
+    println("My job was scheduled for $scheduled and occurred at ${clock.now()}.")
 }
 ```
 
@@ -122,14 +122,14 @@ Cardiologist provides `Clock.executeAt` which executes an action at a specific `
 
 ```kt
 val instant = Instant.parse("2025-05-10T13:15:00Z")
-clock.executeAt(instant) { occurred: Instant ->
-    println("I executed at $occurred!")
+clock.executeAt(instant) { 
+    println("I executed at ${clock.now()}!")
 }
 
 val localDateTime = LocalDatetime(2025, 5, 10, 13, 15, 0)
 val timeZone = TimeZone.of("America/New_York")
-clock.executeAt(localDateTime, timeZone) { occurred: LocalDateTime ->
-    println("I executed at $occurred!")
+clock.executeAt(localDateTime, timeZone) { 
+    println("I executed at ${clock.now().toLocalDateTime(timeZone)}!")
 }
 ```
 
@@ -142,7 +142,7 @@ like "My job which started executing at 2025-05-07T15:24:00"
 ```kt
 val scheduleName = CoroutineName("5-second Pulse schedule")
 withContext(scheduleName) {
-    clock.fixedPeriodPulse(5.seconds).beat(strategy = PulseBackpressureStrategy.CancelPrevious) { scheduled, _ ->
+    clock.fixedPeriodPulse(5.seconds).beat(strategy = PulseBackpressureStrategy.CancelPrevious) { scheduled ->
         val jobName = CoroutineName("My job which started executing at $scheduled")
         withContext(jobName) { myJob() }
     }

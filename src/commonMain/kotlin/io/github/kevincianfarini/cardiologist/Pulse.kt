@@ -14,7 +14,7 @@ import kotlin.jvm.JvmInline
  * A [Pulse] is a cadence which informs consumers when to execute work by calling [Pulse.beat].
  */
 @JvmInline
-public value class Pulse internal constructor(private val flow: Flow<Pair<Instant, Instant>>) {
+public value class Pulse internal constructor(private val flow: Flow<Instant>) {
 
     /**
      * Returns a pulse that beats [count] times.
@@ -26,41 +26,27 @@ public value class Pulse internal constructor(private val flow: Flow<Pair<Instan
     /**
      * Returns a pulse that beats while [predicate] is satisfied.
      */
-    public fun takeWhile(predicate: (Instant, Instant) -> Boolean): Pulse = Pulse(
-        flow.takeWhile { (scheduled, occurred) -> predicate(scheduled, occurred) }
+    public fun takeWhile(predicate: (scheduled: Instant) -> Boolean): Pulse = Pulse(
+        flow.takeWhile(predicate)
     )
 
     /**
-     * Invoke [action] every time this Pulse is set to execute. [Action][action] provides two [instants][Instant]
-     * denoting when the pulse was scheduled to occur, and when it actually occurred.
+     * Invoke [action] every time this Pulse is set to execute. [Action][action] provides an [Instant] denoting when the
+     * pulse was scheduled to occur.
      *
      * This operator will execute [action] according to which [strategy] is specified.
      */
     public suspend fun beat(
         strategy: PulseBackpressureStrategy = PulseBackpressureStrategy.ExecuteConcurrently,
-        action: suspend (scheduled: Instant, occurred: Instant) -> Unit,
+        action: suspend (scheduled: Instant) -> Unit,
     ): Unit = when (strategy) {
-        PulseBackpressureStrategy.CancelPrevious -> flow.collectLatest { (scheduled, occurred) ->
-            action(scheduled, occurred)
-        }
+        PulseBackpressureStrategy.CancelPrevious -> flow.collectLatest(action)
         PulseBackpressureStrategy.ExecuteConcurrently -> coroutineScope {
-            flow.collect { (scheduled, occurred) ->
-                launch { action(scheduled, occurred) }
+            flow.collect { scheduled ->
+                launch { action(scheduled) }
             }
         }
-        PulseBackpressureStrategy.SkipNext -> flow.collectCurrent { (scheduled, occurred) ->
-            action(scheduled, occurred)
-        }
+        PulseBackpressureStrategy.SkipNext -> flow.collectCurrent(action)
         else -> error("Impossible.")
     }
-
-    /**
-     * Invoke [action] every time this Pulse is set to execute.
-     *
-     * This operator will execute [action] according to which [strategy] is specified.
-     */
-    public suspend fun beat(
-        strategy: PulseBackpressureStrategy = PulseBackpressureStrategy.ExecuteConcurrently,
-        action: suspend () -> Unit,
-    ): Unit = beat(strategy) { _, _ -> action() }
 }
