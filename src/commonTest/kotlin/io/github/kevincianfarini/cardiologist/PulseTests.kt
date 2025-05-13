@@ -1,6 +1,11 @@
 package io.github.kevincianfarini.cardiologist
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.testTimeSource
 import kotlinx.datetime.*
@@ -12,7 +17,8 @@ import kotlin.time.measureTime
 @OptIn(ExperimentalCoroutinesApi::class)
 class PulseTests {
 
-    @Test fun intervalPulse_Duration_emits_subsequent_instant_after_delaying() = runTest {
+    @Test
+    fun intervalPulse_Duration_emits_subsequent_instant_after_delaying() = runTest {
         assertEquals(
             expected = 5.seconds,
             actual = testTimeSource.measureTime {
@@ -21,7 +27,8 @@ class PulseTests {
         )
     }
 
-    @Test fun intervalPulse_DateTimePeriod_emits_subsequent_instants_after_delaying() = runTest {
+    @Test
+    fun intervalPulse_DateTimePeriod_emits_subsequent_instants_after_delaying() = runTest {
         val pulse = testClock.fixedPeriodPulse(DateTimePeriod(seconds = 5), TimeZone.UTC).take(1)
         assertEquals(
             expected = 5.seconds,
@@ -29,7 +36,8 @@ class PulseTests {
         )
     }
 
-    @Test fun intervalPulse_Duration_accounts_for_positive_time_drift() = runTest {
+    @Test
+    fun intervalPulse_Duration_accounts_for_positive_time_drift() = runTest {
         var index = 0
         val scheduledInstants = listOf(
             Instant.fromEpochSeconds(60),
@@ -55,7 +63,8 @@ class PulseTests {
         }
     }
 
-    @Test fun intervalPulse_Duration_accounts_for_negative_time_drift() = runTest {
+    @Test
+    fun intervalPulse_Duration_accounts_for_negative_time_drift() = runTest {
         var index = 0
         val scheduledInstants = listOf(
             Instant.fromEpochSeconds(60),
@@ -83,7 +92,8 @@ class PulseTests {
         }
     }
 
-    @Test fun intervalPulse_DateTimePeriod_accounts_for_positive_time_drift() = runTest {
+    @Test
+    fun intervalPulse_DateTimePeriod_accounts_for_positive_time_drift() = runTest {
         var index = 0
         val scheduledInstants = listOf(
             Instant.fromEpochSeconds(60),
@@ -109,7 +119,8 @@ class PulseTests {
         }
     }
 
-    @Test fun intervalPulse_DateTimePeriod_accounts_for_negative_time_drift() = runTest {
+    @Test
+    fun intervalPulse_DateTimePeriod_accounts_for_negative_time_drift() = runTest {
         var index = 0
         val scheduledInstants = listOf(
             Instant.fromEpochSeconds(60),
@@ -137,7 +148,8 @@ class PulseTests {
         }
     }
 
-    @Test fun schedulePulse_accounts_for_positive_time_drift() = runTest {
+    @Test
+    fun schedulePulse_accounts_for_positive_time_drift() = runTest {
         val clock = listOf(
             Instant.fromEpochSeconds(0), // Initial reference in intervalPulse.
             Instant.fromEpochSeconds(0), // Initial reference in delayUntil.
@@ -151,7 +163,8 @@ class PulseTests {
         }
     }
 
-    @Test fun schedulePulse_accounts_for_negative_time_drift() = runTest {
+    @Test
+    fun schedulePulse_accounts_for_negative_time_drift() = runTest {
         var index = 0
         val scheduledInstants = listOf(
             Instant.fromEpochSeconds(60),
@@ -179,5 +192,65 @@ class PulseTests {
             assertEquals(expected = scheduledInstants[index], scheduled)
             assertEquals(expected = occurredInstants[index++], occurred)
         }
+    }
+
+    @Test
+    fun pulse_execute_concurrently_accumulates_jobs() = runTest {
+        val count = MutableStateFlow(0)
+        backgroundScope.launch {
+            val pulse = testClock.fixedPeriodPulse(1.seconds).take(3)
+            pulse.beat(PulseBackpressureStrategy.ExecuteConcurrently) {
+                try {
+                    count.update { it + 1 }
+                    awaitCancellation()
+                } finally {
+                    count.update { it - 1 }
+                }
+            }
+        }
+        delay(10.seconds)
+        assertEquals(expected = 3, actual = count.value)
+    }
+
+    @Test
+    fun pulse_cancel_previous_cancels_correct_jobs() = runTest {
+        val list = MutableStateFlow<List<Instant>>(emptyList())
+        backgroundScope.launch {
+            val pulse = testClock.fixedPeriodPulse(1.seconds).take(3)
+            pulse.beat(PulseBackpressureStrategy.CancelPrevious) { scheduled, _ ->
+                try {
+                    list.update { l -> l + scheduled }
+                    awaitCancellation()
+                } finally {
+                    list.update { l -> l - scheduled }
+                }
+            }
+        }
+        delay(10.seconds)
+        assertEquals(
+            expected = listOf(Instant.fromEpochSeconds(3)),
+            actual = list.value,
+        )
+    }
+
+    @Test
+    fun pulse_skip_next_skips_correct_jobs() = runTest {
+        val list = MutableStateFlow<List<Instant>>(emptyList())
+        backgroundScope.launch {
+            val pulse = testClock.fixedPeriodPulse(1.seconds).take(3)
+            pulse.beat(PulseBackpressureStrategy.SkipNext) { scheduled, _ ->
+                try {
+                    list.update { l -> l + scheduled }
+                    awaitCancellation()
+                } finally {
+                    list.update { l -> l - scheduled }
+                }
+            }
+        }
+        delay(10.seconds)
+        assertEquals(
+            expected = listOf(Instant.fromEpochSeconds(1)),
+            actual = list.value,
+        )
     }
 }

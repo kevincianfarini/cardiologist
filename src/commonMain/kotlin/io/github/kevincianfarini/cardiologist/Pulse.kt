@@ -62,5 +62,5 @@ public value class Pulse internal constructor(private val flow: Flow<Pair<Instan
     public suspend fun beat(
         strategy: PulseBackpressureStrategy = PulseBackpressureStrategy.ExecuteConcurrently,
         action: suspend () -> Unit,
-    ): Unit = beat(strategy) { _, _, -> action }
+    ): Unit = beat(strategy) { _, _ -> action() }
 }
