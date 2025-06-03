@@ -155,7 +155,7 @@ private fun LocalDateTime.nextSecond(
     val incrementedSecond = if (nanosecond > 0) (second + 1) % 60 else second
     return when {
         incrementedSecond < second -> nextMinute(atMinutes, atHours, onDaysOfMonth, inMonths, increment = true).copy(
-            second = incrementedSecond
+            second = minSecond
         )
         incrementedSecond in atSeconds -> copy(second = incrementedSecond)
         incrementedSecond < minSecond -> copy(second = minSecond)
