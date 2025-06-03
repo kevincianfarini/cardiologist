@@ -1,72 +1,75 @@
 package io.github.kevincianfarini.cardiologist.impl
 
+import io.github.kevincianfarini.cardiologist.PulseSchedule
+import io.github.kevincianfarini.cardiologist.PulseScheduleBuilder
+import io.github.kevincianfarini.cardiologist.buildPulseSchedule
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.number
 
-internal fun LocalDateTime.nextMatch(
-    atSeconds: IntRange = 0..59,
-    atMinutes: IntRange = 0..59,
-    atHours: IntRange = 0..23,
-    onDaysOfMonth: IntRange = 1..31,
-    inMonths: ClosedRange<Month> = Month.JANUARY..Month.DECEMBER,
-): LocalDateTime {
+internal fun LocalDateTime.nextMatch(scheduleBuilder: PulseScheduleBuilder.() -> Unit = {}): LocalDateTime {
+    return nextMatch(buildPulseSchedule(scheduleBuilder))
+}
+
+internal fun LocalDateTime.nextMatch(schedule: PulseSchedule): LocalDateTime {
     // Ensure that the nextMatch of this LocalDateTime doesn't produce itself. If it does then increment the
     // nanosecond component by one to ensure that we produce a match that's distinct from this value.
-    val time = if (matches(atSeconds, atMinutes, atHours, onDaysOfMonth, inMonths)) copy(nanosecond = 1) else this
-    return time.nextMonth(inMonths)
-        .nextDay(onDaysOfMonth, inMonths)
-        .nextHour(atHours, onDaysOfMonth, inMonths)
-        .nextMinute(atMinutes, atHours, onDaysOfMonth, inMonths)
-        .nextSecond(atSeconds, atMinutes, atHours, onDaysOfMonth, inMonths)
+    val time = if (matches(schedule)) copy(nanosecond = 1) else this
+    return with(schedule) {
+        time.nextMonth(inMonths)
+            .nextDay(onDaysOfMonth, inMonths)
+            .nextHour(atHours, onDaysOfMonth, inMonths)
+            .nextMinute(atMinutes, atHours, onDaysOfMonth, inMonths)
+            .nextSecond(atSeconds, atMinutes, atHours, onDaysOfMonth, inMonths)
+    }
 }
 
-private fun LocalDateTime.matches(
-    atSeconds: IntRange = 0..59,
-    atMinutes: IntRange = 0..59,
-    atHours: IntRange = 0..23,
-    onDaysOfMonth: IntRange = 1..31,
-    inMonths: ClosedRange<Month> = Month.JANUARY..Month.DECEMBER,
-): Boolean {
-    return nanosecond == 0 && second in atSeconds && minute in atMinutes && hour in atHours
-            && dayOfMonth in onDaysOfMonth && month in inMonths
-}
+private fun LocalDateTime.matches(schedule: PulseSchedule): Boolean = nanosecond == 0 &&
+        second in schedule.atSeconds &&
+        minute in schedule.atMinutes &&
+        hour in schedule.atHours &&
+        dayOfMonth in schedule.onDaysOfMonth &&
+        month in schedule.inMonths
 
 private fun LocalDateTime.nextMonth(
-    inMonths: ClosedRange<Month>,
+    inMonths: Set<Month>,
     increment: Boolean = false,
 ): LocalDateTime {
     val incrementedMonth = if (increment) month.inc() else month
+    val minMonth = inMonths.minOrNull()!!
+    val maxMonth = inMonths.maxOrNull()!!
     return when {
         incrementedMonth < month -> copy(year = year + 1, monthNumber = incrementedMonth.number)
         incrementedMonth in inMonths -> copy(monthNumber = incrementedMonth.number)
-        incrementedMonth < inMonths.start -> copy(
-            monthNumber = inMonths.start.number,
+        incrementedMonth < minMonth -> copy(
+            monthNumber = minMonth.number,
             dayOfMonth = 1,
             hour = 0,
             minute = 0,
             second = 0,
             nanosecond = 0
         )
-        incrementedMonth > inMonths.endInclusive -> copy(
+        incrementedMonth > maxMonth -> copy(
             year = year + 1,
-            monthNumber = inMonths.start.number,
+            monthNumber = minMonth.number,
             dayOfMonth = 1,
             hour = 0,
             minute = 0,
             second = 0,
             nanosecond = 0
         )
-        else -> error("This should be impossible")
+        else -> copy(monthNumber = inMonths.sorted().first { it > incrementedMonth }.number)
     }
 }
 
 private fun LocalDateTime.nextDay(
-    onDaysOfMonth: IntRange,
-    inMonths: ClosedRange<Month>,
+    onDaysOfMonth: Set<Int>,
+    inMonths: Set<Month>,
     increment: Boolean = false,
 ): LocalDateTime {
-    require(onDaysOfMonth.first >= 1 && onDaysOfMonth.last <= 31) { "onDaysOfMonth $onDaysOfMonth not in range 1..31." }
+    val minDayOfMonth = onDaysOfMonth.minOrNull()!!
+    val maxDayOfMonth = onDaysOfMonth.maxOrNull()!!
+    require(minDayOfMonth >= 1 && maxDayOfMonth <= 31) { "onDaysOfMonth $onDaysOfMonth not in range 1..31." }
     val incrementedDay = when {
         increment && dayOfMonth + 1 <= month.numberOfDays(year) -> dayOfMonth + 1
         increment -> 1
@@ -75,89 +78,95 @@ private fun LocalDateTime.nextDay(
     return when {
         incrementedDay < dayOfMonth -> copy(dayOfMonth = incrementedDay).nextMonth(inMonths, increment = true)
         incrementedDay in onDaysOfMonth -> copy(dayOfMonth = incrementedDay)
-        incrementedDay < onDaysOfMonth.first -> {
-            if (onDaysOfMonth.first <= month.numberOfDays(year)) {
-                copy(dayOfMonth = onDaysOfMonth.first)
+        incrementedDay < minDayOfMonth -> {
+            if (minDayOfMonth <= month.numberOfDays(year)) {
+                copy(dayOfMonth = minDayOfMonth)
             } else {
                 nextMonth(inMonths, increment = true).copy(dayOfMonth = 1)
             }
         }
-        incrementedDay > onDaysOfMonth.last -> {
+        incrementedDay > maxDayOfMonth -> {
             nextMonth(inMonths, increment = true).copy(dayOfMonth = 1)
         }
-        else -> error("This should be impossible.")
+        else -> copy(dayOfMonth = onDaysOfMonth.sorted().first { it > incrementedDay })
     }
 }
 
 private fun LocalDateTime.nextHour(
-    atHours: IntRange,
-    onDaysOfMonth: IntRange,
-    inMonths: ClosedRange<Month>,
+    atHours: Set<Int>,
+    onDaysOfMonth: Set<Int>,
+    inMonths: Set<Month>,
     increment: Boolean = false,
 ): LocalDateTime {
-    require(atHours.first >= 0 && atHours.last <= 23) { "atHours $atHours not in range 0..23." }
+    val minHour = atHours.minOrNull()!!
+    val maxHour = atHours.maxOrNull()!!
+    require(minHour >= 0 && maxHour <= 23) { "atHours $atHours not in range 0..23." }
     val incrementedHour = if (increment) (hour + 1) % 24 else hour
     return when {
         incrementedHour < hour -> nextDay(onDaysOfMonth, inMonths, increment = true).copy(hour = incrementedHour)
         incrementedHour in atHours -> copy(hour = incrementedHour)
-        incrementedHour < atHours.first -> copy(hour = atHours.first, minute = 0, second = 0, nanosecond = 0)
-        incrementedHour > atHours.last -> nextDay(onDaysOfMonth, inMonths, increment = true).copy(
-            hour = atHours.first,
+        incrementedHour < minHour -> copy(hour = minHour, minute = 0, second = 0, nanosecond = 0)
+        incrementedHour > maxHour -> nextDay(onDaysOfMonth, inMonths, increment = true).copy(
+            hour = minHour,
             minute = 0,
             second = 0,
             nanosecond = 0,
         )
-        else -> error("This should be impossible.")
+        else -> copy(hour = atHours.sorted().first { it > incrementedHour })
     }
 }
 
 private fun LocalDateTime.nextMinute(
-    atMinutes: IntRange,
-    atHours: IntRange,
-    onDaysOfMonth: IntRange,
-    inMonths: ClosedRange<Month>,
+    atMinutes: Set<Int>,
+    atHours: Set<Int>,
+    onDaysOfMonth: Set<Int>,
+    inMonths: Set<Month>,
     increment: Boolean = false,
 ): LocalDateTime {
-    require(atMinutes.first >= 0 && atMinutes.last <= 59) { "atMinutes $atMinutes not in range 0..59." }
+    val minMinute = atMinutes.minOrNull()!!
+    val maxMinute = atMinutes.maxOrNull()!!
+    require(minMinute >= 0 && maxMinute <= 59) { "atMinutes $atMinutes not in range 0..59." }
     val incrementedMinute = if (increment) (minute + 1) % 60 else minute
     return when {
         incrementedMinute < minute -> nextHour(atHours, onDaysOfMonth, inMonths, increment = true).copy(
             minute = incrementedMinute
         )
         incrementedMinute in atMinutes -> copy(minute = incrementedMinute)
-        incrementedMinute < atMinutes.first -> copy(minute = atMinutes.first, second = 0, nanosecond = 0)
-        incrementedMinute > atMinutes.last -> nextHour(atHours, onDaysOfMonth, inMonths, increment = true).copy(
-            minute = atMinutes.first,
+        incrementedMinute < minMinute -> copy(minute = minMinute, second = 0, nanosecond = 0)
+        incrementedMinute > maxMinute -> nextHour(atHours, onDaysOfMonth, inMonths, increment = true).copy(
+            minute = minMinute,
             second = 0,
             nanosecond = 0,
         )
-        else -> error("This should be impossible.")
+        else -> copy(minute = atMinutes.sorted().first { it > incrementedMinute })
     }
 }
 
 private fun LocalDateTime.nextSecond(
-    atSeconds: IntRange,
-    atMinutes: IntRange,
-    atHours: IntRange,
-    onDaysOfMonth: IntRange,
-    inMonths: ClosedRange<Month>,
+    atSeconds: Set<Int>,
+    atMinutes: Set<Int>,
+    atHours: Set<Int>,
+    onDaysOfMonth: Set<Int>,
+    inMonths: Set<Month>,
 ): LocalDateTime {
-    require(atSeconds.first >= 0 && atSeconds.last <= 59) { " atSeconds $atSeconds not in range 0..59." }
+    val minSecond = atSeconds.minOrNull()!!
+    val maxSeconds = atSeconds.maxOrNull()!!
+    require(minSecond >= 0 && maxSeconds <= 59) { " atSeconds $atSeconds not in range 0..59." }
     val incrementedSecond = if (nanosecond > 0) (second + 1) % 60 else second
     return when {
         incrementedSecond < second -> nextMinute(atMinutes, atHours, onDaysOfMonth, inMonths, increment = true).copy(
             second = incrementedSecond
         )
         incrementedSecond in atSeconds -> copy(second = incrementedSecond)
-        incrementedSecond < atSeconds.first -> copy(second = atSeconds.first)
-        incrementedSecond > atSeconds.last -> nextMinute(
+        incrementedSecond < minSecond -> copy(second = minSecond)
+        incrementedSecond > maxSeconds -> nextMinute(
             atMinutes,
             atHours,
             onDaysOfMonth,
             inMonths,
             increment = true,
-        ).copy(second = atSeconds.first)
-        else -> error("This should be impossible.")
+        ).copy(second = minSecond)
+        else -> copy(second = atSeconds.sorted().first { it > incrementedSecond })
     }.copy(nanosecond = 0)
 }
 
