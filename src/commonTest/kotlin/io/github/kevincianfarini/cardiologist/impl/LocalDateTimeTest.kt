@@ -389,6 +389,14 @@ class LocalDateTimeTest {
             atSeconds(10, 0, 5)
         },
     )
+
+    @Test
+    fun check_2023_10_04T00_00_59_000000001_next_match_is_correct() = assertEquals(
+        expected = stubDatetime.copy(minute = 1, second = 1),
+        actual = stubDatetime.copy(second = 59, nanosecond = 1).nextMatch {
+            atSeconds(1)
+        },
+    )
 }
 
 private fun LocalDateTime.assertGap(
