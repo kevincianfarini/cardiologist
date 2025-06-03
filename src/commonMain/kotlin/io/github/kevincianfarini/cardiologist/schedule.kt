@@ -1,6 +1,7 @@
 package io.github.kevincianfarini.cardiologist
 
 import io.github.kevincianfarini.cardiologist.impl.nextMatch
+import io.github.kevincianfarini.cardiologist.impl.parseCronExpression
 import kotlin.time.Duration
 import kotlinx.coroutines.flow.flow
 import kotlinx.datetime.Clock
@@ -77,6 +78,7 @@ public fun Clock.fixedPeriodPulse(period: DateTimePeriod, timeZone: TimeZone): P
  * @param atHour The hour of a day to pulse at. Null matches the whole valid range, 0..23.
  * @param onDayOfMonth The day of a month to pulse at. Null matches the whole valid range, 0..31.
  * @param inMonth The month of a year to pulse at. Null matches the whole valid range, January..December.
+ * @param timeZone The TimeZone to schedule pulses in.
  * @throws [IllegalArgumentException] if any parameter is out of the above range.
  */
 public fun Clock.schedulePulse(
@@ -86,17 +88,85 @@ public fun Clock.schedulePulse(
     atHour: Int? = null,
     onDayOfMonth: Int? = null,
     inMonth: Month? = null,
+): Pulse = schedulePulse(timeZone) {
+    atSecond?.run(this::atSeconds)
+    atMinute?.run(this::atMinutes)
+    atHour?.run(this::atHours)
+    onDayOfMonth?.run(this::onDaysOfMonth)
+    inMonth?.run(this::inMonths)
+}
+
+/**
+ * Schedule a [Pulse] whose beats occur in accordance with the [built schedule][scheduleBuilder] for a specific
+ * [timeZone].
+ *
+ * For example, the following invocation will schedule a Pulse on the fifth minute of every hour.
+ *
+ * ```kt
+ * clock.schedulePulse {
+ *   atSeconds(0)
+ *   atMinutes(5)
+ * }
+ * ```
+ *
+ * Scheduling pulses is done in local time and is therefore subject to daylight savings time adjustments. Local time
+ * conversion is sometimes ambiguous, and therefore it's recommended to schedule pulses in a fixed UTC offset timezone.
+ * See [LocalDateTime.toInstant] for more details.
+ *
+ * @param scheduleBuilder The DSL lambda for building a Pulse schedule.
+ * @param timeZone The TimeZone to schedule pulses in.
+ * @throws IllegalArgumentException if [scheduleBuilder] is not valid.
+ */
+public fun Clock.schedulePulse(
+    timeZone: TimeZone = TimeZone.UTC,
+    scheduleBuilder: PulseScheduleBuilder.() -> Unit,
+): Pulse = schedulePulse(
+    schedule = buildPulseSchedule(scheduleBuilder),
+    timeZone = timeZone,
+)
+
+/**
+ * Schedule a [Pulse] whose beats occur in accordance with the provided [cronExpression] for a specific [timeZone].
+ *
+ * This function supports the standard cron specification, which includes:
+ *
+ * - Five fields specifying the minute, hour, day of month, month, and day of week.
+ * - `*` denoting a wildcard value.
+ * - List of values using commas, like `1,5,7`.
+ * - Ranges of values, like `5-10`.
+ * - Mixed range and list values, like `5-10,20-25`.
+ * - The integers 0-59 for the minute field.
+ * - The integers 0-23 for the hour field.
+ * - The integers 1-31 for the day of week field.
+ * - The integers 1-12 for the month field.
+ * - The integers 0-6 or strings SUN-SAT for the day of week field.
+ *
+ * Functionality not articulated above is considered non-standard and is therefore explicitly not supported.
+ *
+ * Scheduling pulses is done in local time and is therefore subject to daylight savings time adjustments. Local time
+ * conversion is sometimes ambiguous, and therefore it's recommended to schedule pulses in a fixed UTC offset timezone.
+ * See [LocalDateTime.toInstant] for more details.
+ *
+ * @param cronExpression The standard cron expression.
+ * @param timeZone The TimeZone to schedule pulses in.
+ * @throws IllegalArgumentException if [cronExpression] is not valid.
+ */
+public fun Clock.schedulePulse(
+    cronExpression: String,
+    timeZone: TimeZone = TimeZone.UTC,
+): Pulse = schedulePulse(
+    schedule = cronExpression.parseCronExpression(),
+    timeZone = timeZone,
+)
+
+public fun Clock.schedulePulse(
+    schedule: PulseSchedule,
+    timeZone: TimeZone = TimeZone.UTC,
 ): Pulse {
     val flow = flow {
         var lastPulse: LocalDateTime = now().toLocalDateTime(timeZone)
         while (true) {
-            val nextPulse = lastPulse.nextMatch {
-                atSecond?.run(this::atSeconds)
-                atMinute?.run(this::atMinutes)
-                atHour?.run(this::atHours)
-                onDayOfMonth?.run(this::onDaysOfMonth)
-                inMonth?.run(this::inMonths)
-            }
+            val nextPulse = lastPulse.nextMatch(schedule)
             delayUntil(nextPulse, timeZone)
             emit(nextPulse.toInstant(timeZone))
             lastPulse = nextPulse

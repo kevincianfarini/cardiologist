@@ -11,6 +11,7 @@ import kotlinx.coroutines.test.testTimeSource
 import kotlinx.datetime.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.measureTime
 
@@ -252,5 +253,19 @@ class PulseTests {
             expected = listOf(Instant.fromEpochSeconds(1)),
             actual = list.value,
         )
+    }
+
+    @Test
+    fun schedulePulse_with_cron_expression_simple() = runTest {
+        val pulse = testClock.schedulePulse("* * * * *").take(1)
+        val duration = testTimeSource.measureTime { pulse.beat {  } }
+        assertEquals(expected = 1.minutes, actual = duration)
+    }
+
+    @Test
+    fun schedulePulse_dsl_simple() = runTest {
+        val pulse = testClock.schedulePulse { atSeconds(0) }.take(1)
+        val duration = testTimeSource.measureTime { pulse.beat {  } }
+        assertEquals(expected = 1.minutes, actual = duration)
     }
 }
