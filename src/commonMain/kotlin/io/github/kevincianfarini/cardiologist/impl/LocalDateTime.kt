@@ -58,7 +58,7 @@ private fun LocalDateTime.nextMonth(
             second = 0,
             nanosecond = 0
         )
-        else -> error("This should be impossible")
+        else -> copy(monthNumber = inMonths.sorted().first { it > incrementedMonth }.number)
     }
 }
 
@@ -88,7 +88,7 @@ private fun LocalDateTime.nextDay(
         incrementedDay > maxDayOfMonth -> {
             nextMonth(inMonths, increment = true).copy(dayOfMonth = 1)
         }
-        else -> error("This should be impossible.")
+        else -> copy(dayOfMonth = onDaysOfMonth.sorted().first { it > incrementedDay })
     }
 }
 
@@ -112,7 +112,7 @@ private fun LocalDateTime.nextHour(
             second = 0,
             nanosecond = 0,
         )
-        else -> error("This should be impossible.")
+        else -> copy(hour = atHours.sorted().first { it > incrementedHour })
     }
 }
 
@@ -138,7 +138,7 @@ private fun LocalDateTime.nextMinute(
             second = 0,
             nanosecond = 0,
         )
-        else -> error("This should be impossible.")
+        else -> copy(minute = atMinutes.sorted().first { it > incrementedMinute })
     }
 }
 
@@ -166,7 +166,7 @@ private fun LocalDateTime.nextSecond(
             inMonths,
             increment = true,
         ).copy(second = minSecond)
-        else -> error("This should be impossible.")
+        else -> copy(second = atSeconds.sorted().first { it > incrementedSecond })
     }.copy(nanosecond = 0)
 }
 

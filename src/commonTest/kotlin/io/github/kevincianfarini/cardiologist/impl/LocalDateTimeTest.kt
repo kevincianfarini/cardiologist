@@ -285,6 +285,110 @@ class LocalDateTimeTest {
             assertPeriod = DateTimePeriod(seconds = 1),
         ) { it.year < 2024 }
     }
+
+    @Test
+    fun non_continuous_seconds_matches() = assertEquals(
+        expected = stubDatetime.copy(second = 5),
+        actual = stubDatetime.copy(second = 2).nextMatch {
+            atSeconds(0, 5, 10)
+        },
+    )
+
+    @Test
+    fun non_continuous_unsorted_matches() = assertEquals(
+        expected = stubDatetime.copy(second = 5),
+        actual = stubDatetime.copy(second = 2).nextMatch {
+            atSeconds(10, 0, 5)
+        },
+    )
+
+    @Test
+    fun non_continuous_minutes_matches() = assertEquals(
+        expected = stubDatetime.copy(minute = 5),
+        actual = stubDatetime.copy(minute = 2).nextMatch {
+            atMinutes(0, 5, 10)
+        },
+    )
+
+    @Test
+    fun non_continuous_minutes_unsorted_matches() = assertEquals(
+        expected = stubDatetime.copy(minute = 5),
+        actual = stubDatetime.copy(minute = 2).nextMatch {
+            atMinutes(10, 0, 5)
+        },
+    )
+
+    @Test
+    fun non_continuous_hours_matches() = assertEquals(
+        expected = stubDatetime.copy(hour = 5),
+        actual = stubDatetime.copy(hour = 2).nextMatch {
+            atHours(0, 5, 10)
+        },
+    )
+
+    @Test
+    fun non_continuous_hours_unsorted_matches() = assertEquals(
+        expected = stubDatetime.copy(hour = 5),
+        actual = stubDatetime.copy(hour = 2).nextMatch {
+            atHours(10, 5, 0)
+        },
+    )
+
+    @Test
+    fun non_continuous_days_of_month_matches() = assertEquals(
+        expected = stubDatetime.copy(dayOfMonth = 5),
+        actual = stubDatetime.copy(dayOfMonth = 2).nextMatch {
+            onDaysOfMonth(1, 5, 10)
+        },
+    )
+
+    @Test
+    fun non_continuous_days_of_month_unsorted_matches() = assertEquals(
+        expected = stubDatetime.copy(dayOfMonth = 5),
+        actual = stubDatetime.copy(dayOfMonth = 2).nextMatch {
+            onDaysOfMonth(10, 5, 1)
+        },
+    )
+
+    @Test
+    fun non_continuous_month_matches() = assertEquals(
+        expected = stubDatetime.copy(monthNumber = 5),
+        actual = stubDatetime.copy(monthNumber = 2).nextMatch {
+            inMonths(Month(1), Month(5), Month(10))
+        },
+    )
+
+    @Test
+    fun non_continuous_month_unsorted_matches() = assertEquals(
+        expected = stubDatetime.copy(monthNumber = 5),
+        actual = stubDatetime.copy(monthNumber = 2).nextMatch {
+            inMonths(Month(10), Month(5), Month(1))
+        },
+    )
+
+    @Test
+    fun non_continuous_match_complicated() = assertEquals(
+        expected = stubDatetime.copy(
+            monthNumber = 5,
+            dayOfMonth = 5,
+            hour = 5,
+            minute = 5,
+            second = 5,
+        ),
+        actual = stubDatetime.copy(
+            monthNumber = 2,
+            dayOfMonth = 2,
+            hour = 2,
+            minute = 2,
+            second = 2,
+        ).nextMatch {
+            inMonths(Month(10), Month(5), Month(1))
+            onDaysOfMonth(10, 5, 1)
+            atHours(10, 5, 0)
+            atMinutes(10, 0, 5)
+            atSeconds(10, 0, 5)
+        },
+    )
 }
 
 private fun LocalDateTime.assertGap(
