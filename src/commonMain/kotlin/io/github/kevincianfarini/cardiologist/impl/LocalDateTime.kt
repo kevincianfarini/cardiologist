@@ -3,9 +3,15 @@ package io.github.kevincianfarini.cardiologist.impl
 import io.github.kevincianfarini.cardiologist.PulseSchedule
 import io.github.kevincianfarini.cardiologist.PulseScheduleBuilder
 import io.github.kevincianfarini.cardiologist.buildPulseSchedule
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.DateTimePeriod
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
+import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
+import kotlinx.datetime.toLocalDateTime
 
 internal fun LocalDateTime.nextMatch(scheduleBuilder: PulseScheduleBuilder.() -> Unit = {}): LocalDateTime {
     return nextMatch(buildPulseSchedule(scheduleBuilder))
@@ -17,10 +23,10 @@ internal fun LocalDateTime.nextMatch(schedule: PulseSchedule): LocalDateTime {
     val time = if (matches(schedule)) copy(nanosecond = 1) else this
     return with(schedule) {
         time.nextMonth(inMonths)
-            .nextDay(onDaysOfMonth, inMonths)
-            .nextHour(atHours, onDaysOfMonth, inMonths)
-            .nextMinute(atMinutes, atHours, onDaysOfMonth, inMonths)
-            .nextSecond(atSeconds, atMinutes, atHours, onDaysOfMonth, inMonths)
+            .nextDay(onDaysOfMonth, onDaysOfWeek,inMonths)
+            .nextHour(atHours, onDaysOfMonth, onDaysOfWeek, inMonths)
+            .nextMinute(atMinutes, atHours, onDaysOfMonth, onDaysOfWeek, inMonths)
+            .nextSecond(atSeconds, atMinutes, atHours, onDaysOfMonth, onDaysOfWeek, inMonths)
     }
 }
 
@@ -28,8 +34,17 @@ private fun LocalDateTime.matches(schedule: PulseSchedule): Boolean = nanosecond
         second in schedule.atSeconds &&
         minute in schedule.atMinutes &&
         hour in schedule.atHours &&
-        dayOfMonth in schedule.onDaysOfMonth &&
+        matchesDay(schedule) &&
         month in schedule.inMonths
+
+private fun LocalDateTime.matchesDay(schedule: PulseSchedule): Boolean {
+    val matchesDayOfWeekOnly = schedule.onDaysOfMonth == WILDCARD_DAYS_OF_MONTH && dayOfWeek in schedule.onDaysOfWeek
+    val matchesDayOfMonthAndDayOfWeek = schedule.onDaysOfMonth != WILDCARD_DAYS_OF_MONTH &&
+            schedule.onDaysOfWeek.isNotEmpty() &&
+            (dayOfMonth in schedule.onDaysOfMonth || dayOfWeek in schedule.onDaysOfWeek)
+    val matchesDayOfMonthOnly = schedule.onDaysOfWeek.isEmpty() && dayOfMonth in schedule.onDaysOfMonth
+    return matchesDayOfWeekOnly || matchesDayOfMonthAndDayOfWeek || matchesDayOfMonthOnly
+}
 
 private fun LocalDateTime.nextMonth(
     inMonths: Set<Month>,
@@ -62,7 +77,28 @@ private fun LocalDateTime.nextMonth(
     }
 }
 
+private val WILDCARD_DAYS_OF_MONTH: Set<Int> = (1..31).toSet()
+
 private fun LocalDateTime.nextDay(
+    onDaysOfMonth: Set<Int>,
+    onDaysOfWeek: Set<DayOfWeek>,
+    inMonths: Set<Month>,
+    increment: Boolean = false,
+): LocalDateTime = when {
+    onDaysOfMonth != WILDCARD_DAYS_OF_MONTH && onDaysOfWeek.isNotEmpty() -> {
+        // Both day of month and day of week are non-default values, and therefore we take
+        // the minimum resulting value from both of their calculations.
+        val nextDayOfMonth = nextDayOfMonth(onDaysOfMonth, inMonths, increment)
+        val nextDayOfWeek = nextDayOfWeek(onDaysOfWeek, inMonths, increment)
+        minOf(nextDayOfMonth, nextDayOfWeek)
+    }
+    onDaysOfMonth == WILDCARD_DAYS_OF_MONTH && onDaysOfWeek.isNotEmpty() -> {
+        nextDayOfWeek(onDaysOfWeek, inMonths, increment)
+    }
+    else -> nextDayOfMonth(onDaysOfMonth, inMonths, increment)
+}
+
+private fun LocalDateTime.nextDayOfMonth(
     onDaysOfMonth: Set<Int>,
     inMonths: Set<Month>,
     increment: Boolean = false,
@@ -92,9 +128,40 @@ private fun LocalDateTime.nextDay(
     }
 }
 
+private val DISTANT_LOCAL_FUTURE = LocalDateTime(100_000, 1, 1, 0, 0)
+
+private fun LocalDateTime.nextDayOfWeek(
+    onDaysOfWeek: Set<DayOfWeek>,
+    inMonths: Set<Month>,
+    increment: Boolean = false,
+): LocalDateTime {
+    return when {
+        onDaysOfWeek.isEmpty() -> DISTANT_LOCAL_FUTURE
+        else -> {
+            val incrementedDayOfWeek = if (increment) dayOfWeek.inc() else dayOfWeek
+            val nextMatchedDayOfWeek = when {
+                incrementedDayOfWeek in onDaysOfWeek -> incrementedDayOfWeek
+                else -> incrementedDayOfWeek.incrementUntilMatch(onDaysOfWeek)
+            }
+            val futureDayOfMonth = dayOfMonth + dayOfWeek.daysUntil(nextMatchedDayOfWeek)
+            when {
+                futureDayOfMonth <= month.numberOfDays(year) -> copy(dayOfMonth = futureDayOfMonth)
+                else -> copy(dayOfMonth = 1).nextMonth(inMonths, increment = true).nextDayOfWeek(onDaysOfWeek, inMonths)
+            }
+        }
+    }
+}
+
+private fun DayOfWeek.incrementUntilMatch(matches: Set<DayOfWeek>): DayOfWeek {
+    var day = this
+    while (day !in matches) { day++ }
+    return day
+}
+
 private fun LocalDateTime.nextHour(
     atHours: Set<Int>,
     onDaysOfMonth: Set<Int>,
+    onDaysOfWeek: Set<DayOfWeek>,
     inMonths: Set<Month>,
     increment: Boolean = false,
 ): LocalDateTime {
@@ -103,10 +170,10 @@ private fun LocalDateTime.nextHour(
     require(minHour >= 0 && maxHour <= 23) { "atHours $atHours not in range 0..23." }
     val incrementedHour = if (increment) (hour + 1) % 24 else hour
     return when {
-        incrementedHour < hour -> nextDay(onDaysOfMonth, inMonths, increment = true).copy(hour = incrementedHour)
+        incrementedHour < hour -> nextDay(onDaysOfMonth, onDaysOfWeek, inMonths, increment = true).copy(hour = incrementedHour)
         incrementedHour in atHours -> copy(hour = incrementedHour)
         incrementedHour < minHour -> copy(hour = minHour, minute = 0, second = 0, nanosecond = 0)
-        incrementedHour > maxHour -> nextDay(onDaysOfMonth, inMonths, increment = true).copy(
+        incrementedHour > maxHour -> nextDay(onDaysOfMonth, onDaysOfWeek, inMonths, increment = true).copy(
             hour = minHour,
             minute = 0,
             second = 0,
@@ -120,6 +187,7 @@ private fun LocalDateTime.nextMinute(
     atMinutes: Set<Int>,
     atHours: Set<Int>,
     onDaysOfMonth: Set<Int>,
+    onDaysOfWeek: Set<DayOfWeek>,
     inMonths: Set<Month>,
     increment: Boolean = false,
 ): LocalDateTime {
@@ -128,12 +196,12 @@ private fun LocalDateTime.nextMinute(
     require(minMinute >= 0 && maxMinute <= 59) { "atMinutes $atMinutes not in range 0..59." }
     val incrementedMinute = if (increment) (minute + 1) % 60 else minute
     return when {
-        incrementedMinute < minute -> nextHour(atHours, onDaysOfMonth, inMonths, increment = true).copy(
+        incrementedMinute < minute -> nextHour(atHours, onDaysOfMonth, onDaysOfWeek, inMonths, increment = true).copy(
             minute = incrementedMinute
         )
         incrementedMinute in atMinutes -> copy(minute = incrementedMinute)
         incrementedMinute < minMinute -> copy(minute = minMinute, second = 0, nanosecond = 0)
-        incrementedMinute > maxMinute -> nextHour(atHours, onDaysOfMonth, inMonths, increment = true).copy(
+        incrementedMinute > maxMinute -> nextHour(atHours, onDaysOfMonth, onDaysOfWeek, inMonths, increment = true).copy(
             minute = minMinute,
             second = 0,
             nanosecond = 0,
@@ -147,6 +215,7 @@ private fun LocalDateTime.nextSecond(
     atMinutes: Set<Int>,
     atHours: Set<Int>,
     onDaysOfMonth: Set<Int>,
+    onDaysOfWeek: Set<DayOfWeek>,
     inMonths: Set<Month>,
 ): LocalDateTime {
     val minSecond = atSeconds.minOrNull()!!
@@ -154,7 +223,7 @@ private fun LocalDateTime.nextSecond(
     require(minSecond >= 0 && maxSeconds <= 59) { " atSeconds $atSeconds not in range 0..59." }
     val incrementedSecond = if (nanosecond > 0) (second + 1) % 60 else second
     return when {
-        incrementedSecond < second -> nextMinute(atMinutes, atHours, onDaysOfMonth, inMonths, increment = true).copy(
+        incrementedSecond < second -> nextMinute(atMinutes, atHours, onDaysOfMonth, onDaysOfWeek, inMonths, increment = true).copy(
             second = minSecond
         )
         incrementedSecond in atSeconds -> copy(second = incrementedSecond)
@@ -163,6 +232,7 @@ private fun LocalDateTime.nextSecond(
             atMinutes,
             atHours,
             onDaysOfMonth,
+            onDaysOfWeek,
             inMonths,
             increment = true,
         ).copy(second = minSecond)
@@ -202,4 +272,13 @@ internal fun LocalDateTime.copy(
 
 private operator fun Month.inc(): Month {
     return Month.entries[(ordinal + 1) % 12]
+}
+
+private operator fun DayOfWeek.inc(): DayOfWeek {
+    return DayOfWeek.entries[(ordinal + 1) % 7]
+}
+
+private fun DayOfWeek.daysUntil(other: DayOfWeek): Int = when {
+    other >= this -> other.ordinal - ordinal
+    else -> 7 - (ordinal - other.ordinal)
 }

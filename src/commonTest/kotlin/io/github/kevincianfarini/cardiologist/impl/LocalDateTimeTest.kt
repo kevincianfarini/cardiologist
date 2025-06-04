@@ -397,6 +397,74 @@ class LocalDateTimeTest {
             atSeconds(1)
         },
     )
+
+    @Test
+    fun schedules_day_of_week_no_day_of_month() = assertEquals(
+        expected = stubDatetime.copy(dayOfMonth = 7), // Saturday.
+        actual = stubDatetime.nextMatch {
+            // stubDatetime is October 4th, 2023; a Wednesday.
+            onDaysOfWeek(DayOfWeek.SATURDAY)
+        }
+    )
+
+    @Test
+    fun schedules_day_of_week_multiple_values() = assertEquals(
+        expected = stubDatetime.copy(dayOfMonth = 5), // Thursday.
+        actual = stubDatetime.nextMatch {
+            // stubDatetime is October 4th, 2023; a Wednesday.
+            onDaysOfWeek(DayOfWeek.MONDAY..DayOfWeek.FRIDAY)
+            atHours(0)
+            atMinutes(0)
+            atSeconds(0)
+        }
+    )
+
+    @Test
+    fun schedules_day_of_week_multiple_values_not_continuous() = assertEquals(
+        expected = stubDatetime.copy(dayOfMonth = 8), // Sunday.
+        actual = stubDatetime.nextMatch {
+            // stubDatetime is October 4th, 2023; a Wednesday.
+            onDaysOfWeek(DayOfWeek.SUNDAY, DayOfWeek.TUESDAY)
+        }
+    )
+
+    @Test
+    fun schedules_day_of_week_day_of_month_before_day_of_week() = assertEquals(
+        expected = stubDatetime.copy(dayOfMonth = 5),
+        actual = stubDatetime.nextMatch {
+            // stubDatetime is October 4th, 2023; a Wednesday.
+            onDaysOfWeek(DayOfWeek.SATURDAY)
+            onDaysOfMonth(5)
+        }
+    )
+
+    @Test
+    fun schedules_day_of_week_day_of_month_after_next_day_of_week() = assertEquals(
+        expected = stubDatetime.copy(dayOfMonth = 7),
+        actual = stubDatetime.nextMatch {
+            // stubDatetime is October 4th, 2023; a Wednesday.
+            onDaysOfWeek(DayOfWeek.SATURDAY)
+            onDaysOfMonth(8)
+        }
+    )
+
+    @Test
+    fun schedules_day_of_week_increments_month() = assertEquals(
+        expected = stubDatetime.copy(monthNumber = 11, dayOfMonth = 4),
+        actual = stubDatetime.copy(dayOfMonth = 31).nextMatch {
+            // October 31st, 2023 was a Tuesday.
+            onDaysOfWeek(DayOfWeek.SATURDAY)
+        }
+    )
+
+    @Test
+    fun schedules_day_of_week_wraps_around_week() = assertEquals(
+        expected = stubDatetime.copy(dayOfMonth = 10),
+        actual = stubDatetime.nextMatch {
+            // October 4th, 2023 was a Wednesday.
+            onDaysOfWeek(DayOfWeek.TUESDAY)
+        }
+    )
 }
 
 private fun LocalDateTime.assertGap(
