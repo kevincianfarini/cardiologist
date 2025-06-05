@@ -2,9 +2,9 @@
 <html class="no-js">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>delayUntil</title>
-    <link href="../../images/logo-icon.svg" rel="icon" type="image/svg">
-    <script>var pathToRoot = "../../";</script>
+    <title>atSeconds</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
     <script>document.documentElement.classList.replace("no-js","js");</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
     if (storage == null) {
@@ -20,25 +20,25 @@
     }
     </script>
 <script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async="async"></script>
-<script type="text/javascript" src="../../scripts/sourceset_dependencies.js" async="async"></script>
-<link href="../../styles/style.css" rel="Stylesheet">
-<link href="../../styles/main.css" rel="Stylesheet">
-<link href="../../styles/prism.css" rel="Stylesheet">
-<link href="../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../styles/font-jb-sans-auto.css" rel="Stylesheet">
-<link href="../../ui-kit/ui-kit.min.css" rel="Stylesheet">
-<script type="text/javascript" src="../../scripts/clipboard.js" async="async"></script>
-<script type="text/javascript" src="../../scripts/navigation-loader.js" async="async"></script>
-<script type="text/javascript" src="../../scripts/platform-content-handler.js" async="async"></script>
-<script type="text/javascript" src="../../scripts/main.js" defer="defer"></script>
-<script type="text/javascript" src="../../scripts/prism.js" async="async"></script>
-<script type="text/javascript" src="../../ui-kit/ui-kit.min.js" defer="defer"></script>
-<script type="text/javascript" src="../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
 </head>
 <body>
     <div class="root">
     <nav class="navigation theme-dark" id="navigation-wrapper">
-            <a class="library-name--link" href="../../index.html">
+            <a class="library-name--link" href="../../../index.html">
                     cardiologist
             </a>
         <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle"
@@ -104,12 +104,12 @@
                 </div>
             </div>
             <div id="main">
-<div class="main-content" data-page-type="member" id="content" pageIds="cardiologist::io.github.kevincianfarini.cardiologist//delayUntil/kotlinx.datetime.Clock#kotlinx.datetime.Instant/PointingToDeclaration//1558683979">
-  <div class="breadcrumbs"><a href="../../index.html">cardiologist</a><span class="delimiter">/</span><a href="index.html">io.github.kevincianfarini.cardiologist</a><span class="delimiter">/</span><span class="current">delayUntil</span></div>
+<div class="main-content" data-page-type="member" id="content" pageIds="cardiologist::io.github.kevincianfarini.cardiologist/PulseScheduleBuilder/atSeconds/#kotlin.Int#kotlin.IntArray/PointingToDeclaration//1558683979">
+  <div class="breadcrumbs"><a href="../../../index.html">cardiologist</a><span class="delimiter">/</span><a href="../index.html">io.github.kevincianfarini.cardiologist</a><span class="delimiter">/</span><a href="index.html">PulseScheduleBuilder</a><span class="delimiter">/</span><span class="current">atSeconds</span></div>
   <div class="cover ">
-    <h1 class="cover"><span>delay</span><wbr></wbr><span><span>Until</span></span></h1>
+    <h1 class="cover"><span>at</span><wbr></wbr><span><span>Seconds</span></span></h1>
   </div>
-  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":/commonMain"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><span data-unresolved-link="kotlinx.datetime/Clock///PointingToDeclaration/">Clock</span><span class="token punctuation">.</span><a href="delay-until.html"><span class="token function">delayUntil</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">instant<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/Instant///PointingToDeclaration/">Instant</span></span></span><span class="token punctuation">)</span></div><p class="paragraph">Suspend the coroutine until <a href="delay-until.html">instant</a> without blocking the thread. If <span data-unresolved-link="kotlinx.datetime/Clock/now/#/PointingToDeclaration/">Clock.now</span> is greater than <a href="delay-until.html">instant</a>, this function returns immediately.</p><p class="paragraph">Coroutines delayed for more than one minute will occassionally be resumed to account for clock drift.</p><hr><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><span data-unresolved-link="kotlinx.datetime/Clock///PointingToDeclaration/">Clock</span><span class="token punctuation">.</span><a href="delay-until.html"><span class="token function">delayUntil</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">dateTime<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/LocalDateTime///PointingToDeclaration/">LocalDateTime</span><span class="token punctuation">, </span></span><span class="parameter ">timeZone<span class="token operator">: </span><span data-unresolved-link="kotlinx.datetime/TimeZone///PointingToDeclaration/">TimeZone</span></span></span><span class="token punctuation">)</span></div><p class="paragraph">Suspend the coroutine until <a href="delay-until.html">dateTime</a> in <a href="delay-until.html">timeZone</a> without blocking the thread. If <span data-unresolved-link="kotlinx.datetime/Clock/now/#/PointingToDeclaration/">Clock.now</span> is greater than the <span data-unresolved-link="kotlinx.datetime/Instant///PointingToDeclaration/">Instant</span> associated with <a href="delay-until.html">dateTime</a> and <a href="delay-until.html">timeZone</a>, this function returns immediately.</p><p class="paragraph">Coroutines delayed for more than one minute will occassionally be resumed to account for clock drift.</p></div></div>
+  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="at-seconds.html"><span class="token function">atSeconds</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>values<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div><p class="paragraph">Add one or more second values to this schedule.</p><p class="paragraph">Valid values range from 0..59. Attempting to build a <a href="../-pulse-schedule/index.html">PulseSchedule</a> with an out of range value will throw an <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-illegal-argument-exception/index.html">IllegalArgumentException</a>.</p><hr><div class="symbol monospace"><span class="token keyword">fun </span><a href="at-seconds.html"><span class="token function">atSeconds</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.ranges/-int-range/index.html">IntRange</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">vararg </span>values<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.ranges/-int-range/index.html">IntRange</a></span></span><span class="token punctuation">)</span></div><p class="paragraph">Add one or more second ranges to this schedule.</p><p class="paragraph">Valid values range from 0..59. Attempting to build a <a href="../-pulse-schedule/index.html">PulseSchedule</a> with an out of range value will throw an <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-illegal-argument-exception/index.html">IllegalArgumentException</a>.</p></div></div>
 </div>
     <div class="footer">
         <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
