@@ -163,6 +163,16 @@ public fun Clock.schedulePulse(
     timeZone = timeZone,
 )
 
+/**
+ * Schedule a [Pulse] whose beats occur in accordance with [schedule] for a specific [timeZone].
+ *
+ * Scheduling pulses is done in local time and is therefore subject to daylight savings time adjustments. Local time
+ * conversion is sometimes ambiguous, and therefore it's recommended to schedule pulses in a fixed UTC offset timezone.
+ * See [LocalDateTime.toInstant] for more details.
+ *
+ * @param schedule The pre-built [PulseSchedule].
+ * @param timeZone The TimeZone to schedule pulses in.
+ */
 public fun Clock.schedulePulse(
     schedule: PulseSchedule,
     timeZone: TimeZone = TimeZone.UTC,

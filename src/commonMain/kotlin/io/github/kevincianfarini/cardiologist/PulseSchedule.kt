@@ -47,6 +47,12 @@ public class PulseScheduleBuilder internal constructor() {
     private var _inMonths: Set<Month>? = null
     private var _onDaysOfWeek: Set<DayOfWeek>? = null
 
+    /**
+     * Add one or more second values to this schedule.
+     *
+     * Valid values range from 0..59. Attempting to build a [PulseSchedule] with an out of range value will throw
+     * an [IllegalArgumentException].
+     */
     public fun atSeconds(value: Int, vararg values: Int) {
         _atSeconds = buildSet {
             _atSeconds?.let(this::addAll)
@@ -55,6 +61,12 @@ public class PulseScheduleBuilder internal constructor() {
         }
     }
 
+    /**
+     * Add one or more second ranges to this schedule.
+     *
+     * Valid values range from 0..59. Attempting to build a [PulseSchedule] with an out of range value will throw
+     * an [IllegalArgumentException].
+     */
     public fun atSeconds(value: IntRange, vararg values: IntRange) {
         require(!value.isEmpty()) { "Cannot add empty range of values: $value" }
         values.forEach { v ->
@@ -66,7 +78,12 @@ public class PulseScheduleBuilder internal constructor() {
             values.forEach(this::addAll)
         }
     }
-
+    /**
+     * Add one or more minute values to this schedule.
+     *
+     * Valid values range from 0..59. Attempting to build a [PulseSchedule] with an out of range value will throw
+     * an [IllegalArgumentException].
+     */
     public fun atMinutes(value: Int, vararg values: Int) {
         _atMinutes = buildSet {
             _atMinutes?.let(this::addAll)
@@ -75,6 +92,12 @@ public class PulseScheduleBuilder internal constructor() {
         }
     }
 
+    /**
+     * Add one or more minute ranges to this schedule.
+     *
+     * Valid values range from 0..59. Attempting to build a [PulseSchedule] with an out of range value will throw
+     * an [IllegalArgumentException].
+     */
     public fun atMinutes(value: IntRange, vararg values: IntRange) {
         require(!value.isEmpty()) { "Cannot add empty range of values: $value" }
         values.forEach { v ->
@@ -87,6 +110,12 @@ public class PulseScheduleBuilder internal constructor() {
         }
     }
 
+    /**
+     * Add one or more hour values to this schedule.
+     *
+     * Valid values range from 0..23. Attempting to build a [PulseSchedule] with an out of range value will throw
+     * an [IllegalArgumentException].
+     */
     public fun atHours(value: Int, vararg values: Int) {
         _atHours = buildSet {
             _atHours?.let(this::addAll)
@@ -95,6 +124,12 @@ public class PulseScheduleBuilder internal constructor() {
         }
     }
 
+    /**
+     * Add one or more hour ranges to this schedule.
+     *
+     * Valid values range from 0..23. Attempting to build a [PulseSchedule] with an out of range value will throw
+     * an [IllegalArgumentException].
+     */
     public fun atHours(value: IntRange, vararg values: IntRange) {
         require(!value.isEmpty()) { "Cannot add empty range of values: $value" }
         values.forEach { v ->
@@ -107,6 +142,12 @@ public class PulseScheduleBuilder internal constructor() {
         }
     }
 
+    /**
+     * Add one or more day of month values to this schedule.
+     *
+     * Valid values range from 1..31. Attempting to build a [PulseSchedule] with an out of range value will throw
+     * an [IllegalArgumentException].
+     */
     public fun onDaysOfMonth(value: Int, vararg values: Int) {
         _onDaysOfMonth = buildSet {
             _onDaysOfMonth?.let(this::addAll)
@@ -115,6 +156,12 @@ public class PulseScheduleBuilder internal constructor() {
         }
     }
 
+    /**
+     * Add one or more day of month ranges to this schedule.
+     *
+     * Valid values range from 1..31. Attempting to build a [PulseSchedule] with an out of range value will throw
+     * an [IllegalArgumentException].
+     */
     public fun onDaysOfMonth(value: IntRange, vararg values: IntRange) {
         require(!value.isEmpty()) { "Cannot add empty range of values: $value" }
         values.forEach { v ->
@@ -127,6 +174,9 @@ public class PulseScheduleBuilder internal constructor() {
         }
     }
 
+    /**
+     * Add one or more month values to this schedule.
+     */
     public fun inMonths(value: Month, vararg values: Month) {
         _inMonths = buildSet {
             _inMonths?.let(this::addAll)
@@ -135,6 +185,9 @@ public class PulseScheduleBuilder internal constructor() {
         }
     }
 
+    /**
+     * Add one or more month ranges to this schedule.
+     */
     public fun inMonths(value: ClosedRange<Month>, vararg values: ClosedRange<Month>) {
         require(!value.isEmpty()) { "Cannot add empty range of values: $value" }
         values.forEach { v ->
@@ -147,6 +200,9 @@ public class PulseScheduleBuilder internal constructor() {
         }
     }
 
+    /**
+     * Add one or more day of week values to this schedule.
+     */
     public fun onDaysOfWeek(value: DayOfWeek, vararg values: DayOfWeek) {
         _onDaysOfWeek = buildSet {
             _onDaysOfWeek?.let(this::addAll)
@@ -155,6 +211,9 @@ public class PulseScheduleBuilder internal constructor() {
         }
     }
 
+    /**
+     * Add one or more day of week ranges to this schedule.
+     */
     public fun onDaysOfWeek(value: ClosedRange<DayOfWeek>, vararg values: ClosedRange<DayOfWeek>) {
         require(!value.isEmpty()) { "Cannot add empty range of values: $value" }
         values.forEach { v ->
