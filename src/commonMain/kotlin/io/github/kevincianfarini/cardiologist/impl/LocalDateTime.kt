@@ -3,15 +3,10 @@ package io.github.kevincianfarini.cardiologist.impl
 import io.github.kevincianfarini.cardiologist.PulseSchedule
 import io.github.kevincianfarini.cardiologist.PulseScheduleBuilder
 import io.github.kevincianfarini.cardiologist.buildPulseSchedule
-import kotlinx.datetime.DatePeriod
-import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.DayOfWeek
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.number
-import kotlinx.datetime.toLocalDateTime
 
 internal fun LocalDateTime.nextMatch(scheduleBuilder: PulseScheduleBuilder.() -> Unit = {}): LocalDateTime {
     return nextMatch(buildPulseSchedule(scheduleBuilder))
@@ -240,6 +235,7 @@ private fun LocalDateTime.nextSecond(
     }.copy(nanosecond = 0)
 }
 
+@Suppress("REDUNDANT_ELSE_IN_WHEN")
 private fun Month.numberOfDays(year: Int) = when (this) {
     Month.JANUARY -> 31
     Month.FEBRUARY -> if (year.isLeapYear) 29 else 28
@@ -253,6 +249,7 @@ private fun Month.numberOfDays(year: Int) = when (this) {
     Month.OCTOBER -> 31
     Month.NOVEMBER -> 30
     Month.DECEMBER -> 31
+    else -> error("This is impossible.")
 }
 
 private val Int.isLeapYear: Boolean get() {

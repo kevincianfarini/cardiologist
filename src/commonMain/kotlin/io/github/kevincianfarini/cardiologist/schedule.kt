@@ -6,6 +6,7 @@ import kotlin.time.Duration
 import kotlinx.coroutines.flow.flow
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimePeriod
+import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
@@ -78,6 +79,7 @@ public fun Clock.fixedPeriodPulse(period: DateTimePeriod, timeZone: TimeZone): P
  * @param atHour The hour of a day to pulse at. Null matches the whole valid range, 0..23.
  * @param onDayOfMonth The day of a month to pulse at. Null matches the whole valid range, 0..31.
  * @param inMonth The month of a year to pulse at. Null matches the whole valid range, January..December.
+ * @param onDayOfWeek The day of week to pulse at. Null matches any day of the week.
  * @param timeZone The TimeZone to schedule pulses in.
  * @throws [IllegalArgumentException] if any parameter is out of the above range.
  */
@@ -88,12 +90,14 @@ public fun Clock.schedulePulse(
     atHour: Int? = null,
     onDayOfMonth: Int? = null,
     inMonth: Month? = null,
+    onDayOfWeek: DayOfWeek? = null
 ): Pulse = schedulePulse(timeZone) {
     atSecond?.run(this::atSeconds)
     atMinute?.run(this::atMinutes)
     atHour?.run(this::atHours)
     onDayOfMonth?.run(this::onDaysOfMonth)
     inMonth?.run(this::inMonths)
+    onDayOfWeek?.run(this::onDaysOfWeek)
 }
 
 /**
