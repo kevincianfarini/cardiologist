@@ -5,7 +5,7 @@ kotlin = "2.1.21"
 kotlinx-coroutines = "1.10.2"
 kotlinx-datetime = "0.6.2"
 poko = "0.18.7"
-publish = "0.32.0"
+publish = "0.33.0"
 
 [libraries]
 kotlin-test-core = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
