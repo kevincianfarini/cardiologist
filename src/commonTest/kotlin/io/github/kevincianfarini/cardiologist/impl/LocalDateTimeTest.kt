@@ -5,13 +5,15 @@ import io.github.kevincianfarini.cardiologist.buildPulseSchedule
 import kotlinx.datetime.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 class LocalDateTimeTest {
 
     private val stubDatetime = LocalDateTime(
         year = 2023,
-        monthNumber = 10,
-        dayOfMonth = 4,
+        month = Month.OCTOBER,
+        day = 4,
         hour = 0,
         minute = 0,
         second = 0,
@@ -101,8 +103,8 @@ class LocalDateTimeTest {
         expected = stubDatetime.copy(year = 2024, monthNumber = 1, dayOfMonth = 1),
         actual = LocalDateTime(
             year = 2023,
-            monthNumber = 12,
-            dayOfMonth = 31,
+            month = Month.DECEMBER,
+            day = 31,
             hour = 23,
             minute = 59,
             second = 59,
@@ -123,16 +125,16 @@ class LocalDateTimeTest {
     fun matches_up_to_next_minute_complex() = assertEquals(
         expected = LocalDateTime(
             year = 2023,
-            monthNumber = 10,
-            dayOfMonth = 5,
+            month = Month.OCTOBER,
+            day = 5,
             hour = 8,
             minute = 58,
             second = 0,
         ),
         actual = LocalDateTime(
             year = 2023,
-            monthNumber = 10,
-            dayOfMonth = 5,
+            month = Month.OCTOBER,
+            day = 5,
             hour = 8,
             minute = 56,
             second = 17,
@@ -201,8 +203,8 @@ class LocalDateTimeTest {
 
     @Test
     fun matches_jan_18_2024_to_jan_19_2024() = assertEquals(
-        expected = LocalDateTime(year = 2024, monthNumber = 1, dayOfMonth = 19, hour = 0, minute = 0),
-        actual = LocalDateTime(year = 2024, monthNumber = 1, dayOfMonth = 18, hour = 23, minute = 59, second = 48)
+        expected = LocalDateTime(year = 2024, month = Month.JANUARY, day = 19, hour = 0, minute = 0),
+        actual = LocalDateTime(year = 2024, month = Month.JANUARY, day = 18, hour = 23, minute = 59, second = 48)
             .nextMatch {
                 atSeconds(0)
                 atMinutes(0)
@@ -212,7 +214,7 @@ class LocalDateTimeTest {
 
     @Test
     fun one_month_gap_for_two_years() {
-        LocalDateTime(year = 2023, monthNumber = 1, dayOfMonth = 1, hour = 0, minute = 0).assertGap(
+        LocalDateTime(year = 2023, month = Month.JANUARY, day = 1, hour = 0, minute = 0).assertGap(
             assertPeriod = DateTimePeriod(months = 1),
             schedule = buildPulseSchedule {
                 atSeconds(0)
@@ -225,7 +227,7 @@ class LocalDateTimeTest {
 
     @Test
     fun one_month_gap_for_a_year() {
-        LocalDateTime(year = 2023, monthNumber = 1, dayOfMonth = 1, hour = 0, minute = 0).assertGap(
+        LocalDateTime(year = 2023, month = Month.JANUARY, day = 1, hour = 0, minute = 0).assertGap(
             assertPeriod = DateTimePeriod(months = 1),
             schedule = buildPulseSchedule {
                 atSeconds(0)
@@ -238,7 +240,7 @@ class LocalDateTimeTest {
 
     @Test
     fun one_day_gap_for_a_year() {
-        LocalDateTime(year = 2023, monthNumber = 1, dayOfMonth = 1, hour = 0, minute = 0).assertGap(
+        LocalDateTime(year = 2023, month = Month.JANUARY, day = 1, hour = 0, minute = 0).assertGap(
             assertPeriod = DateTimePeriod(days = 1),
             schedule = buildPulseSchedule {
                 atSeconds(0)
@@ -250,7 +252,7 @@ class LocalDateTimeTest {
 
     @Test
     fun one_day_gap_for_two_years() {
-        LocalDateTime(year = 2023, monthNumber = 1, dayOfMonth = 1, hour = 0, minute = 0).assertGap(
+        LocalDateTime(year = 2023, month = Month.JANUARY, day = 1, hour = 0, minute = 0).assertGap(
             assertPeriod = DateTimePeriod(days = 1),
             schedule = buildPulseSchedule {
                 atSeconds(0)
@@ -262,7 +264,7 @@ class LocalDateTimeTest {
 
     @Test
     fun one_hour_gap_for_a_year() {
-        LocalDateTime(year = 2023, monthNumber = 1, dayOfMonth = 1, hour = 0, minute = 0).assertGap(
+        LocalDateTime(year = 2023, month = Month.JANUARY, day = 1, hour = 0, minute = 0).assertGap(
             assertPeriod = DateTimePeriod(hours = 1),
             schedule = buildPulseSchedule {
                 atSeconds(0)
@@ -273,7 +275,7 @@ class LocalDateTimeTest {
 
     @Test
     fun one_minute_gap_for_a_year() {
-        LocalDateTime(year = 2023, monthNumber = 1, dayOfMonth = 1, hour = 0, minute = 0).assertGap(
+        LocalDateTime(year = 2023, month = Month.JANUARY, day = 1, hour = 0, minute = 0).assertGap(
             assertPeriod = DateTimePeriod(minutes = 1),
             schedule = buildPulseSchedule { atSeconds(0) },
         ) { it.year < 2024 }
@@ -281,7 +283,7 @@ class LocalDateTimeTest {
 
     @Test
     fun one_second_gap_for_a_year() {
-        LocalDateTime(year = 2023, monthNumber = 1, dayOfMonth = 1, hour = 0, minute = 0).assertGap(
+        LocalDateTime(year = 2023, month = Month.JANUARY, day = 1, hour = 0, minute = 0).assertGap(
             assertPeriod = DateTimePeriod(seconds = 1),
         ) { it.year < 2024 }
     }
@@ -467,6 +469,7 @@ class LocalDateTimeTest {
     )
 }
 
+@ExperimentalTime
 private fun LocalDateTime.assertGap(
     assertPeriod: DateTimePeriod,
     schedule: PulseSchedule = buildPulseSchedule {  },

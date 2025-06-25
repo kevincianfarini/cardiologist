@@ -2,18 +2,19 @@ package io.github.kevincianfarini.cardiologist
 
 import io.github.kevincianfarini.cardiologist.impl.nextMatch
 import io.github.kevincianfarini.cardiologist.impl.parseCronExpression
+import kotlin.time.Clock
 import kotlin.time.Duration
+import kotlin.time.Instant
 import kotlinx.coroutines.flow.flow
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimePeriod
 import kotlinx.datetime.DayOfWeek
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.ExperimentalTime
 
 /**
  * Return a [Pulse] which beats every [period].
@@ -22,6 +23,7 @@ import kotlinx.datetime.toLocalDateTime
  * scheduled start of the subsequent [beat][Pulse.beat]. The returned [Pulse] will delay for [period] prior to its first
  * [beat][Pulse.beat].
  */
+@ExperimentalTime
 public fun Clock.fixedPeriodPulse(period: Duration): Pulse {
     val flow = flow {
         var nextPulse: Instant = now() + period
@@ -41,6 +43,7 @@ public fun Clock.fixedPeriodPulse(period: Duration): Pulse {
  * scheduled start of the subsequent [beat][Pulse.beat]. The returned [Pulse] will delay for [period] prior to its first
  * [beat][Pulse.beat].
  */
+@ExperimentalTime
 public fun Clock.fixedPeriodPulse(period: DateTimePeriod, timeZone: TimeZone): Pulse {
     val flow = flow {
         var nextPulse: Instant = now().plus(period, timeZone)
@@ -83,6 +86,7 @@ public fun Clock.fixedPeriodPulse(period: DateTimePeriod, timeZone: TimeZone): P
  * @param timeZone The TimeZone to schedule pulses in.
  * @throws [IllegalArgumentException] if any parameter is out of the above range.
  */
+@ExperimentalTime
 public fun Clock.schedulePulse(
     timeZone: TimeZone = TimeZone.UTC,
     atSecond: Int? = null,
@@ -121,6 +125,7 @@ public fun Clock.schedulePulse(
  * @param timeZone The TimeZone to schedule pulses in.
  * @throws IllegalArgumentException if [scheduleBuilder] is not valid.
  */
+@ExperimentalTime
 public fun Clock.schedulePulse(
     timeZone: TimeZone = TimeZone.UTC,
     scheduleBuilder: PulseScheduleBuilder.() -> Unit,
@@ -155,6 +160,7 @@ public fun Clock.schedulePulse(
  * @param timeZone The TimeZone to schedule pulses in.
  * @throws IllegalArgumentException if [cronExpression] is not valid.
  */
+@ExperimentalTime
 public fun Clock.schedulePulse(
     cronExpression: String,
     timeZone: TimeZone = TimeZone.UTC,
@@ -173,6 +179,7 @@ public fun Clock.schedulePulse(
  * @param schedule The pre-built [PulseSchedule].
  * @param timeZone The TimeZone to schedule pulses in.
  */
+@ExperimentalTime
 public fun Clock.schedulePulse(
     schedule: PulseSchedule,
     timeZone: TimeZone = TimeZone.UTC,
