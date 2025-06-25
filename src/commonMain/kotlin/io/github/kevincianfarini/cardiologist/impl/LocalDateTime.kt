@@ -36,8 +36,8 @@ private fun LocalDateTime.matchesDay(schedule: PulseSchedule): Boolean {
     val matchesDayOfWeekOnly = schedule.onDaysOfMonth == WILDCARD_DAYS_OF_MONTH && dayOfWeek in schedule.onDaysOfWeek
     val matchesDayOfMonthAndDayOfWeek = schedule.onDaysOfMonth != WILDCARD_DAYS_OF_MONTH &&
             schedule.onDaysOfWeek.isNotEmpty() &&
-            (dayOfMonth in schedule.onDaysOfMonth || dayOfWeek in schedule.onDaysOfWeek)
-    val matchesDayOfMonthOnly = schedule.onDaysOfWeek.isEmpty() && dayOfMonth in schedule.onDaysOfMonth
+            (day in schedule.onDaysOfMonth || dayOfWeek in schedule.onDaysOfWeek)
+    val matchesDayOfMonthOnly = schedule.onDaysOfWeek.isEmpty() && day in schedule.onDaysOfMonth
     return matchesDayOfWeekOnly || matchesDayOfMonthAndDayOfWeek || matchesDayOfMonthOnly
 }
 
@@ -102,12 +102,12 @@ private fun LocalDateTime.nextDayOfMonth(
     val maxDayOfMonth = onDaysOfMonth.maxOrNull()!!
     require(minDayOfMonth >= 1 && maxDayOfMonth <= 31) { "onDaysOfMonth $onDaysOfMonth not in range 1..31." }
     val incrementedDay = when {
-        increment && dayOfMonth + 1 <= month.numberOfDays(year) -> dayOfMonth + 1
+        increment && day + 1 <= month.numberOfDays(year) -> day + 1
         increment -> 1
-        else -> dayOfMonth
+        else -> day
     }
     return when {
-        incrementedDay < dayOfMonth -> copy(dayOfMonth = incrementedDay).nextMonth(inMonths, increment = true)
+        incrementedDay < day -> copy(dayOfMonth = incrementedDay).nextMonth(inMonths, increment = true)
         incrementedDay in onDaysOfMonth -> copy(dayOfMonth = incrementedDay)
         incrementedDay < minDayOfMonth -> {
             if (minDayOfMonth <= month.numberOfDays(year)) {
@@ -138,7 +138,7 @@ private fun LocalDateTime.nextDayOfWeek(
                 incrementedDayOfWeek in onDaysOfWeek -> incrementedDayOfWeek
                 else -> incrementedDayOfWeek.incrementUntilMatch(onDaysOfWeek)
             }
-            val futureDayOfMonth = dayOfMonth + dayOfWeek.daysUntil(nextMatchedDayOfWeek)
+            val futureDayOfMonth = day + dayOfWeek.daysUntil(nextMatchedDayOfWeek)
             when {
                 futureDayOfMonth <= month.numberOfDays(year) -> copy(dayOfMonth = futureDayOfMonth)
                 else -> copy(dayOfMonth = 1).nextMonth(inMonths, increment = true).nextDayOfWeek(onDaysOfWeek, inMonths)
@@ -235,7 +235,6 @@ private fun LocalDateTime.nextSecond(
     }.copy(nanosecond = 0)
 }
 
-@Suppress("REDUNDANT_ELSE_IN_WHEN")
 private fun Month.numberOfDays(year: Int) = when (this) {
     Month.JANUARY -> 31
     Month.FEBRUARY -> if (year.isLeapYear) 29 else 28
@@ -249,7 +248,6 @@ private fun Month.numberOfDays(year: Int) = when (this) {
     Month.OCTOBER -> 31
     Month.NOVEMBER -> 30
     Month.DECEMBER -> 31
-    else -> error("This is impossible.")
 }
 
 private val Int.isLeapYear: Boolean get() {
@@ -259,8 +257,8 @@ private val Int.isLeapYear: Boolean get() {
 
 internal fun LocalDateTime.copy(
     year: Int = this.year,
-    monthNumber: Int = this.monthNumber,
-    dayOfMonth: Int = this.dayOfMonth,
+    monthNumber: Int = this.month.number,
+    dayOfMonth: Int = this.day,
     hour: Int = this.hour,
     minute: Int = this.minute,
     second: Int = this.second,

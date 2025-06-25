@@ -7,12 +7,14 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlin.jvm.JvmInline
+import kotlin.time.ExperimentalTime
 
 /**
  * A [Pulse] is a cadence which informs consumers when to execute work by calling [Pulse.beat].
  */
+@ExperimentalTime
 @JvmInline
 public value class Pulse internal constructor(private val flow: Flow<Instant>) {
 

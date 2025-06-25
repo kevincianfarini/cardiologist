@@ -1,12 +1,13 @@
 package io.github.kevincianfarini.cardiologist
 
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Instant
 import kotlinx.coroutines.delay
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
+import kotlin.time.ExperimentalTime
 
 /**
  * Execute the provided [action] at or after [instant].
@@ -14,6 +15,7 @@ import kotlinx.datetime.toInstant
  * The coroutine will be suspended until [instant] without blocking the thread. If [Clock.now] returns an [Instant]
  * greater than the supplied [instant], this function executes [action] without suspending.
  */
+@ExperimentalTime
 public suspend fun <T> Clock.executeAt(
     instant: Instant,
     action: suspend () -> T,
@@ -32,6 +34,7 @@ public suspend fun <T> Clock.executeAt(
  * Local time conversion is sometimes ambiguous, and therefore it's recommended to schedule execution in a
  * fixed UTC offset timezone. See [LocalDateTime.toInstant] for more details.
  */
+@ExperimentalTime
 public suspend fun <T> Clock.executeAt(
     dateTime: LocalDateTime,
     timeZone: TimeZone,
@@ -47,6 +50,7 @@ public suspend fun <T> Clock.executeAt(
  *
  * Coroutines delayed for more than one minute will occasionally be resumed to account for clock drift.
  */
+@ExperimentalTime
 internal suspend fun Clock.delayUntil(instant: Instant) {
     var now = now()
     while (now < instant) {
@@ -63,6 +67,7 @@ internal suspend fun Clock.delayUntil(instant: Instant) {
  *
  * Coroutines delayed for more than one minute will occasionally be resumed to account for clock drift.
  */
+@ExperimentalTime
 internal suspend fun Clock.delayUntil(dateTime: LocalDateTime, timeZone: TimeZone) {
     delayUntil(instant = dateTime.toInstant(timeZone))
 }
