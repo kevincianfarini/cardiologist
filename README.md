@@ -25,7 +25,7 @@ A pulse was scheduled in America/New_York for 2025-01-11T08:47 and occurred at 2
 
 ```toml
 [versions]
-cardiologist = "0.4.0"
+cardiologist = "0.6.0"
 
 [libraries]
 cardiologist = { module = "io.github.kevincianfarini.cardiologist:cardiologist", version.ref = "cardiologist" }
