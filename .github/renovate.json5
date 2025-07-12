@@ -13,7 +13,7 @@
     {
       customType: 'regex',
       fileMatch: [
-        '^\\.java-version$',
+        '\\.java-version$',
       ],
       matchStrings: [
         '(?<currentValue>.*)\\n',
