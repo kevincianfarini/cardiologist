@@ -1,0 +1,77 @@
+public final class io/github/kevincianfarini/cardiologist/Pulse {
+	public static final fun beat-impl (Lkotlinx/coroutines/flow/Flow;Lio/github/kevincianfarini/cardiologist/PulseBackpressureStrategy;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun beat-impl$default (Lkotlinx/coroutines/flow/Flow;Lio/github/kevincianfarini/cardiologist/PulseBackpressureStrategy;Lkotlin/jvm/functions/Function2;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final synthetic fun box-impl (Lkotlinx/coroutines/flow/Flow;)Lio/github/kevincianfarini/cardiologist/Pulse;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Lkotlinx/coroutines/flow/Flow;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Lkotlinx/coroutines/flow/Flow;Lkotlinx/coroutines/flow/Flow;)Z
+	public fun hashCode ()I
+	public static fun hashCode-impl (Lkotlinx/coroutines/flow/Flow;)I
+	public static final fun take-xIqdNEc (Lkotlinx/coroutines/flow/Flow;I)Lkotlinx/coroutines/flow/Flow;
+	public static final fun takeWhile-xIqdNEc (Lkotlinx/coroutines/flow/Flow;Lkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Lkotlinx/coroutines/flow/Flow;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class io/github/kevincianfarini/cardiologist/PulseBackpressureStrategy {
+	public static final field Companion Lio/github/kevincianfarini/cardiologist/PulseBackpressureStrategy$Companion;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/kevincianfarini/cardiologist/PulseBackpressureStrategy$Companion {
+	public final fun getCancelPrevious ()Lio/github/kevincianfarini/cardiologist/PulseBackpressureStrategy;
+	public final fun getExecuteConcurrently ()Lio/github/kevincianfarini/cardiologist/PulseBackpressureStrategy;
+	public final fun getSkipNext ()Lio/github/kevincianfarini/cardiologist/PulseBackpressureStrategy;
+}
+
+public final class io/github/kevincianfarini/cardiologist/PulseSchedule {
+	public fun <init> (Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAtHours ()Ljava/util/Set;
+	public final fun getAtMinutes ()Ljava/util/Set;
+	public final fun getAtSeconds ()Ljava/util/Set;
+	public final fun getInMonths ()Ljava/util/Set;
+	public final fun getOnDaysOfMonth ()Ljava/util/Set;
+	public final fun getOnDaysOfWeek ()Ljava/util/Set;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/kevincianfarini/cardiologist/PulseScheduleBuilder {
+	public final fun atHours (I[I)V
+	public final fun atHours (Lkotlin/ranges/IntRange;[Lkotlin/ranges/IntRange;)V
+	public final fun atMinutes (I[I)V
+	public final fun atMinutes (Lkotlin/ranges/IntRange;[Lkotlin/ranges/IntRange;)V
+	public final fun atSeconds (I[I)V
+	public final fun atSeconds (Lkotlin/ranges/IntRange;[Lkotlin/ranges/IntRange;)V
+	public final fun inMonths (Lkotlin/ranges/ClosedRange;[Lkotlin/ranges/ClosedRange;)V
+	public final fun inMonths (Lkotlinx/datetime/Month;[Lkotlinx/datetime/Month;)V
+	public final fun onDaysOfMonth (I[I)V
+	public final fun onDaysOfMonth (Lkotlin/ranges/IntRange;[Lkotlin/ranges/IntRange;)V
+	public final fun onDaysOfWeek (Lkotlin/ranges/ClosedRange;[Lkotlin/ranges/ClosedRange;)V
+	public final fun onDaysOfWeek (Lkotlinx/datetime/DayOfWeek;[Lkotlinx/datetime/DayOfWeek;)V
+}
+
+public final class io/github/kevincianfarini/cardiologist/PulseScheduleKt {
+	public static final fun buildPulseSchedule (Lkotlin/jvm/functions/Function1;)Lio/github/kevincianfarini/cardiologist/PulseSchedule;
+}
+
+public final class io/github/kevincianfarini/cardiologist/ScheduleKt {
+	public static final fun fixedPeriodPulse (Lkotlin/time/Clock;Lkotlinx/datetime/DateTimePeriod;Lkotlinx/datetime/TimeZone;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun fixedPeriodPulse-HG0u8IE (Lkotlin/time/Clock;J)Lkotlinx/coroutines/flow/Flow;
+	public static final fun schedulePulse (Lkotlin/time/Clock;Lio/github/kevincianfarini/cardiologist/PulseSchedule;Lkotlinx/datetime/TimeZone;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun schedulePulse (Lkotlin/time/Clock;Ljava/lang/String;Lkotlinx/datetime/TimeZone;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun schedulePulse (Lkotlin/time/Clock;Lkotlinx/datetime/TimeZone;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Lkotlinx/datetime/Month;Lkotlinx/datetime/DayOfWeek;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun schedulePulse (Lkotlin/time/Clock;Lkotlinx/datetime/TimeZone;Lkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun schedulePulse$default (Lkotlin/time/Clock;Lio/github/kevincianfarini/cardiologist/PulseSchedule;Lkotlinx/datetime/TimeZone;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun schedulePulse$default (Lkotlin/time/Clock;Ljava/lang/String;Lkotlinx/datetime/TimeZone;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun schedulePulse$default (Lkotlin/time/Clock;Lkotlinx/datetime/TimeZone;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Ljava/lang/Integer;Lkotlinx/datetime/Month;Lkotlinx/datetime/DayOfWeek;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+	public static synthetic fun schedulePulse$default (Lkotlin/time/Clock;Lkotlinx/datetime/TimeZone;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class io/github/kevincianfarini/cardiologist/SuspendKt {
+	public static final fun executeAt (Lkotlin/time/Clock;Lkotlin/time/Instant;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun executeAt (Lkotlin/time/Clock;Lkotlinx/datetime/LocalDateTime;Lkotlinx/datetime/TimeZone;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+

@@ -1,0 +1,75 @@
+// Klib ABI Dump
+// Targets: [androidNativeArm32, androidNativeArm64, androidNativeX64, androidNativeX86, iosArm64, iosSimulatorArm64, iosX64, linuxArm64, linuxX64, macosArm64, macosX64, mingwX64, tvosArm64, tvosSimulatorArm64, tvosX64, wasmWasi, watchosArm32, watchosArm64, watchosDeviceArm64, watchosSimulatorArm64, watchosX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <cardiologist>
+final class io.github.kevincianfarini.cardiologist/PulseBackpressureStrategy { // io.github.kevincianfarini.cardiologist/PulseBackpressureStrategy|null[0]
+    final fun toString(): kotlin/String // io.github.kevincianfarini.cardiologist/PulseBackpressureStrategy.toString|toString(){}[0]
+
+    final object Companion { // io.github.kevincianfarini.cardiologist/PulseBackpressureStrategy.Companion|null[0]
+        final val CancelPrevious // io.github.kevincianfarini.cardiologist/PulseBackpressureStrategy.Companion.CancelPrevious|{}CancelPrevious[0]
+            final fun <get-CancelPrevious>(): io.github.kevincianfarini.cardiologist/PulseBackpressureStrategy // io.github.kevincianfarini.cardiologist/PulseBackpressureStrategy.Companion.CancelPrevious.<get-CancelPrevious>|<get-CancelPrevious>(){}[0]
+        final val ExecuteConcurrently // io.github.kevincianfarini.cardiologist/PulseBackpressureStrategy.Companion.ExecuteConcurrently|{}ExecuteConcurrently[0]
+            final fun <get-ExecuteConcurrently>(): io.github.kevincianfarini.cardiologist/PulseBackpressureStrategy // io.github.kevincianfarini.cardiologist/PulseBackpressureStrategy.Companion.ExecuteConcurrently.<get-ExecuteConcurrently>|<get-ExecuteConcurrently>(){}[0]
+        final val SkipNext // io.github.kevincianfarini.cardiologist/PulseBackpressureStrategy.Companion.SkipNext|{}SkipNext[0]
+            final fun <get-SkipNext>(): io.github.kevincianfarini.cardiologist/PulseBackpressureStrategy // io.github.kevincianfarini.cardiologist/PulseBackpressureStrategy.Companion.SkipNext.<get-SkipNext>|<get-SkipNext>(){}[0]
+    }
+}
+
+final class io.github.kevincianfarini.cardiologist/PulseSchedule { // io.github.kevincianfarini.cardiologist/PulseSchedule|null[0]
+    constructor <init>(kotlin.collections/Set<kotlin/Int>, kotlin.collections/Set<kotlin/Int>, kotlin.collections/Set<kotlin/Int>, kotlin.collections/Set<kotlin/Int>, kotlin.collections/Set<kotlinx.datetime/Month>, kotlin.collections/Set<kotlinx.datetime/DayOfWeek>) // io.github.kevincianfarini.cardiologist/PulseSchedule.<init>|<init>(kotlin.collections.Set<kotlin.Int>;kotlin.collections.Set<kotlin.Int>;kotlin.collections.Set<kotlin.Int>;kotlin.collections.Set<kotlin.Int>;kotlin.collections.Set<kotlinx.datetime.Month>;kotlin.collections.Set<kotlinx.datetime.DayOfWeek>){}[0]
+
+    final val atHours // io.github.kevincianfarini.cardiologist/PulseSchedule.atHours|{}atHours[0]
+        final fun <get-atHours>(): kotlin.collections/Set<kotlin/Int> // io.github.kevincianfarini.cardiologist/PulseSchedule.atHours.<get-atHours>|<get-atHours>(){}[0]
+    final val atMinutes // io.github.kevincianfarini.cardiologist/PulseSchedule.atMinutes|{}atMinutes[0]
+        final fun <get-atMinutes>(): kotlin.collections/Set<kotlin/Int> // io.github.kevincianfarini.cardiologist/PulseSchedule.atMinutes.<get-atMinutes>|<get-atMinutes>(){}[0]
+    final val atSeconds // io.github.kevincianfarini.cardiologist/PulseSchedule.atSeconds|{}atSeconds[0]
+        final fun <get-atSeconds>(): kotlin.collections/Set<kotlin/Int> // io.github.kevincianfarini.cardiologist/PulseSchedule.atSeconds.<get-atSeconds>|<get-atSeconds>(){}[0]
+    final val inMonths // io.github.kevincianfarini.cardiologist/PulseSchedule.inMonths|{}inMonths[0]
+        final fun <get-inMonths>(): kotlin.collections/Set<kotlinx.datetime/Month> // io.github.kevincianfarini.cardiologist/PulseSchedule.inMonths.<get-inMonths>|<get-inMonths>(){}[0]
+    final val onDaysOfMonth // io.github.kevincianfarini.cardiologist/PulseSchedule.onDaysOfMonth|{}onDaysOfMonth[0]
+        final fun <get-onDaysOfMonth>(): kotlin.collections/Set<kotlin/Int> // io.github.kevincianfarini.cardiologist/PulseSchedule.onDaysOfMonth.<get-onDaysOfMonth>|<get-onDaysOfMonth>(){}[0]
+    final val onDaysOfWeek // io.github.kevincianfarini.cardiologist/PulseSchedule.onDaysOfWeek|{}onDaysOfWeek[0]
+        final fun <get-onDaysOfWeek>(): kotlin.collections/Set<kotlinx.datetime/DayOfWeek> // io.github.kevincianfarini.cardiologist/PulseSchedule.onDaysOfWeek.<get-onDaysOfWeek>|<get-onDaysOfWeek>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // io.github.kevincianfarini.cardiologist/PulseSchedule.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // io.github.kevincianfarini.cardiologist/PulseSchedule.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // io.github.kevincianfarini.cardiologist/PulseSchedule.toString|toString(){}[0]
+}
+
+final class io.github.kevincianfarini.cardiologist/PulseScheduleBuilder { // io.github.kevincianfarini.cardiologist/PulseScheduleBuilder|null[0]
+    final fun atHours(kotlin.ranges/IntRange, kotlin/Array<out kotlin.ranges/IntRange>...) // io.github.kevincianfarini.cardiologist/PulseScheduleBuilder.atHours|atHours(kotlin.ranges.IntRange;kotlin.Array<out|kotlin.ranges.IntRange>...){}[0]
+    final fun atHours(kotlin/Int, kotlin/IntArray...) // io.github.kevincianfarini.cardiologist/PulseScheduleBuilder.atHours|atHours(kotlin.Int;kotlin.IntArray...){}[0]
+    final fun atMinutes(kotlin.ranges/IntRange, kotlin/Array<out kotlin.ranges/IntRange>...) // io.github.kevincianfarini.cardiologist/PulseScheduleBuilder.atMinutes|atMinutes(kotlin.ranges.IntRange;kotlin.Array<out|kotlin.ranges.IntRange>...){}[0]
+    final fun atMinutes(kotlin/Int, kotlin/IntArray...) // io.github.kevincianfarini.cardiologist/PulseScheduleBuilder.atMinutes|atMinutes(kotlin.Int;kotlin.IntArray...){}[0]
+    final fun atSeconds(kotlin.ranges/IntRange, kotlin/Array<out kotlin.ranges/IntRange>...) // io.github.kevincianfarini.cardiologist/PulseScheduleBuilder.atSeconds|atSeconds(kotlin.ranges.IntRange;kotlin.Array<out|kotlin.ranges.IntRange>...){}[0]
+    final fun atSeconds(kotlin/Int, kotlin/IntArray...) // io.github.kevincianfarini.cardiologist/PulseScheduleBuilder.atSeconds|atSeconds(kotlin.Int;kotlin.IntArray...){}[0]
+    final fun inMonths(kotlin.ranges/ClosedRange<kotlinx.datetime/Month>, kotlin/Array<out kotlin.ranges/ClosedRange<kotlinx.datetime/Month>>...) // io.github.kevincianfarini.cardiologist/PulseScheduleBuilder.inMonths|inMonths(kotlin.ranges.ClosedRange<kotlinx.datetime.Month>;kotlin.Array<out|kotlin.ranges.ClosedRange<kotlinx.datetime.Month>>...){}[0]
+    final fun inMonths(kotlinx.datetime/Month, kotlin/Array<out kotlinx.datetime/Month>...) // io.github.kevincianfarini.cardiologist/PulseScheduleBuilder.inMonths|inMonths(kotlinx.datetime.Month;kotlin.Array<out|kotlinx.datetime.Month>...){}[0]
+    final fun onDaysOfMonth(kotlin.ranges/IntRange, kotlin/Array<out kotlin.ranges/IntRange>...) // io.github.kevincianfarini.cardiologist/PulseScheduleBuilder.onDaysOfMonth|onDaysOfMonth(kotlin.ranges.IntRange;kotlin.Array<out|kotlin.ranges.IntRange>...){}[0]
+    final fun onDaysOfMonth(kotlin/Int, kotlin/IntArray...) // io.github.kevincianfarini.cardiologist/PulseScheduleBuilder.onDaysOfMonth|onDaysOfMonth(kotlin.Int;kotlin.IntArray...){}[0]
+    final fun onDaysOfWeek(kotlin.ranges/ClosedRange<kotlinx.datetime/DayOfWeek>, kotlin/Array<out kotlin.ranges/ClosedRange<kotlinx.datetime/DayOfWeek>>...) // io.github.kevincianfarini.cardiologist/PulseScheduleBuilder.onDaysOfWeek|onDaysOfWeek(kotlin.ranges.ClosedRange<kotlinx.datetime.DayOfWeek>;kotlin.Array<out|kotlin.ranges.ClosedRange<kotlinx.datetime.DayOfWeek>>...){}[0]
+    final fun onDaysOfWeek(kotlinx.datetime/DayOfWeek, kotlin/Array<out kotlinx.datetime/DayOfWeek>...) // io.github.kevincianfarini.cardiologist/PulseScheduleBuilder.onDaysOfWeek|onDaysOfWeek(kotlinx.datetime.DayOfWeek;kotlin.Array<out|kotlinx.datetime.DayOfWeek>...){}[0]
+}
+
+final value class io.github.kevincianfarini.cardiologist/Pulse { // io.github.kevincianfarini.cardiologist/Pulse|null[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // io.github.kevincianfarini.cardiologist/Pulse.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // io.github.kevincianfarini.cardiologist/Pulse.hashCode|hashCode(){}[0]
+    final fun take(kotlin/Int): io.github.kevincianfarini.cardiologist/Pulse // io.github.kevincianfarini.cardiologist/Pulse.take|take(kotlin.Int){}[0]
+    final fun takeWhile(kotlin/Function1<kotlin.time/Instant, kotlin/Boolean>): io.github.kevincianfarini.cardiologist/Pulse // io.github.kevincianfarini.cardiologist/Pulse.takeWhile|takeWhile(kotlin.Function1<kotlin.time.Instant,kotlin.Boolean>){}[0]
+    final fun toString(): kotlin/String // io.github.kevincianfarini.cardiologist/Pulse.toString|toString(){}[0]
+    final suspend fun beat(io.github.kevincianfarini.cardiologist/PulseBackpressureStrategy = ..., kotlin.coroutines/SuspendFunction1<kotlin.time/Instant, kotlin/Unit>) // io.github.kevincianfarini.cardiologist/Pulse.beat|beat(io.github.kevincianfarini.cardiologist.PulseBackpressureStrategy;kotlin.coroutines.SuspendFunction1<kotlin.time.Instant,kotlin.Unit>){}[0]
+}
+
+final fun (kotlin.time/Clock).io.github.kevincianfarini.cardiologist/fixedPeriodPulse(kotlin.time/Duration): io.github.kevincianfarini.cardiologist/Pulse // io.github.kevincianfarini.cardiologist/fixedPeriodPulse|fixedPeriodPulse@kotlin.time.Clock(kotlin.time.Duration){}[0]
+final fun (kotlin.time/Clock).io.github.kevincianfarini.cardiologist/fixedPeriodPulse(kotlinx.datetime/DateTimePeriod, kotlinx.datetime/TimeZone): io.github.kevincianfarini.cardiologist/Pulse // io.github.kevincianfarini.cardiologist/fixedPeriodPulse|fixedPeriodPulse@kotlin.time.Clock(kotlinx.datetime.DateTimePeriod;kotlinx.datetime.TimeZone){}[0]
+final fun (kotlin.time/Clock).io.github.kevincianfarini.cardiologist/schedulePulse(io.github.kevincianfarini.cardiologist/PulseSchedule, kotlinx.datetime/TimeZone = ...): io.github.kevincianfarini.cardiologist/Pulse // io.github.kevincianfarini.cardiologist/schedulePulse|schedulePulse@kotlin.time.Clock(io.github.kevincianfarini.cardiologist.PulseSchedule;kotlinx.datetime.TimeZone){}[0]
+final fun (kotlin.time/Clock).io.github.kevincianfarini.cardiologist/schedulePulse(kotlin/String, kotlinx.datetime/TimeZone = ...): io.github.kevincianfarini.cardiologist/Pulse // io.github.kevincianfarini.cardiologist/schedulePulse|schedulePulse@kotlin.time.Clock(kotlin.String;kotlinx.datetime.TimeZone){}[0]
+final fun (kotlin.time/Clock).io.github.kevincianfarini.cardiologist/schedulePulse(kotlinx.datetime/TimeZone = ..., kotlin/Function1<io.github.kevincianfarini.cardiologist/PulseScheduleBuilder, kotlin/Unit>): io.github.kevincianfarini.cardiologist/Pulse // io.github.kevincianfarini.cardiologist/schedulePulse|schedulePulse@kotlin.time.Clock(kotlinx.datetime.TimeZone;kotlin.Function1<io.github.kevincianfarini.cardiologist.PulseScheduleBuilder,kotlin.Unit>){}[0]
+final fun (kotlin.time/Clock).io.github.kevincianfarini.cardiologist/schedulePulse(kotlinx.datetime/TimeZone = ..., kotlin/Int? = ..., kotlin/Int? = ..., kotlin/Int? = ..., kotlin/Int? = ..., kotlinx.datetime/Month? = ..., kotlinx.datetime/DayOfWeek? = ...): io.github.kevincianfarini.cardiologist/Pulse // io.github.kevincianfarini.cardiologist/schedulePulse|schedulePulse@kotlin.time.Clock(kotlinx.datetime.TimeZone;kotlin.Int?;kotlin.Int?;kotlin.Int?;kotlin.Int?;kotlinx.datetime.Month?;kotlinx.datetime.DayOfWeek?){}[0]
+final fun io.github.kevincianfarini.cardiologist/buildPulseSchedule(kotlin/Function1<io.github.kevincianfarini.cardiologist/PulseScheduleBuilder, kotlin/Unit>): io.github.kevincianfarini.cardiologist/PulseSchedule // io.github.kevincianfarini.cardiologist/buildPulseSchedule|buildPulseSchedule(kotlin.Function1<io.github.kevincianfarini.cardiologist.PulseScheduleBuilder,kotlin.Unit>){}[0]
+final suspend fun <#A: kotlin/Any?> (kotlin.time/Clock).io.github.kevincianfarini.cardiologist/executeAt(kotlin.time/Instant, kotlin.coroutines/SuspendFunction0<#A>): #A // io.github.kevincianfarini.cardiologist/executeAt|executeAt@kotlin.time.Clock(kotlin.time.Instant;kotlin.coroutines.SuspendFunction0<0:0>){0§<kotlin.Any?>}[0]
+final suspend fun <#A: kotlin/Any?> (kotlin.time/Clock).io.github.kevincianfarini.cardiologist/executeAt(kotlinx.datetime/LocalDateTime, kotlinx.datetime/TimeZone, kotlin.coroutines/SuspendFunction0<#A>): #A // io.github.kevincianfarini.cardiologist/executeAt|executeAt@kotlin.time.Clock(kotlinx.datetime.LocalDateTime;kotlinx.datetime.TimeZone;kotlin.coroutines.SuspendFunction0<0:0>){0§<kotlin.Any?>}[0]

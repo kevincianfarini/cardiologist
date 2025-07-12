@@ -1,6 +1,9 @@
+@file:OptIn(ExperimentalAbiValidation::class)
+
 import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 
 plugins {
     alias(libs.plugins.dokka)
@@ -14,6 +17,8 @@ kotlin {
 
     compilerOptions { allWarningsAsErrors.set(true) }
     explicitApi()
+
+    abiValidation { enabled = true }
 
     androidNativeArm32()
     androidNativeArm64()
