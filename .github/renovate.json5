@@ -9,11 +9,11 @@
     'workarounds:javaLTSVersions',
   ],
   customManagers: [
-    // Update java-version file with the latest JDK version.
+    // Update .java-version file with the latest JDK version.
     {
       customType: 'regex',
       fileMatch: [
-        '^java-version$',
+        '^\\.java-version$',
       ],
       matchStrings: [
         '(?<currentValue>.*)\\n',
