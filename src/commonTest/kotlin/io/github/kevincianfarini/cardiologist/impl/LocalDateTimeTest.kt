@@ -354,7 +354,7 @@ class LocalDateTimeTest {
 
     @Test
     fun non_continuous_month_matches() = assertEquals(
-        expected = stubDatetime.copy(monthNumber = 5),
+        expected = LocalDateTime(year = 2023, month = 5, day = 1, hour = 0, minute = 0, second = 0),
         actual = stubDatetime.copy(monthNumber = 2).nextMatch {
             inMonths(Month(1), Month(5), Month(10))
         },
@@ -362,7 +362,7 @@ class LocalDateTimeTest {
 
     @Test
     fun non_continuous_month_unsorted_matches() = assertEquals(
-        expected = stubDatetime.copy(monthNumber = 5),
+        expected = LocalDateTime(year = 2023, month = 5, day = 1, hour = 0, minute = 0, second = 0),
         actual = stubDatetime.copy(monthNumber = 2).nextMatch {
             inMonths(Month(10), Month(5), Month(1))
         },
@@ -370,19 +370,23 @@ class LocalDateTimeTest {
 
     @Test
     fun non_continuous_match_complicated() = assertEquals(
-        expected = stubDatetime.copy(
-            monthNumber = 5,
-            dayOfMonth = 5,
-            hour = 5,
-            minute = 5,
-            second = 5,
+        expected = LocalDateTime(
+            year = 2023,
+            month = 5,
+            day = 1,
+            hour = 0,
+            minute = 0,
+            second = 0,
+            nanosecond = 0
         ),
-        actual = stubDatetime.copy(
-            monthNumber = 2,
-            dayOfMonth = 2,
+        actual = LocalDateTime(
+            year = 2023,
+            month = 2,
+            day = 2,
             hour = 2,
             minute = 2,
             second = 2,
+            nanosecond = 0,
         ).nextMatch {
             inMonths(Month(10), Month(5), Month(1))
             onDaysOfMonth(10, 5, 1)
@@ -411,10 +415,10 @@ class LocalDateTimeTest {
 
     @Test
     fun schedules_day_of_week_multiple_values() = assertEquals(
-        expected = stubDatetime.copy(dayOfMonth = 5), // Thursday.
+        expected = LocalDateTime(year = 2023, month = 10, day = 5, hour = 0, minute = 0, second = 0), // Thursday.
         actual = stubDatetime.nextMatch {
             // stubDatetime is October 4th, 2023; a Wednesday.
-            onDaysOfWeek(DayOfWeek.MONDAY..DayOfWeek.FRIDAY)
+            onDaysOfWeek(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.THURSDAY)
             atHours(0)
             atMinutes(0)
             atSeconds(0)
@@ -465,6 +469,59 @@ class LocalDateTimeTest {
         actual = stubDatetime.nextMatch {
             // October 4th, 2023 was a Wednesday.
             onDaysOfWeek(DayOfWeek.TUESDAY)
+        }
+    )
+
+    @Test
+    fun github_issue_151() = assertEquals(
+        expected = LocalDateTime(2025, 7, 25, 13, 15, 0),
+        actual = LocalDateTime(2025, 7, 25, 13, 14, 8, 89612504).nextMatch {
+            atMinutes(0, 15, 30, 45)
+            atSeconds(0)
+        }
+    )
+
+    @Test
+    fun next_hour_middle_of_multi_value_range_works() = assertEquals(
+        expected = LocalDateTime(2025, 7, 25, 15, 0, 0, 0),
+        actual = LocalDateTime(2025, 7, 25, 13, 14, 8, 89612504).nextMatch {
+            atHours(12, 15, 17)
+            atMinutes(0)
+            atSeconds(0)
+        }
+    )
+
+    @Test
+    fun next_day_of_month_middle_of_multi_value_range_works() = assertEquals(
+        expected = LocalDateTime(2025, 7, 26, 0, 0, 0, 0),
+        actual = LocalDateTime(2025, 7, 25, 13, 14, 8, 89612504).nextMatch {
+            onDaysOfMonth(24, 26, 29)
+            atHours(0)
+            atMinutes(0)
+            atSeconds(0)
+        }
+    )
+
+    @Test
+    fun next_month_middle_of_multi_value_range_works() = assertEquals(
+        expected = LocalDateTime(2025, 8, 1, 0, 0, 0, 0),
+        actual = LocalDateTime(2025, 7, 25, 13, 14, 8, 89612504).nextMatch {
+            inMonths(Month.JUNE, Month.AUGUST, Month.SEPTEMBER)
+            onDaysOfMonth(1)
+            atHours(0)
+            atMinutes(0)
+            atSeconds(0)
+        }
+    )
+
+    @Test
+    fun next_day_of_week_middle_of_multi_value_range_works() = assertEquals(
+        expected = LocalDateTime(2025, 7, 26, 0, 0, 0, 0),
+        actual = LocalDateTime(2025, 7, 25, 13, 14, 8, 89612504).nextMatch {
+            onDaysOfWeek(DayOfWeek.THURSDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
+            atHours(0)
+            atMinutes(0)
+            atSeconds(0)
         }
     )
 }
