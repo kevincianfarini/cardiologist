@@ -76,7 +76,7 @@ tasks.withType<AbstractTestTask> {
 }
 
 mavenPublishing {
-    publishToMavenCentral(host = SonatypeHost.S01, automaticRelease = true)
+    publishToMavenCentral(automaticRelease = true)
     signAllPublications()
 }
 
