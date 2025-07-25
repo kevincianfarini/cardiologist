@@ -68,7 +68,14 @@ private fun LocalDateTime.nextMonth(
             second = 0,
             nanosecond = 0
         )
-        else -> copy(monthNumber = inMonths.sorted().first { it > incrementedMonth }.number)
+        else -> copy(
+            monthNumber = inMonths.sorted().first { it > incrementedMonth }.number,
+            dayOfMonth = 1,
+            hour = 0,
+            minute = 0,
+            second = 0,
+            nanosecond = 0,
+        )
     }
 }
 
@@ -119,7 +126,13 @@ private fun LocalDateTime.nextDayOfMonth(
         incrementedDay > maxDayOfMonth -> {
             nextMonth(inMonths, increment = true).copy(dayOfMonth = 1)
         }
-        else -> copy(dayOfMonth = onDaysOfMonth.sorted().first { it > incrementedDay })
+        else -> copy(
+            dayOfMonth = onDaysOfMonth.sorted().first { it > incrementedDay },
+            hour = 0,
+            minute = 0,
+            second = 0,
+            nanosecond = 0,
+        )
     }
 }
 
@@ -140,8 +153,20 @@ private fun LocalDateTime.nextDayOfWeek(
             }
             val futureDayOfMonth = day + dayOfWeek.daysUntil(nextMatchedDayOfWeek)
             when {
-                futureDayOfMonth <= month.numberOfDays(year) -> copy(dayOfMonth = futureDayOfMonth)
-                else -> copy(dayOfMonth = 1).nextMonth(inMonths, increment = true).nextDayOfWeek(onDaysOfWeek, inMonths)
+                futureDayOfMonth <= month.numberOfDays(year) -> copy(
+                    dayOfMonth = futureDayOfMonth,
+                    hour = 0,
+                    minute = 0,
+                    second = 0,
+                    nanosecond = 0,
+                )
+                else -> copy(
+                    dayOfMonth = 1,
+                    hour = 0,
+                    minute = 0,
+                    second = 0,
+                    nanosecond = 0,
+                ).nextMonth(inMonths, increment = true).nextDayOfWeek(onDaysOfWeek, inMonths)
             }
         }
     }
@@ -174,7 +199,12 @@ private fun LocalDateTime.nextHour(
             second = 0,
             nanosecond = 0,
         )
-        else -> copy(hour = atHours.sorted().first { it > incrementedHour })
+        else -> copy(
+            hour = atHours.sorted().first { it > incrementedHour },
+            minute = 0,
+            second = 0,
+            nanosecond = 0,
+        )
     }
 }
 
@@ -201,7 +231,11 @@ private fun LocalDateTime.nextMinute(
             second = 0,
             nanosecond = 0,
         )
-        else -> copy(minute = atMinutes.sorted().first { it > incrementedMinute })
+        else -> copy(
+            minute = atMinutes.sorted().first { it > incrementedMinute },
+            second = 0,
+            nanosecond = 0,
+        )
     }
 }
 

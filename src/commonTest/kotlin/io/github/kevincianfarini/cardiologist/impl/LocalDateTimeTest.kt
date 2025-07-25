@@ -467,6 +467,59 @@ class LocalDateTimeTest {
             onDaysOfWeek(DayOfWeek.TUESDAY)
         }
     )
+
+    @Test
+    fun github_issue_151() = assertEquals(
+        expected = LocalDateTime(2025, 7, 25, 13, 15, 0),
+        actual = LocalDateTime(2025, 7, 25, 13, 14, 8, 89612504).nextMatch {
+            atMinutes(0, 15, 30, 45)
+            atSeconds(0)
+        }
+    )
+
+    @Test
+    fun next_hour_middle_of_multi_value_range_works() = assertEquals(
+        expected = LocalDateTime(2025, 7, 25, 15, 0, 0, 0),
+        actual = LocalDateTime(2025, 7, 25, 13, 14, 8, 89612504).nextMatch {
+            atHours(12, 15, 17)
+            atMinutes(0)
+            atSeconds(0)
+        }
+    )
+
+    @Test
+    fun next_day_of_month_middle_of_multi_value_range_works() = assertEquals(
+        expected = LocalDateTime(2025, 7, 26, 0, 0, 0, 0),
+        actual = LocalDateTime(2025, 7, 25, 13, 14, 8, 89612504).nextMatch {
+            onDaysOfMonth(24, 26, 29)
+            atHours(0)
+            atMinutes(0)
+            atSeconds(0)
+        }
+    )
+
+    @Test
+    fun next_month_middle_of_multi_value_range_works() = assertEquals(
+        expected = LocalDateTime(2025, 8, 1, 0, 0, 0, 0),
+        actual = LocalDateTime(2025, 7, 25, 13, 14, 8, 89612504).nextMatch {
+            inMonths(Month.JUNE, Month.AUGUST, Month.SEPTEMBER)
+            onDaysOfMonth(1)
+            atHours(0)
+            atMinutes(0)
+            atSeconds(0)
+        }
+    )
+
+    @Test
+    fun next_day_of_week_middle_of_multi_value_range_works() = assertEquals(
+        expected = LocalDateTime(2025, 7, 26, 0, 0, 0, 0),
+        actual = LocalDateTime(2025, 7, 25, 13, 14, 8, 89612504).nextMatch {
+            onDaysOfWeek(DayOfWeek.THURSDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)
+            atHours(0)
+            atMinutes(0)
+            atSeconds(0)
+        }
+    )
 }
 
 @ExperimentalTime
