@@ -28,12 +28,12 @@ public final class io/github/kevincianfarini/cardiologist/PulseBackpressureStrat
 public final class io/github/kevincianfarini/cardiologist/PulseSchedule {
 	public fun <init> (Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;)V
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getAtHours ()Ljava/util/Set;
-	public final fun getAtMinutes ()Ljava/util/Set;
-	public final fun getAtSeconds ()Ljava/util/Set;
-	public final fun getInMonths ()Ljava/util/Set;
-	public final fun getOnDaysOfMonth ()Ljava/util/Set;
-	public final fun getOnDaysOfWeek ()Ljava/util/Set;
+	public final fun getAtHours ()Ljava/util/List;
+	public final fun getAtMinutes ()Ljava/util/List;
+	public final fun getAtSeconds ()Ljava/util/List;
+	public final fun getInMonths ()Ljava/util/List;
+	public final fun getOnDaysOfMonth ()Ljava/util/List;
+	public final fun getOnDaysOfWeek ()Ljava/util/List;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
