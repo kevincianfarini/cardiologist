@@ -36,6 +36,13 @@ public class PulseSchedule(
         // Don't check if onDaysOfWeek is empty because an empty set is equivalent to the wildcard `*` value in cron
         // expressions.
     }
+
+    internal val sortedSeconds = atSeconds.sorted()
+    internal val sortedMinutes = atMinutes.sorted()
+    internal val sortedHours = atHours.sorted()
+    internal val sortedDaysOfMonth = onDaysOfMonth.sorted()
+    internal val sortedMonths = inMonths.sorted()
+    internal val sortedDaysOfWeek = onDaysOfWeek.sorted()
 }
 
 public class PulseScheduleBuilder internal constructor() {
