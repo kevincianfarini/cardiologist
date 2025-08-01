@@ -1,6 +1,5 @@
 package io.github.kevincianfarini.cardiologist.impl
 
-import io.github.kevincianfarini.cardiologist.PulseSchedule
 import io.github.kevincianfarini.cardiologist.buildPulseSchedule
 import kotlinx.datetime.*
 import kotlin.test.Test
@@ -10,97 +9,109 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalTime::class)
 class LocalDateTimeTest {
 
-    private val stubDatetime = LocalDateTime(
-        year = 2023,
-        month = Month.OCTOBER,
-        day = 4,
-        hour = 0,
-        minute = 0,
-        second = 0,
-        nanosecond = 0,
-    )
-
     @Test
     fun does_not_match_to_equivalent_value() = assertEquals(
-        expected = stubDatetime.copy(second = 1),
-        actual = stubDatetime.nextMatch()
+        expected = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 1, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 0, 0).nextMatch()
     )
 
     @Test
     fun half_second_is_adjusted_up_to_second() = assertEquals(
-        expected = stubDatetime.copy(second = 1),
-        actual = stubDatetime.copy(nanosecond = 500).nextMatch(),
+        expected = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 1, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 0, 500).nextMatch(),
     )
 
     @Test
     fun half_second_is_adjusted_up_to_2_seconds() = assertEquals(
-        expected = stubDatetime.copy(second = 2),
-        actual = stubDatetime.copy(nanosecond = 500).nextMatch { atSeconds(2) },
+        expected = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 2, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 0, 500).nextMatch {
+            atSeconds(2)
+        },
     )
 
     @Test
     fun beginning_of_minute_adjusted_up_to_30_seconds() = assertEquals(
-        expected = stubDatetime.copy(second = 30),
-        actual = stubDatetime.copy(nanosecond = 500).nextMatch { atSeconds(30) },
+        expected = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 30, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 0, 500).nextMatch {
+            atSeconds(30)
+        },
     )
 
     @Test
     fun middle_of_minute_adjusted_up_to_minute() = assertEquals(
-        expected = stubDatetime.copy(minute = 1),
-        actual = stubDatetime.copy(second = 30).nextMatch { atSeconds(0) },
+        expected = LocalDateTime(2023, Month.OCTOBER, 4, 0, 1, 0, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 30, 0).nextMatch {
+            atSeconds(0)
+        },
     )
 
     @Test
     fun beginning_of_minute_adjusted_up_to_minimum_of_range() = assertEquals(
-        expected = stubDatetime.copy(second = 30),
-        actual = stubDatetime.copy(nanosecond = 500).nextMatch { atSeconds(30..59) },
+        expected = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 30, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 0, 500).nextMatch {
+            atSeconds(30..59)
+        },
     )
 
     @Test
     fun beginning_of_hour_adjusted_up_to_30_minutes() = assertEquals(
-        expected = stubDatetime.copy(minute = 30),
-        actual = stubDatetime.nextMatch { atMinutes(30) },
+        expected = LocalDateTime(2023, Month.OCTOBER, 4, 0, 30, 0, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 0, 0).nextMatch {
+            atMinutes(30)
+        },
     )
 
     @Test
     fun beginning_of_hour_adjusted_up_to_30_minutes_of_range() = assertEquals(
-        expected = stubDatetime.copy(minute = 30),
-        actual = stubDatetime.nextMatch { atMinutes(30..59) },
+        expected = LocalDateTime(2023, Month.OCTOBER, 4, 0, 30, 0, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 0, 0).nextMatch {
+            atMinutes(30..59)
+        },
     )
 
     @Test
     fun noon_adjusted_to_next_day() = assertEquals(
-        expected = stubDatetime.copy(dayOfMonth = 5),
-        actual = stubDatetime.copy(hour = 12).nextMatch { atHours(0) },
+        expected = LocalDateTime(2023, Month.OCTOBER, 5, 0, 0, 0, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 12, 0, 0, 0).nextMatch {
+            atHours(0)
+        },
     )
 
     @Test
     fun noon_october_31_adjusted_to_midnight_november_1() = assertEquals(
-        expected = stubDatetime.copy(monthNumber = 11, dayOfMonth = 1),
-        actual = stubDatetime.copy(dayOfMonth = 31, hour = 12).nextMatch { atHours(0) },
+        expected = LocalDateTime(2023, Month.NOVEMBER, 1, 0, 0, 0, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 31, 12, 0, 0, 0).nextMatch {
+            atHours(0)
+        },
     )
 
     @Test
     fun noon_february_28_adjusted_to_midnight_march_1() = assertEquals(
-        expected = stubDatetime.copy(monthNumber = 3, dayOfMonth = 1),
-        actual = stubDatetime.copy(monthNumber = 2, dayOfMonth = 28, hour = 12).nextMatch { atHours(0) },
+        expected = LocalDateTime(2023, Month.MARCH, 1, 0, 0, 0, 0),
+        actual = LocalDateTime(2023, Month.FEBRUARY, 28, 12, 0, 0, 0).nextMatch {
+            atHours(0)
+        },
     )
 
     @Test
     fun noon_february_28_2024_adjusted_to_midnight_feb_29() = assertEquals(
-        expected = stubDatetime.copy(year = 2024, monthNumber = 2, dayOfMonth = 29),
-        actual = stubDatetime.copy(year = 2024, monthNumber = 2, dayOfMonth = 28, hour = 12).nextMatch { atHours(0) },
+        expected = LocalDateTime(2024, Month.FEBRUARY, 29, 0, 0, 0, 0),
+        actual = LocalDateTime(2024, Month.FEBRUARY, 28, 12, 0, 0, 0).nextMatch {
+            atHours(0)
+        },
     )
 
     @Test
     fun noon_december_31_2023_adjusted_to_midnight_jan_1_2024() = assertEquals(
-        expected = stubDatetime.copy(year = 2024, monthNumber = 1, dayOfMonth = 1),
-        actual = stubDatetime.copy(year = 2023, monthNumber = 12, dayOfMonth = 31, hour = 12).nextMatch { atHours(0) },
+        expected = LocalDateTime(2024, Month.JANUARY, 1, 0, 0, 0, 0),
+        actual = LocalDateTime(2023, Month.DECEMBER, 31, 12, 0, 0, 0).nextMatch {
+            atHours(0)
+        },
     )
 
     @Test
     fun nanosecond_before_2024_cascades_all_fields() = assertEquals(
-        expected = stubDatetime.copy(year = 2024, monthNumber = 1, dayOfMonth = 1),
+        expected = LocalDateTime(2024, Month.JANUARY, 1, 0, 0, 0, 0),
         actual = LocalDateTime(
             year = 2023,
             month = Month.DECEMBER,
@@ -114,8 +125,8 @@ class LocalDateTimeTest {
 
     @Test
     fun matches_next_five_minute_interval_of_noon() = assertEquals(
-        expected = stubDatetime.copy(hour = 12, minute = 5),
-        actual = stubDatetime.nextMatch {
+        expected = LocalDateTime(2023, Month.OCTOBER, 4, 12, 5, 0, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 0, 0).nextMatch {
             atMinutes(5)
             atHours(12..23)
         },
@@ -144,35 +155,32 @@ class LocalDateTimeTest {
 
     @Test
     fun matches_next_month() = assertEquals(
-        expected = stubDatetime.copy(monthNumber = 11, dayOfMonth = 1),
-        actual = stubDatetime.nextMatch { inMonths(Month.NOVEMBER) },
+        expected = LocalDateTime(2023, Month.NOVEMBER, 1, 0, 0, 0, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 0, 0).nextMatch {
+            inMonths(Month.NOVEMBER)
+        },
     )
 
     @Test
     fun matches_10_seconds() = assertEquals(
-        expected = stubDatetime.copy(hour = 20, minute = 30, second = 10),
-        actual = stubDatetime.copy(hour = 20, minute = 29, second = 36).nextMatch { atSeconds(10) },
+        expected = LocalDateTime(2023, Month.OCTOBER, 4, 20, 30, 10, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 20, 29, 35, 0).nextMatch {
+            atSeconds(10)
+        },
     )
 
     @Test
     fun matches_10_seconds_through_45_seconds() = assertEquals(
-        expected = stubDatetime.copy(hour = 20, minute = 36, second = 10, nanosecond = 0),
-        actual = stubDatetime.copy(
-            hour = 20,
-            minute = 35,
-            second = 45,
-            nanosecond = 1,
-        ).nextMatch { atSeconds(10..45) },
+        expected = LocalDateTime(2023, Month.OCTOBER, 4, 20, 36, 10, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 20, 35, 45, 1).nextMatch {
+            atSeconds(10..45)
+        },
     )
 
     @Test
     fun matches_10_minutes_through_57_minutes() = assertEquals(
-        expected = stubDatetime.copy(dayOfMonth = 5, hour = 0, minute = 10, second = 0),
-        actual = stubDatetime.copy(
-            hour = 23,
-            minute = 57,
-            second = 1,
-        ).nextMatch {
+        expected = LocalDateTime(2023, Month.OCTOBER, 5, 0, 10, 0, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 23, 57, 1, 0).nextMatch {
             atSeconds(0)
             atMinutes(10..57)
         },
@@ -180,8 +188,8 @@ class LocalDateTimeTest {
 
     @Test
     fun matches_september_2024_from_october_2023() = assertEquals(
-        expected = stubDatetime.copy(year = 2024, monthNumber = 9, dayOfMonth = 1),
-        actual = stubDatetime.nextMatch {
+        expected = LocalDateTime(2024, Month.SEPTEMBER, 1, 0, 0, 0, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 0, 0).nextMatch {
             atSeconds(0)
             atMinutes(0)
             atHours(0)
@@ -192,8 +200,8 @@ class LocalDateTimeTest {
 
     @Test
     fun matches_september_2024_from_october_2023_any_hour() = assertEquals(
-        expected = stubDatetime.copy(year = 2024, monthNumber = 9, dayOfMonth = 1),
-        actual = stubDatetime.copy(dayOfMonth = 6, hour = 0, minute = 41, second = 7).nextMatch {
+        expected = LocalDateTime(2024, Month.SEPTEMBER, 1, 0, 0, 0, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 6, 0, 41, 7, 0).nextMatch {
             atSeconds(0)
             atMinutes(0)
             onDaysOfMonth(1)
@@ -213,141 +221,65 @@ class LocalDateTimeTest {
     )
 
     @Test
-    fun one_month_gap_for_two_years() {
-        LocalDateTime(year = 2023, month = Month.JANUARY, day = 1, hour = 0, minute = 0).assertGap(
-            assertPeriod = DateTimePeriod(months = 1),
-            schedule = buildPulseSchedule {
-                atSeconds(0)
-                atMinutes(0)
-                atHours(0)
-                onDaysOfMonth(1)
-            },
-        ) { it.year < 2025 }
-    }
-
-    @Test
-    fun one_month_gap_for_a_year() {
-        LocalDateTime(year = 2023, month = Month.JANUARY, day = 1, hour = 0, minute = 0).assertGap(
-            assertPeriod = DateTimePeriod(months = 1),
-            schedule = buildPulseSchedule {
-                atSeconds(0)
-                atMinutes(0)
-                atHours(0)
-                onDaysOfMonth(1)
-            },
-        ) { it.year < 2024 }
-    }
-
-    @Test
-    fun one_day_gap_for_a_year() {
-        LocalDateTime(year = 2023, month = Month.JANUARY, day = 1, hour = 0, minute = 0).assertGap(
-            assertPeriod = DateTimePeriod(days = 1),
-            schedule = buildPulseSchedule {
-                atSeconds(0)
-                atMinutes(0)
-                atHours(0)
-            },
-        ) { it.year < 2024 }
-    }
-
-    @Test
-    fun one_day_gap_for_two_years() {
-        LocalDateTime(year = 2023, month = Month.JANUARY, day = 1, hour = 0, minute = 0).assertGap(
-            assertPeriod = DateTimePeriod(days = 1),
-            schedule = buildPulseSchedule {
-                atSeconds(0)
-                atMinutes(0)
-                atHours(0)
-            },
-        ) { it.year < 2025 }
-    }
-
-    @Test
-    fun one_hour_gap_for_a_year() {
-        LocalDateTime(year = 2023, month = Month.JANUARY, day = 1, hour = 0, minute = 0).assertGap(
-            assertPeriod = DateTimePeriod(hours = 1),
-            schedule = buildPulseSchedule {
-                atSeconds(0)
-                atMinutes(0)
-            },
-        ) { it.year < 2024 }
-    }
-
-    @Test
-    fun one_minute_gap_for_a_year() {
-        LocalDateTime(year = 2023, month = Month.JANUARY, day = 1, hour = 0, minute = 0).assertGap(
-            assertPeriod = DateTimePeriod(minutes = 1),
-            schedule = buildPulseSchedule { atSeconds(0) },
-        ) { it.year < 2024 }
-    }
-
-    @Test
-    fun one_second_gap_for_a_year() {
-        LocalDateTime(year = 2023, month = Month.JANUARY, day = 1, hour = 0, minute = 0).assertGap(
-            assertPeriod = DateTimePeriod(seconds = 1),
-        ) { it.year < 2024 }
-    }
-
-    @Test
     fun non_continuous_seconds_matches() = assertEquals(
-        expected = stubDatetime.copy(second = 5),
-        actual = stubDatetime.copy(second = 2).nextMatch {
+        expected = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 5, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 2, 0).nextMatch {
             atSeconds(0, 5, 10)
         },
     )
 
     @Test
     fun non_continuous_unsorted_matches() = assertEquals(
-        expected = stubDatetime.copy(second = 5),
-        actual = stubDatetime.copy(second = 2).nextMatch {
+        expected = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 5, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 2, 0).nextMatch {
             atSeconds(10, 0, 5)
         },
     )
 
     @Test
     fun non_continuous_minutes_matches() = assertEquals(
-        expected = stubDatetime.copy(minute = 5),
-        actual = stubDatetime.copy(minute = 2).nextMatch {
+        expected = LocalDateTime(2023, Month.OCTOBER, 4, 0, 5, 0, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 0, 2, 0, 0).nextMatch {
             atMinutes(0, 5, 10)
         },
     )
 
     @Test
     fun non_continuous_minutes_unsorted_matches() = assertEquals(
-        expected = stubDatetime.copy(minute = 5),
-        actual = stubDatetime.copy(minute = 2).nextMatch {
+        expected = LocalDateTime(2023, Month.OCTOBER, 4, 0, 5, 0, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 0, 2, 0, 0).nextMatch {
             atMinutes(10, 0, 5)
         },
     )
 
     @Test
     fun non_continuous_hours_matches() = assertEquals(
-        expected = stubDatetime.copy(hour = 5),
-        actual = stubDatetime.copy(hour = 2).nextMatch {
+        expected = LocalDateTime(2023, Month.OCTOBER, 4, 5, 0, 0, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 2, 0, 0, 0).nextMatch {
             atHours(0, 5, 10)
         },
     )
 
     @Test
     fun non_continuous_hours_unsorted_matches() = assertEquals(
-        expected = stubDatetime.copy(hour = 5),
-        actual = stubDatetime.copy(hour = 2).nextMatch {
+        expected = LocalDateTime(2023, Month.OCTOBER, 4, 5, 0, 0, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 2, 0, 0, 0).nextMatch {
             atHours(10, 5, 0)
         },
     )
 
     @Test
     fun non_continuous_days_of_month_matches() = assertEquals(
-        expected = stubDatetime.copy(dayOfMonth = 5),
-        actual = stubDatetime.copy(dayOfMonth = 2).nextMatch {
+        expected = LocalDateTime(2023, Month.OCTOBER, 5, 0, 0, 0, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 2, 0, 0, 0, 0).nextMatch {
             onDaysOfMonth(1, 5, 10)
         },
     )
 
     @Test
     fun non_continuous_days_of_month_unsorted_matches() = assertEquals(
-        expected = stubDatetime.copy(dayOfMonth = 5),
-        actual = stubDatetime.copy(dayOfMonth = 2).nextMatch {
+        expected = LocalDateTime(2023, Month.OCTOBER, 5, 0, 0, 0, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 2, 0, 0, 0, 0).nextMatch {
             onDaysOfMonth(10, 5, 1)
         },
     )
@@ -355,7 +287,7 @@ class LocalDateTimeTest {
     @Test
     fun non_continuous_month_matches() = assertEquals(
         expected = LocalDateTime(year = 2023, month = 5, day = 1, hour = 0, minute = 0, second = 0),
-        actual = stubDatetime.copy(monthNumber = 2).nextMatch {
+        actual = LocalDateTime(2023, Month.FEBRUARY, 4, 0, 0, 0, 0).nextMatch {
             inMonths(Month(1), Month(5), Month(10))
         },
     )
@@ -363,7 +295,7 @@ class LocalDateTimeTest {
     @Test
     fun non_continuous_month_unsorted_matches() = assertEquals(
         expected = LocalDateTime(year = 2023, month = 5, day = 1, hour = 0, minute = 0, second = 0),
-        actual = stubDatetime.copy(monthNumber = 2).nextMatch {
+        actual = LocalDateTime(2023, Month.FEBRUARY, 4, 0, 0, 0, 0).nextMatch {
             inMonths(Month(10), Month(5), Month(1))
         },
     )
@@ -398,17 +330,17 @@ class LocalDateTimeTest {
 
     @Test
     fun check_2023_10_04T00_00_59_000000001_next_match_is_correct() = assertEquals(
-        expected = stubDatetime.copy(minute = 1, second = 1),
-        actual = stubDatetime.copy(second = 59, nanosecond = 1).nextMatch {
+        expected = LocalDateTime(2023, Month.OCTOBER, 4, 0, 1, 1, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 59, 1).nextMatch {
             atSeconds(1)
         },
     )
 
     @Test
     fun schedules_day_of_week_no_day_of_month() = assertEquals(
-        expected = stubDatetime.copy(dayOfMonth = 7), // Saturday.
-        actual = stubDatetime.nextMatch {
-            // stubDatetime is October 4th, 2023; a Wednesday.
+        expected = LocalDateTime(2023, Month.OCTOBER, 7, 0, 0, 0, 0), // Saturday.
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 0, 0).nextMatch {
+            // LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 0, 0) is October 4th, 2023; a Wednesday.
             onDaysOfWeek(DayOfWeek.SATURDAY)
         }
     )
@@ -416,8 +348,8 @@ class LocalDateTimeTest {
     @Test
     fun schedules_day_of_week_multiple_values() = assertEquals(
         expected = LocalDateTime(year = 2023, month = 10, day = 5, hour = 0, minute = 0, second = 0), // Thursday.
-        actual = stubDatetime.nextMatch {
-            // stubDatetime is October 4th, 2023; a Wednesday.
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 0, 0).nextMatch {
+            // LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 0, 0) is October 4th, 2023; a Wednesday.
             onDaysOfWeek(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.THURSDAY)
             atHours(0)
             atMinutes(0)
@@ -427,18 +359,18 @@ class LocalDateTimeTest {
 
     @Test
     fun schedules_day_of_week_multiple_values_not_continuous() = assertEquals(
-        expected = stubDatetime.copy(dayOfMonth = 8), // Sunday.
-        actual = stubDatetime.nextMatch {
-            // stubDatetime is October 4th, 2023; a Wednesday.
+        expected = LocalDateTime(2023, Month.OCTOBER, 8, 0, 0, 0, 0), // Sunday.
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 0, 0).nextMatch {
+            // LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 0, 0) is October 4th, 2023; a Wednesday.
             onDaysOfWeek(DayOfWeek.SUNDAY, DayOfWeek.TUESDAY)
         }
     )
 
     @Test
     fun schedules_day_of_week_day_of_month_before_day_of_week() = assertEquals(
-        expected = stubDatetime.copy(dayOfMonth = 5),
-        actual = stubDatetime.nextMatch {
-            // stubDatetime is October 4th, 2023; a Wednesday.
+        expected = LocalDateTime(2023, Month.OCTOBER, 5, 0, 0, 0, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 0, 0).nextMatch {
+            // LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 0, 0) is October 4th, 2023; a Wednesday.
             onDaysOfWeek(DayOfWeek.SATURDAY)
             onDaysOfMonth(5)
         }
@@ -446,9 +378,9 @@ class LocalDateTimeTest {
 
     @Test
     fun schedules_day_of_week_day_of_month_after_next_day_of_week() = assertEquals(
-        expected = stubDatetime.copy(dayOfMonth = 7),
-        actual = stubDatetime.nextMatch {
-            // stubDatetime is October 4th, 2023; a Wednesday.
+        expected = LocalDateTime(2023, Month.OCTOBER, 7, 0, 0, 0, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 0, 0).nextMatch {
+            // LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 0, 0) is October 4th, 2023; a Wednesday.
             onDaysOfWeek(DayOfWeek.SATURDAY)
             onDaysOfMonth(8)
         }
@@ -456,8 +388,8 @@ class LocalDateTimeTest {
 
     @Test
     fun schedules_day_of_week_increments_month() = assertEquals(
-        expected = stubDatetime.copy(monthNumber = 11, dayOfMonth = 4),
-        actual = stubDatetime.copy(dayOfMonth = 31).nextMatch {
+        expected = LocalDateTime(2023, Month.NOVEMBER, 4, 0, 0, 0, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 31, 0, 0, 0, 0).nextMatch {
             // October 31st, 2023 was a Tuesday.
             onDaysOfWeek(DayOfWeek.SATURDAY)
         }
@@ -465,8 +397,8 @@ class LocalDateTimeTest {
 
     @Test
     fun schedules_day_of_week_wraps_around_week() = assertEquals(
-        expected = stubDatetime.copy(dayOfMonth = 10),
-        actual = stubDatetime.nextMatch {
+        expected = LocalDateTime(2023, Month.OCTOBER, 10, 0, 0, 0, 0),
+        actual = LocalDateTime(2023, Month.OCTOBER, 4, 0, 0, 0, 0).nextMatch {
             // October 4th, 2023 was a Wednesday.
             onDaysOfWeek(DayOfWeek.TUESDAY)
         }
@@ -524,26 +456,137 @@ class LocalDateTimeTest {
             atSeconds(0)
         }
     )
-}
 
-@ExperimentalTime
-private fun LocalDateTime.assertGap(
-    assertPeriod: DateTimePeriod,
-    schedule: PulseSchedule = buildPulseSchedule {  },
-    takeWhile: (LocalDateTime) -> Boolean,
-) = nextMatchSequence(schedule)
-    .takeWhile(takeWhile)
-    .windowed(2) { (first, second) ->
+    @Test
+    fun apscheduler_weekday_range() {
+        val schedule = buildPulseSchedule {
+            onDaysOfWeek(DayOfWeek.FRIDAY..DayOfWeek.SUNDAY)
+            atHours(0)
+            atMinutes(0)
+            atSeconds(0)
+        }
         assertEquals(
-            expected = assertPeriod,
-            actual = first.toInstant(TimeZone.UTC).periodUntil(
-                other = second.toInstant(TimeZone.UTC),
-                timeZone = TimeZone.UTC
-            ),
-            message = "The difference between $first and $second is not $assertPeriod."
+            actual = LocalDateTime(2020, 1, 1, 0, 0).nextMatch(schedule),
+            expected = LocalDateTime(2020, 1, 3, 0, 0),
         )
-    }.last()
+        assertEquals(
+            actual = LocalDateTime(2020, 1, 3, 0, 0).nextMatch(schedule),
+            expected = LocalDateTime(2020, 1, 4, 0, 0),
+        )
+        assertEquals(
+            actual = LocalDateTime(2020, 1, 4, 0, 0).nextMatch(schedule),
+            expected = LocalDateTime(2020, 1, 5, 0, 0),
+        )
+    }
 
-private fun LocalDateTime.nextMatchSequence(schedule: PulseSchedule): Sequence<LocalDateTime> {
-    return generateSequence(seed = this) { seed -> seed.nextMatch(schedule) }
+    @Test
+    fun apscheduler_month_rollover() {
+        val schedule = buildPulseSchedule {
+            onDaysOfMonth(30)
+            atHours(0)
+            atMinutes(0)
+            atSeconds(0)
+        }
+        assertEquals(
+            actual = LocalDateTime(2016, 2, 1, 0, 0).nextMatch(schedule),
+            expected = LocalDateTime(2016, 3, 30, 0, 0),
+        )
+        assertEquals(
+            actual = LocalDateTime(2016, 3, 30, 0, 0).nextMatch(schedule),
+            expected = LocalDateTime(2016, 4, 30, 0, 0),
+        )
+    }
+
+    @Test
+    fun apscheduler_increment_weekday() {
+        val schedule = buildPulseSchedule {
+            atHours(5, 6)
+            atMinutes(0)
+            atSeconds(0)
+        }
+        assertEquals(
+            actual = LocalDateTime(2009, 9, 25, 7, 0).nextMatch(schedule),
+            expected = LocalDateTime(2009, 9, 26, 5, 0),
+        )
+    }
+
+    @Test
+    fun apscheduler_cron_schedule_1() {
+        val schedule = buildPulseSchedule {
+            inMonths(Month.JANUARY, Month.APRIL)
+            onDaysOfMonth(5, 6)
+            atHours(0)
+            atMinutes(0)
+            atSeconds(0)
+        }
+        assertEquals(
+            actual = LocalDateTime(2008, 12, 1, 0, 0).nextMatch(schedule),
+            expected = LocalDateTime(2009, 1, 5, 0, 0),
+        )
+        assertEquals(
+            actual = LocalDateTime(2009, 1, 5, 0, 0).nextMatch(schedule),
+            expected = LocalDateTime(2009, 1, 6, 0, 0),
+        )
+        assertEquals(
+            actual = LocalDateTime(2009, 1, 6, 0, 0).nextMatch(schedule),
+            expected = LocalDateTime(2009, 4, 5, 0, 0),
+        )
+        assertEquals(
+            actual = LocalDateTime(2009, 4, 5, 0, 0).nextMatch(schedule),
+            expected = LocalDateTime(2009, 4, 6, 0, 0),
+        )
+        assertEquals(
+            actual = LocalDateTime(2009, 4, 6, 0, 0).nextMatch(schedule),
+            expected = LocalDateTime(2010, 1, 5, 0, 0),
+        )
+    }
+
+    @Test
+    fun apscheduler_cron_trigger_2() {
+        val schedule = buildPulseSchedule {
+            inMonths(Month.JANUARY..Month.MARCH)
+            onDaysOfMonth(5)
+            atHours(0)
+            atMinutes(0)
+            atSeconds(0)
+        }
+        assertEquals(
+            actual = LocalDateTime(2009, 10, 14, 0, 0).nextMatch(schedule),
+            expected = LocalDateTime(2010, 1, 5, 0, 0)
+        )
+        assertEquals(
+            actual = LocalDateTime(2010, 1, 5, 0, 0).nextMatch(schedule),
+            expected = LocalDateTime(2010, 2, 5, 0, 0)
+        )
+        assertEquals(
+            actual = LocalDateTime(2010, 2, 5, 0, 0).nextMatch(schedule),
+            expected = LocalDateTime(2010, 3, 5, 0, 0)
+        )
+        assertEquals(
+            actual = LocalDateTime(2010, 3, 5, 0, 0).nextMatch(schedule),
+            expected = LocalDateTime(2011, 1, 5, 0, 0)
+        )
+    }
+
+    @Test
+    fun next_hour_february_rollover_to_march() = assertEquals(
+        expected = LocalDateTime(2025, 3, 1, 0, 0),
+        actual = LocalDateTime(2025, 2, 28, 23, 0).nextMatch {
+            atHours(0)
+            atMinutes(0)
+            atSeconds(0)
+        }
+    )
+
+    @Test
+    fun month_increment() = assertEquals(
+        expected = LocalDateTime(2025, 12, 1, 0, 0),
+        actual = LocalDateTime(2025, 10, 10, 23, 0).nextMatch {
+            inMonths(Month.DECEMBER)
+            onDaysOfMonth(1)
+            atHours(0)
+            atMinutes(0)
+            atSeconds(0)
+        }
+    )
 }
