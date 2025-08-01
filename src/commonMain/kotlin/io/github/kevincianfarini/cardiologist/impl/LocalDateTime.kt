@@ -17,11 +17,11 @@ internal fun LocalDateTime.nextMatch(schedule: PulseSchedule): LocalDateTime {
     // nanosecond component by one to ensure that we produce a match that's distinct from this value.
     val time = if (matches(schedule)) copy(nanosecond = 1) else this
     return with(schedule) {
-        time.nextMonth(sortedMonths)
-            .nextDay(sortedDaysOfMonth, sortedDaysOfWeek, sortedMonths)
-            .nextHour(sortedHours, sortedDaysOfMonth, sortedDaysOfWeek, sortedMonths)
-            .nextMinute(sortedMinutes, sortedHours, sortedDaysOfMonth, sortedDaysOfWeek, sortedMonths)
-            .nextSecond(sortedSeconds, sortedMinutes, sortedHours, sortedDaysOfMonth, sortedDaysOfWeek, sortedMonths)
+        time.nextMonth(inMonths)
+            .nextDay(onDaysOfMonth, onDaysOfWeek, inMonths)
+            .nextHour(atHours, onDaysOfMonth, onDaysOfWeek, inMonths)
+            .nextMinute(atMinutes, atHours, onDaysOfMonth, onDaysOfWeek, inMonths)
+            .nextSecond(atSeconds, atMinutes, atHours, onDaysOfMonth, onDaysOfWeek, inMonths)
     }
 }
 

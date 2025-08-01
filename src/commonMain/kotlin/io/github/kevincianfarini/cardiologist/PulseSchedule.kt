@@ -8,21 +8,41 @@ import kotlinx.datetime.number
 
 /**
  * A [Pulse] schedule that can be used with [schedulePulse] to define complex schedules.
- *
- * @constructor Creates a new PulseSchedule. Second values must be in range 0..59, minute values must be in range 0..59,
- *              hour values must be in range 0..23, and day of month values must be in range 1..31. This constructor also
- *              requires that seconds, minutes, hours, days of month, and months cannot be empty sets.
- * @throws IllegalArgumentException if the constructor is called with any of our bounds value or an improperly empty set.
  */
 @Poko
-public class PulseSchedule(
-    public val atSeconds: Set<Int>,
-    public val atMinutes: Set<Int>,
-    public val atHours: Set<Int>,
-    public val onDaysOfMonth: Set<Int>,
-    public val inMonths: Set<Month>,
-    public val onDaysOfWeek: Set<DayOfWeek>,
+public class PulseSchedule internal constructor(
+    public val atSeconds: List<Int>,
+    public val atMinutes: List<Int>,
+    public val atHours: List<Int>,
+    public val onDaysOfMonth: List<Int>,
+    public val inMonths: List<Month>,
+    public val onDaysOfWeek: List<DayOfWeek>,
 ) {
+
+    /**
+     * Creates a new PulseSchedule. Second values must be in range 0..59, minute values must be in range 0..59,
+     * hour values must be in range 0..23, and day of month values must be in range 1..31. This constructor also
+     * requires that seconds, minutes, hours, days of month, and months cannot be empty sets.
+     *
+     * @throws IllegalArgumentException if the constructor is called with any of our bounds value or an improperly empty
+     *                                  set.
+     */
+    public constructor(
+        atSeconds: Set<Int>,
+        atMinutes: Set<Int>,
+        atHours: Set<Int>,
+        onDaysOfMonth: Set<Int>,
+        inMonths: Set<Month>,
+        onDaysOfWeek: Set<DayOfWeek>,
+    ) : this(
+        atSeconds = atSeconds.sorted(),
+        atMinutes = atMinutes.sorted(),
+        atHours = atHours.sorted(),
+        onDaysOfMonth = onDaysOfMonth.sorted(),
+        inMonths = inMonths.sorted(),
+        onDaysOfWeek = onDaysOfWeek.sorted()
+    )
+
     init {
         require(!atSeconds.any { it !in 0..59 }) { "Seconds has an out of bound value: $atSeconds" }
         require(atSeconds.isNotEmpty()) { "Seconds cannot be empty!" }
@@ -36,13 +56,6 @@ public class PulseSchedule(
         // Don't check if onDaysOfWeek is empty because an empty set is equivalent to the wildcard `*` value in cron
         // expressions.
     }
-
-    internal val sortedSeconds = atSeconds.sorted()
-    internal val sortedMinutes = atMinutes.sorted()
-    internal val sortedHours = atHours.sorted()
-    internal val sortedDaysOfMonth = onDaysOfMonth.sorted()
-    internal val sortedMonths = inMonths.sorted()
-    internal val sortedDaysOfWeek = onDaysOfWeek.sorted()
 }
 
 public class PulseScheduleBuilder internal constructor() {
