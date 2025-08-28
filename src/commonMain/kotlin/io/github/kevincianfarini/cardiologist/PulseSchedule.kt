@@ -1,6 +1,7 @@
 package io.github.kevincianfarini.cardiologist
 
 import dev.drewhamilton.poko.Poko
+import io.github.kevincianfarini.cardiologist.impl.parseCronExpression
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.Month
 import kotlinx.datetime.isoDayNumber
@@ -55,6 +56,32 @@ public class PulseSchedule internal constructor(
         require(inMonths.isNotEmpty()) { "Months cannot be empty!" }
         // Don't check if onDaysOfWeek is empty because an empty set is equivalent to the wildcard `*` value in cron
         // expressions.
+    }
+
+    public companion object {
+        /**
+         * Parse a cron [expression] into a [PulseSchedule].
+         *
+         * This function supports the standard cron specification, which includes:
+         *
+         * - Five fields specifying the minute, hour, day of month, month, and day of week.
+         * - `*` denoting a wildcard value.
+         * - List of values using commas, like `1,5,7`.
+         * - Ranges of values, like `5-10`.
+         * - Mixed range and list values, like `5-10,20-25`.
+         * - The integers 0-59 for the minute field.
+         * - The integers 0-23 for the hour field.
+         * - The integers 1-31 for the day of week field.
+         * - The integers 1-12 for the month field.
+         * - The integers 0-6 or strings SUN-SAT for the day of week field.
+         *
+         * Functionality not articulated above is considered non-standard and is therefore explicitly not supported.
+         *
+         * @throws IllegalArgumentException Malformed cron expression or unsupported cron feature.
+         */
+        public fun parseCron(expression: String): PulseSchedule {
+            return expression.parseCronExpression()
+        }
     }
 }
 

@@ -258,13 +258,6 @@ class PulseTests {
     }
 
     @Test
-    fun schedulePulse_with_cron_expression_simple() = runTest {
-        val pulse = testClock.schedulePulse("* * * * *").take(1)
-        val duration = testTimeSource.measureTime { pulse.beat {  } }
-        assertEquals(expected = 1.minutes, actual = duration)
-    }
-
-    @Test
     fun schedulePulse_dsl_simple() = runTest {
         val pulse = testClock.schedulePulse { atSeconds(0) }.take(1)
         val duration = testTimeSource.measureTime { pulse.beat {  } }
