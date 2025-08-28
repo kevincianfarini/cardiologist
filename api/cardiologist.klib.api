@@ -38,6 +38,10 @@ final class io.github.kevincianfarini.cardiologist/PulseSchedule { // io.github.
     final fun equals(kotlin/Any?): kotlin/Boolean // io.github.kevincianfarini.cardiologist/PulseSchedule.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // io.github.kevincianfarini.cardiologist/PulseSchedule.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // io.github.kevincianfarini.cardiologist/PulseSchedule.toString|toString(){}[0]
+
+    final object Companion { // io.github.kevincianfarini.cardiologist/PulseSchedule.Companion|null[0]
+        final fun parseCron(kotlin/String): io.github.kevincianfarini.cardiologist/PulseSchedule // io.github.kevincianfarini.cardiologist/PulseSchedule.Companion.parseCron|parseCron(kotlin.String){}[0]
+    }
 }
 
 final class io.github.kevincianfarini.cardiologist/PulseScheduleBuilder { // io.github.kevincianfarini.cardiologist/PulseScheduleBuilder|null[0]

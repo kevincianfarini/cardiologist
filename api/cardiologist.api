@@ -26,6 +26,7 @@ public final class io/github/kevincianfarini/cardiologist/PulseBackpressureStrat
 }
 
 public final class io/github/kevincianfarini/cardiologist/PulseSchedule {
+	public static final field Companion Lio/github/kevincianfarini/cardiologist/PulseSchedule$Companion;
 	public fun <init> (Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;Ljava/util/Set;)V
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getAtHours ()Ljava/util/List;
@@ -36,6 +37,10 @@ public final class io/github/kevincianfarini/cardiologist/PulseSchedule {
 	public final fun getOnDaysOfWeek ()Ljava/util/List;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class io/github/kevincianfarini/cardiologist/PulseSchedule$Companion {
+	public final fun parseCron (Ljava/lang/String;)Lio/github/kevincianfarini/cardiologist/PulseSchedule;
 }
 
 public final class io/github/kevincianfarini/cardiologist/PulseScheduleBuilder {

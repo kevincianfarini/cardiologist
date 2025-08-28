@@ -1,17 +1,19 @@
-package io.github.kevincianfarini.cardiologist.impl
+package io.github.kevincianfarini.cardiologist
 
-import io.github.kevincianfarini.cardiologist.PulseSchedule
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.Month
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 
-class ParseCronTest {
+class PulseScheduleParseCronTest {
 
     @Test
     fun incorrect_number_of_segments_errors() {
-        val e = assertFails { "".parseCronExpression() }
+        val e = assertFailsWith<IllegalArgumentException> {
+            PulseSchedule.parseCron("")
+        }
         assertEquals(
             expected = "'' is not a valid cron expression.",
             actual = e.message
@@ -29,7 +31,7 @@ class ParseCronTest {
                 onDaysOfWeek = emptySet(),
                 inMonths = Month.entries.toSet(),
             ),
-            actual = "* * * * *".parseCronExpression()
+            actual = PulseSchedule.parseCron("* * * * *")
         )
     }
 
@@ -44,7 +46,7 @@ class ParseCronTest {
                 onDaysOfWeek = emptySet(),
                 inMonths = Month.entries.toSet(),
             ),
-            actual = "*       * \t *   *   *".parseCronExpression()
+            actual = PulseSchedule.parseCron("*       * \t *   *   *")
         )
     }
 
@@ -59,7 +61,7 @@ class ParseCronTest {
                 onDaysOfWeek = emptySet(),
                 inMonths = Month.entries.toSet(),
             ),
-            actual = "0 * * * *".parseCronExpression()
+            actual = PulseSchedule.parseCron("0 * * * *")
         )
     }
 
@@ -74,7 +76,7 @@ class ParseCronTest {
                 onDaysOfWeek = emptySet(),
                 inMonths = Month.entries.toSet(),
             ),
-            actual = "0,5 * * * *".parseCronExpression()
+            actual = PulseSchedule.parseCron("0,5 * * * *")
         )
     }
 
@@ -89,7 +91,7 @@ class ParseCronTest {
                 onDaysOfWeek = emptySet(),
                 inMonths = Month.entries.toSet(),
             ),
-            actual = "0-5 * * * *".parseCronExpression()
+            actual = PulseSchedule.parseCron("0-5 * * * *")
         )
     }
 
@@ -104,7 +106,7 @@ class ParseCronTest {
                 onDaysOfWeek = emptySet(),
                 inMonths = Month.entries.toSet(),
             ),
-            actual = "0-5,10,15 * * * *".parseCronExpression()
+            actual = PulseSchedule.parseCron("0-5,10,15 * * * *")
         )
     }
 
@@ -119,14 +121,14 @@ class ParseCronTest {
                 onDaysOfWeek = emptySet(),
                 inMonths = Month.entries.toSet(),
             ),
-            actual = "0-5,10-15 * * * *".parseCronExpression()
+            actual = PulseSchedule.parseCron("0-5,10-15 * * * *")
         )
     }
 
     @Test
     fun minutes_double_comma_invalid() {
-        val e = assertFails {
-            "0,,1 * * * *".parseCronExpression()
+        val e = assertFailsWith<IllegalArgumentException> {
+            PulseSchedule.parseCron("0,,1 * * * *")
         }
         assertEquals(
             expected = "Cron expression is malformed: <<0,,1>> * * * *",
@@ -136,8 +138,8 @@ class ParseCronTest {
 
     @Test
     fun minutes_double_range_invalid() {
-        val e = assertFails {
-            "0--1 * * * *".parseCronExpression()
+        val e = assertFailsWith<IllegalArgumentException> {
+            PulseSchedule.parseCron("0--1 * * * *")
         }
         assertEquals(
             expected = "Cron expression is malformed: <<0--1>> * * * *",
@@ -147,8 +149,8 @@ class ParseCronTest {
 
     @Test
     fun minutes_range_no_end_invalid() {
-        val e = assertFails {
-            "0- * * * *".parseCronExpression()
+        val e = assertFailsWith<IllegalArgumentException> {
+            PulseSchedule.parseCron("0- * * * *")
         }
         assertEquals(
             expected = "Cron expression is malformed: <<0->> * * * *",
@@ -158,8 +160,8 @@ class ParseCronTest {
 
     @Test
     fun minutes_range_no_start_invalid() {
-        val e = assertFails {
-            "-1 * * * *".parseCronExpression()
+        val e = assertFailsWith<IllegalArgumentException> {
+            PulseSchedule.parseCron("-1 * * * *")
         }
         assertEquals(
             expected = "Cron expression is malformed: <<-1>> * * * *",
@@ -169,8 +171,8 @@ class ParseCronTest {
 
     @Test
     fun minutes_range_empty_invalid() {
-        val e = assertFails {
-            "5-3 * * * *".parseCronExpression()
+        val e = assertFailsWith<IllegalArgumentException> {
+            PulseSchedule.parseCron("5-3 * * * *")
         }
         assertEquals(
             expected = "Cron expression is malformed: <<5-3>> * * * *",
@@ -180,8 +182,8 @@ class ParseCronTest {
 
     @Test
     fun minutes_invalid_value() {
-        val e = assertFails {
-            "75 * * * *".parseCronExpression()
+        val e = assertFailsWith<IllegalArgumentException> {
+            PulseSchedule.parseCron("75 * * * *")
         }
         assertEquals(
             expected = "Cron expression is malformed: <<75>> * * * *",
@@ -192,8 +194,8 @@ class ParseCronTest {
 
     @Test
     fun hours_invalid_value() {
-        val e = assertFails {
-            "* 24 * * *".parseCronExpression()
+        val e = assertFailsWith<IllegalArgumentException> {
+            PulseSchedule.parseCron("* 24 * * *")
         }
         assertEquals(
             expected = "Cron expression is malformed: * <<24>> * * *",
@@ -203,8 +205,8 @@ class ParseCronTest {
 
     @Test
     fun day_of_month_invalid_value() {
-        val e = assertFails {
-            "* * 0 * *".parseCronExpression()
+        val e = assertFailsWith<IllegalArgumentException> {
+            PulseSchedule.parseCron("* * 0 * *")
         }
         assertEquals(
             expected = "Cron expression is malformed: * * <<0>> * *",
@@ -214,8 +216,8 @@ class ParseCronTest {
 
     @Test
     fun month_invalid_int_value() {
-        val e = assertFails {
-            "* * * 13 *".parseCronExpression()
+        val e = assertFailsWith<IllegalArgumentException> {
+            PulseSchedule.parseCron("* * * 13 *")
         }
         assertEquals(
             expected = "Cron expression is malformed: * * * <<13>> *",
@@ -225,8 +227,8 @@ class ParseCronTest {
 
     @Test
     fun day_of_week_invalid_int_value() {
-        val e = assertFails {
-            "* * * * 7".parseCronExpression()
+        val e = assertFailsWith<IllegalArgumentException> {
+            PulseSchedule.parseCron("* * * * 7")
         }
         assertEquals(
             expected = "Cron expression is malformed: * * * * <<7>>",
@@ -261,7 +263,7 @@ class ParseCronTest {
                     onDaysOfWeek = emptySet(),
                     inMonths = setOf(enum),
                 ),
-                actual = "* * * $string *".parseCronExpression()
+                actual = PulseSchedule.parseCron("* * * $string *")
             )
         }
     }
@@ -288,7 +290,7 @@ class ParseCronTest {
                     onDaysOfWeek = setOf(enum),
                     inMonths = Month.entries.toSet()
                 ),
-                actual = "* * * * $string".parseCronExpression()
+                actual = PulseSchedule.parseCron("* * * * $string")
             )
         }
     }
@@ -304,14 +306,14 @@ class ParseCronTest {
                 onDaysOfWeek = DayOfWeek.entries.toSet(),
                 inMonths = Month.entries.toSet()
             ),
-            actual = "* * * * SUN-SAT".parseCronExpression()
+            actual = PulseSchedule.parseCron("* * * * SUN-SAT")
         )
     }
 
     @Test
     fun invalid_month_string() {
-        val e = assertFails {
-            "* * * WRONG *".parseCronExpression()
+        val e = assertFailsWith<IllegalArgumentException> {
+            PulseSchedule.parseCron("* * * WRONG *")
         }
         assertEquals(
             expected = "Cron expression is malformed: * * * <<WRONG>> *",
@@ -321,8 +323,8 @@ class ParseCronTest {
 
     @Test
     fun invalid_day_of_week_string() {
-        val e = assertFails {
-            "* * * * WRONG".parseCronExpression()
+        val e = assertFailsWith<IllegalArgumentException> {
+            PulseSchedule.parseCron("* * * * WRONG")
         }
         assertEquals(
             expected = "Cron expression is malformed: * * * * <<WRONG>>",
@@ -332,8 +334,8 @@ class ParseCronTest {
 
     @Test
     fun multiple_incorrect_values_yield_many_errors() {
-        val e = assertFails {
-            "60 24 32 13 7".parseCronExpression()
+        val e = assertFailsWith<IllegalArgumentException> {
+            PulseSchedule.parseCron("60 24 32 13 7")
         }
         assertEquals(
             expected = "Cron expression is malformed: <<60>> <<24>> <<32>> <<13>> <<7>>",

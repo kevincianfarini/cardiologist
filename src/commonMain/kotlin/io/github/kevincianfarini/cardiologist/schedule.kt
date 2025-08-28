@@ -137,20 +137,7 @@ public fun Clock.schedulePulse(
 /**
  * Schedule a [Pulse] whose beats occur in accordance with the provided [cronExpression] for a specific [timeZone].
  *
- * This function supports the standard cron specification, which includes:
- *
- * - Five fields specifying the minute, hour, day of month, month, and day of week.
- * - `*` denoting a wildcard value.
- * - List of values using commas, like `1,5,7`.
- * - Ranges of values, like `5-10`.
- * - Mixed range and list values, like `5-10,20-25`.
- * - The integers 0-59 for the minute field.
- * - The integers 0-23 for the hour field.
- * - The integers 1-31 for the day of week field.
- * - The integers 1-12 for the month field.
- * - The integers 0-6 or strings SUN-SAT for the day of week field.
- *
- * Functionality not articulated above is considered non-standard and is therefore explicitly not supported.
+ * See [PulseSchedule.parseCron] for supported cron expression features.
  *
  * Scheduling pulses is done in local time and is therefore subject to daylight savings time adjustments. Local time
  * conversion is sometimes ambiguous, and therefore it's recommended to schedule pulses in a fixed UTC offset timezone.
@@ -160,6 +147,13 @@ public fun Clock.schedulePulse(
  * @param timeZone The TimeZone to schedule pulses in.
  * @throws IllegalArgumentException if [cronExpression] is not valid.
  */
+@Deprecated(
+    message = "Parse cron expression separately from scheduling a pulse",
+    replaceWith = ReplaceWith(
+        "this.schedulePulse(PulseSchedule.parseCron(cronExpression), timeZone)",
+        "io.github.kevincianfarini.cardiologist.PulseSchedule",
+    ),
+)
 @ExperimentalTime
 public fun Clock.schedulePulse(
     cronExpression: String,

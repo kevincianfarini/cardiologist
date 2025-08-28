@@ -76,7 +76,9 @@ private fun String.parseDaysOfWeekExpressionOrNull(): Set<DayOfWeek>? {
                     4 -> DayOfWeek.THURSDAY
                     5 -> DayOfWeek.FRIDAY
                     6 -> DayOfWeek.SATURDAY
-                    else -> error("Invalid day of week integer $dayOfWeekInt.")
+                    else -> {
+                        throw IllegalArgumentException("Invalid day of week integer $dayOfWeekInt.")
+                    }
                 }
                 add(result)
             }
