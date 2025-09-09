@@ -11,7 +11,7 @@ import kotlinx.datetime.number
  * A [Pulse] schedule that can be used with [schedulePulse] to define complex schedules.
  */
 @Poko
-public class PulseSchedule internal constructor(
+public class PulseSchedule private constructor(
     public val atSeconds: List<Int>,
     public val atMinutes: List<Int>,
     public val atHours: List<Int>,
@@ -56,6 +56,57 @@ public class PulseSchedule internal constructor(
         require(inMonths.isNotEmpty()) { "Months cannot be empty!" }
         // Don't check if onDaysOfWeek is empty because an empty set is equivalent to the wildcard `*` value in cron
         // expressions.
+    }
+
+    override fun toString(): String = buildString {
+        append("PulseSchedule{atSeconds=[")
+        appendRanges(atSeconds) { it }
+        append("], atMinutes=[")
+        appendRanges(atMinutes) { it }
+        append("], atHours=[")
+        appendRanges(atHours) { it }
+        append("], onDaysOfMonth=[")
+        appendRanges(onDaysOfMonth) { it }
+        append("], inMonths=[")
+        appendRanges(inMonths, Enum<*>::ordinal)
+        if (onDaysOfWeek.isNotEmpty()) {
+            append("], onDaysOfWeek=[")
+            appendRanges(onDaysOfWeek, Enum<*>::ordinal)
+        }
+        append("]}")
+    }
+
+    private fun <T : Any> StringBuilder.appendRanges(elements: Collection<T>, value: (T) -> Int) {
+        val iterator = elements.iterator()
+
+        // All collections are guaranteed to be non-empty.
+        val first = iterator.next()
+        var startValue = value(first)
+        append(first)
+
+        var last = first
+        var lastValue = startValue
+        while (iterator.hasNext()) {
+            val current = iterator.next()
+            val currentValue = value(current)
+            if (currentValue != lastValue + 1) {
+                if (lastValue > startValue) {
+                    append('-')
+                    append(last)
+                }
+                append(", ")
+                append(current)
+
+                startValue = currentValue
+            }
+            last = current
+            lastValue = currentValue
+        }
+
+        if (lastValue > startValue) {
+            append('-')
+            append(last)
+        }
     }
 
     public companion object {
