@@ -1,7 +1,7 @@
 [versions]
 dokka = "2.0.0"
 kmpmt = "0.1.1"
-kotlin = "2.2.10"
+kotlin = "2.2.20"
 kotlinx-coroutines = "1.10.2"
 kotlinx-datetime = "0.7.1"
 poko = "0.19.3"
